@@ -180,7 +180,7 @@ function! s:Aligner._align_with(pat)
   let max_width = max(map(values(M_flds), 's:string_width(v:val)'))
   call map(M_flds, 's:string_pad(v:val, max_width, self.options.M_fld_align)')
   let max_width = max(map(values(R_flds), 's:string_width(v:val)'))
-  call map(R_flds, 's:string_pad(v:val, max_width, self.options.R_fld_align)')
+  call map(R_flds, 's:string_pad(v:val, max_width, self.options.R_fld_align, 1)')
 
   let lpad = s:padding(self.options.L_padding)
   let rpad = s:padding(self.options.R_padding)
@@ -217,18 +217,24 @@ function! s:string_is_ascii(str)
 endfunction
 
 function! s:string_pad(str, width, align, ...)
-  let w = s:string_width(a:str)
-  if w >= a:width
+  let str_w = s:string_width(a:str)
+  if str_w >= a:width
     return a:str
   endif
+  let no_trailer = (a:0 ? a:1 : 0)
   if a:align ==# 'left'
-    return a:str . s:padding(a:width - w)
+    let lpad = ""
+    let rpad = s:padding(a:width - str_w)
   elseif a:align ==# 'center'
-    let left_pad = (a:width - w) / 2
-    return  s:padding(left_pad) . a:str . s:padding(a:width - left_pad - w)
+    let lpad_w = (a:width - str_w) / 2
+    let lpad = s:padding(lpad_w)
+    let rpad = s:padding(a:width - lpad_w - str_w)
   elseif a:align ==# 'right'
-    return s:padding(a:width - w) . a:str
+    let lpad = s:padding(a:width - str_w)
+    let rpad = ""
   endif
+  let rpad = (no_trailer ? "" : rpad)
+  return lpad . a:str . rpad
 endfunction
 
 function! s:padding(width)
