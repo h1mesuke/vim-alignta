@@ -1,5 +1,8 @@
 # alignta.vim test suite
 
+#=============================================================================
+# ASCII
+
 #-----------------------------------------------------------------------------
 # TEST_ALIGN_1_DATA_BEGIN
   a = 1
@@ -47,5 +50,104 @@
     aaa =  10
   aaaaa = 100
 # TEST_ALIGN_1_RRR_EXPECTED_END
+
+#-----------------------------------------------------------------------------
+# TEST_ALIGN_0PAD_DATA_BEGIN
+  a = 1
+  aaa = 10
+  aaaaa = 100
+# TEST_ALIGN_0PAD_DATA_END
+# TEST_ALIGN_0PAD_EXPECTED_BEGIN
+  a    =1
+  aaa  =10
+  aaaaa=100
+# TEST_ALIGN_0PAD_EXPECTED_END
+
+#-----------------------------------------------------------------------------
+# TEST_ALIGN_3PAD_DATA_BEGIN
+  a = 1
+  aaa = 10
+  aaaaa = 100
+# TEST_ALIGN_3PAD_DATA_END
+# TEST_ALIGN_3PAD_EXPECTED_BEGIN
+  a       =   1
+  aaa     =   10
+  aaaaa   =   100
+# TEST_ALIGN_3PAD_EXPECTED_END
+
+#-----------------------------------------------------------------------------
+# TEST_ALIGN_LPAD_DATA_BEGIN
+  a = 1
+  aaa = 10
+  aaaaa = 100
+# TEST_ALIGN_LPAD_DATA_END
+# TEST_ALIGN_LPAD_EXPECTED_BEGIN
+  a       = 1
+  aaa     = 10
+  aaaaa   = 100
+# TEST_ALIGN_LPAD_EXPECTED_END
+
+#-----------------------------------------------------------------------------
+# TEST_ALIGN_RPAD_DATA_BEGIN
+  a = 1
+  aaa = 10
+  aaaaa = 100
+# TEST_ALIGN_RPAD_DATA_END
+# TEST_ALIGN_RPAD_EXPECTED_BEGIN
+  a     =   1
+  aaa   =   10
+  aaaaa =   100
+# TEST_ALIGN_RPAD_EXPECTED_END
+
+#=============================================================================
+# Multi-byte
+
+#-----------------------------------------------------------------------------
+# TEST_MB_ALIGN_1_DATA_BEGIN
+  あ ＝ 壱
+  あいう ＝ 壱十
+  あいうえお ＝ 壱十百
+# TEST_MB_ALIGN_1_DATA_END
+# TEST_MB_ALIGN_1_EXPECTED_BEGIN
+  あ         ＝ 壱
+  あいう     ＝ 壱十
+  あいうえお ＝ 壱十百
+# TEST_MB_ALIGN_1_EXPECTED_END
+
+#-----------------------------------------------------------------------------
+# TEST_MB_ALIGN_1_LLL_DATA_BEGIN
+  あ ＝ 壱
+  あいう ＝ 壱十
+  あいうえお ＝ 壱十百
+# TEST_MB_ALIGN_1_LLL_DATA_END
+# TEST_MB_ALIGN_1_LLL_EXPECTED_BEGIN
+  あ         ＝ 壱
+  あいう     ＝ 壱十
+  あいうえお ＝ 壱十百
+# TEST_MB_ALIGN_1_LLL_EXPECTED_END
+
+#-----------------------------------------------------------------------------
+# TEST_MB_ALIGN_1_CCC_DATA_BEGIN
+  あ ＝ 壱
+  あいう ＝ 壱十
+  あいうえお ＝ 壱十百
+# TEST_MB_ALIGN_1_CCC_DATA_END
+# TEST_MB_ALIGN_1_CCC_EXPECTED_BEGIN
+      あ     ＝   壱
+    あいう   ＝  壱十
+  あいうえお ＝ 壱十百
+# TEST_MB_ALIGN_1_CCC_EXPECTED_END
+
+#-----------------------------------------------------------------------------
+# TEST_MB_ALIGN_1_RRR_DATA_BEGIN
+  あ ＝ 壱
+  あいう ＝ 壱十
+  あいうえお ＝ 壱十百
+# TEST_MB_ALIGN_1_RRR_DATA_END
+# TEST_MB_ALIGN_1_RRR_EXPECTED_BEGIN
+          あ ＝     壱
+      あいう ＝   壱十
+  あいうえお ＝ 壱十百
+# TEST_MB_ALIGN_1_RRR_EXPECTED_END
 
 # vim: filetype=conf
