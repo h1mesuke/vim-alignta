@@ -72,23 +72,19 @@ function! s:parse_options(value)
   let align = { '<': 'left', '|': 'center', '>': 'right' }
   let opts = {}
 
-  " <<< or <<<11 or <<<1:1 or
+  " <<< or <<<1 or <<<11 or <<<1:1
   let matched = matchlist(a:value,
-        \ '^\([<|>]\)\([<|>]\)\([<|>]\)\%(\(\d\)\(\d\)\|\(\d\+\):\(\d\+\)\)\=$')
+        \ '^\([<|>]\)\([<|>]\)\([<|>]\)\%(\(\d\)\(\d\)\=\|\(\d\+\):\(\d\+\)\)\=$')
   if len(matched) > 0
     let opts.L_fld_align = align[matched[1]]
     let opts.M_fld_align = align[matched[2]]
     let opts.R_fld_align = align[matched[3]]
     if matched[4] != ""
       let opts.L_padding = str2nr(matched[4])
-    endif
-    if matched[5] != ""
-      let opts.R_padding = str2nr(matched[5])
+      let opts.R_padding = (matched[5] != "" ? str2nr(matched[5]) : opts.L_padding)
     endif
     if matched[6] != ""
       let opts.L_padding = str2nr(matched[6])
-    endif
-    if matched[7] != ""
       let opts.R_padding = str2nr(matched[7])
     endif
     call s:decho(" parsed options = " . string(opts))
