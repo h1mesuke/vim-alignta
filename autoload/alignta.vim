@@ -3,7 +3,7 @@
 "
 " File		: autoload/alignta.vim
 " Author	: h1mesuke <himesuke@gmail.com>
-" Updated : 2010-11-20
+" Updated : 2010-11-21
 " Version : 0.0.1
 " License : MIT license {{{
 "
@@ -35,7 +35,15 @@ endfunction
 "-----------------------------------------------------------------------------
 " Aligner
 
-let s:Aligner = {}
+let s:Aligner = {
+      \ 'defalut_options': {
+      \   'L_fld_align': 'left',
+      \   'M_fld_align': 'left',
+      \   'R_fld_align': 'left',
+      \   'L_padding': 1,
+      \   'R_padding': 1,
+      \ },
+      \}
 
 function! s:Aligner.new(region, args)
   let obj = copy(self)
@@ -47,13 +55,208 @@ endfunction
 function! s:Aligner.initialize(region, args)
   let self.region = s:Region.new(a:region)
   let self.arguments = a:args
+  call self.init_options()
+  let self._lines = self.region.lines
+  let self._match_start = map(range(0, len(self._lines) - 1), '0')
+endfunction
+
+function! s:Aligner.init_options()
+  let self.options = copy(s:Aligner.defalut_options)
+endfunction
+
+function! s:Aligner.apply_options(opts)
+  call extend(self.options, a:opts, 'force')
+endfunction
+
+function! s:parse_options(value)
+  let align = { '<': 'left', '|': 'center', '>': 'right' }
+  let opts = {}
+
+  " <<< or <<<11 or <<<1:1 or
+  let matched = matchlist(a:value,
+        \ '^\([<|>]\)\([<|>]\)\([<|>]\)\%(\(\d\)\(\d\)\|\(\d\+\):\(\d\+\)\)\=$')
+  if len(matched) > 0
+    let opts.L_fld_align = align[matched[1]]
+    let opts.M_fld_align = align[matched[2]]
+    let opts.R_fld_align = align[matched[3]]
+    if matched[4] != ""
+      let opts.L_padding = str2nr(matched[4])
+    endif
+    if matched[5] != ""
+      let opts.R_padding = str2nr(matched[5])
+    endif
+    if matched[6] != ""
+      let opts.L_padding = str2nr(matched[6])
+    endif
+    if matched[7] != ""
+      let opts.R_padding = str2nr(matched[7])
+    endif
+    call s:decho(" parsed options = " . string(opts))
+    return opts
+  endif
+
+  return opts
 endfunction
 
 function! s:Aligner.align()
-  echomsg "align!"
-  echomsg "self.region = " . string(self.region)
-  echomsg "self.arguments = " . string(self.arguments)
+  call s:decho("arguments = " . string(self.arguments))
+
+  if exists('g:alignta_profile') && g:alignta_profile && has("reltime")
+    let start_time = reltime()
+  endif
+
+  for value in self.arguments
+    let opts = s:parse_options(value)
+    if len(opts) > 0
+      " options
+      call self.apply_options(opts)
+    else
+      " pattern
+      let nstr = matchstr(value, '{\zs\(\d\+\|+\)\ze}$')
+      let value = substitute(value, '{\(\d\+\|+\)}$', '', '')
+      if nstr == ""
+        let n = 1
+      elseif nstr == '+'
+        " pattern{+}
+        let n = 9999
+      else
+        " pattern{\d\+}
+        let n = str2nr(nstr)
+      endif
+      while n > 0
+        if !self._align_with(value)
+          break
+        endif
+        let n -= 1
+      endwhile
+    endif
+  endfor
+
+  " update!
+  let self.region.lines = self._lines
+  call self.region.update()
+
+  if exists('g:alignta_profile') && g:alignta_profile && has("reltime")
+    let used_time = split(reltimestr(reltime(start_time)))[0]
+    echomsg "alignta: used=" . used_time . "s"
+  endif
 endfunction
+
+function! s:Aligner._align_with(pat)
+  call s:decho("current options = " . string(self.options))
+
+  let L_flds = {}
+  let M_flds = {}
+  let R_flds = {}
+  let n_lines = len(self._lines)
+
+  " phase 1
+  " match and split self._lines
+  let matched = 0
+  let idx = 0
+  while idx < n_lines
+    let line = self._lines[idx]
+    if line != ""
+      let match_beg = match(line, a:pat, self._match_start[idx])
+      if match_beg >= 0
+        let match_end = matchend(line, a:pat, self._match_start[idx])
+        let L_flds[idx] = substitute(strpart(line, 0, match_beg), '\s*$', '', '')
+        let M_flds[idx] = strpart(line, match_beg, match_end - match_beg)
+        let R_flds[idx] = substitute(strpart(line, match_end), '^\s*', '', '')
+        let matched += 1
+      endif
+    endif
+    let idx += 1
+  endwhile
+
+  if matched == 0
+    return 0
+  endif
+
+  " phase 2
+  " pad and join
+  let max_width = max(map(values(L_flds), 's:string_width(v:val)'))
+  call map(L_flds, 's:string_pad(v:val, max_width, self.options.L_fld_align)')
+  let max_width = max(map(values(M_flds), 's:string_width(v:val)'))
+  call map(M_flds, 's:string_pad(v:val, max_width, self.options.M_fld_align)')
+  let max_width = max(map(values(R_flds), 's:string_width(v:val)'))
+  call map(R_flds, 's:string_pad(v:val, max_width, self.options.R_fld_align)')
+
+  let lpad = s:padding(self.options.L_padding)
+  let rpad = s:padding(self.options.R_padding)
+  let idx = 0
+  while idx < n_lines
+    if has_key(L_flds, idx)
+      let aligned = L_flds[idx] . lpad . M_flds[idx] . rpad
+      let self._lines[idx] = aligned . R_flds[idx]
+      let self._match_start[idx] = strlen(aligned)
+    endif
+    let idx += 1
+  endwhile
+
+  return 1
+endfunction
+
+function! s:print_error(msg)
+  echohl ErrorMsg
+  echo a:msg
+  echohl None
+endfunction
+
+function! s:decho(msg)
+  if exists('g:alignta_debug') && g:alignta_debug
+    echomsg "alignta: " . a:msg
+  endif
+endfunction
+
+"-----------------------------------------------------------------------------
+" String
+
+function! s:string_is_ascii(str)
+  return (a:str =~ '^[\x00-\x7f]*$')
+endfunction
+
+function! s:string_pad(str, width, align, ...)
+  let w = s:string_width(a:str)
+  if w >= a:width
+    return a:str
+  endif
+  if a:align ==# 'left'
+    return a:str . s:padding(a:width - w)
+  elseif a:align ==# 'center'
+    let left_pad = (a:width - w) / 2
+    return  s:padding(left_pad) . a:str . s:padding(a:width - left_pad - w)
+  elseif a:align ==# 'right'
+    return s:padding(a:width - w) . a:str
+  endif
+endfunction
+
+function! s:padding(width)
+  return printf('%*s', a:width, "")
+endfunction
+
+if v:version >= 703
+  function! s:string_width(str)
+    return strwidth(a:str)
+  endfunction
+
+else
+  function! s:string_width(str)
+    if s:string_is_ascii(a:str)
+      return strlen(a:str)
+    endif
+    " borrowed from Charles E. Campbell, Jr's align.vim
+    " http://www.vim.org/scripts/script.php?script_id=294
+    "
+    let save_mod = &l:modified
+    execute "normal! o\<Esc>"
+    call setline(line('.'), a:str)
+    let width = virtcol('$') - 1
+    silent delete
+    let &l:modified = save_mod
+    return width
+  endfunction
+endif
 
 "-----------------------------------------------------------------------------
 " Region
@@ -169,7 +372,7 @@ function! s:Region.update()
     let regtype = vismode
     if self.type ==# 'block'
       " calculate the block width
-      let max_width = max(map(copy(self.lines), 'util#string#width(v:val)'))
+      let max_width = max(map(copy(self.lines), 's:string_width(v:val)'))
       let regtype .= max_width
     endif
     call setreg('v', join(self.lines, "\n"), regtype)
