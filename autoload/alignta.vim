@@ -142,7 +142,7 @@ function! s:Aligner.align()
   endif
 endfunction
 
-function! s:Aligner._align_with(pat)
+function! s:Aligner._align_with(pattern)
   call s:decho("current options = " . string(self.options))
 
   let L_flds = {}
@@ -157,9 +157,9 @@ function! s:Aligner._align_with(pat)
   while idx < n_lines
     let line = self._lines[idx]
     if line != ""
-      let match_beg = match(line, a:pat, self._match_start[idx])
+      let match_beg = match(line, a:pattern, self._match_start[idx])
       if match_beg >= 0
-        let match_end = matchend(line, a:pat, self._match_start[idx])
+        let match_end = matchend(line, a:pattern, self._match_start[idx])
         let L_flds[idx] = substitute(strpart(line, 0, match_beg), '\s*$', '', '')
         let M_flds[idx] = strpart(line, match_beg, match_end - match_beg)
         let R_flds[idx] = substitute(strpart(line, match_end), '^\s*', '', '')
@@ -187,12 +187,14 @@ function! s:Aligner._align_with(pat)
   let idx = 0
   while idx < n_lines
     if has_key(L_flds, idx)
-      let aligned = L_flds[idx] . lpad . M_flds[idx] . rpad
+      let aligned = L_flds[idx] . lpad . M_flds[idx]
+      let aligned .= (R_flds[idx] != "" ? rpad : "")
       let self._lines[idx] = aligned . R_flds[idx]
       let self._match_start[idx] = strlen(aligned)
     endif
     let idx += 1
   endwhile
+  call s:decho("pattern = " . a:pattern)
   call s:decho(self._lines)
 
   return 1
