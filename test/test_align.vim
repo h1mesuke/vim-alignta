@@ -50,6 +50,39 @@ function! tc.test_align_1_rrr()
   call self.print_lines(value)
 endfunction
 
+function! tc.test_align_2()
+  let tag = 'align_2'
+  execute ':' . s:data_range(tag) . 'Alignta ={2}'
+  let value = s:data_lines(tag)
+  silent undo
+  let expected = s:expected_lines(tag)
+  call assert#equals_C(expected, value)
+  call self.print_lines(expected)
+  call self.print_lines(value)
+endfunction
+
+function! tc.test_align_n()
+  let tag = 'align_n'
+  execute ':' . s:data_range(tag) . 'Alignta ={+}'
+  let value = s:data_lines(tag)
+  silent undo
+  let expected = s:expected_lines(tag)
+  call assert#equals_C(expected, value)
+  call self.print_lines(expected)
+  call self.print_lines(value)
+endfunction
+
+function! tc.test_align_mp()
+  let tag = 'align_mp'
+  execute ':' . s:data_range(tag) . 'Alignta = /* */'
+  let value = s:data_lines(tag)
+  silent undo
+  let expected = s:expected_lines(tag)
+  call assert#equals_C(expected, value)
+  call self.print_lines(expected)
+  call self.print_lines(value)
+endfunction
+
 "---------------------------------------
 " Padding
 
@@ -219,9 +252,7 @@ endfunction
 
 function! tc.print_lines(lines)
   call self.puts()
-  for line in a:lines
-    call self.puts(line)
-  endfor
+  call self.puts(a:lines)
 endfunction
 
 unlet tc

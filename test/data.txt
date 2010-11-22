@@ -52,6 +52,42 @@
 # TEST_ALIGN_1_RRR_EXPECTED_END
 
 #-----------------------------------------------------------------------------
+# TEST_ALIGN_2_DATA_BEGIN
+  a = bbbbb = 1
+  aaa = bbb = 10
+  aaaaa = b =100
+# TEST_ALIGN_2_DATA_END
+# TEST_ALIGN_2_EXPECTED_BEGIN
+  a     = bbbbb = 1
+  aaa   = bbb   = 10
+  aaaaa = b     = 100
+# TEST_ALIGN_2_EXPECTED_END
+
+#-----------------------------------------------------------------------------
+# TEST_ALIGN_N_DATA_BEGIN
+  a = bbbbb = c = ddddd = 1
+  aaa = bbb = ccc = ddd = 10
+  aaaaa = b = ccccc = d =100
+# TEST_ALIGN_N_DATA_END
+# TEST_ALIGN_N_EXPECTED_BEGIN
+  a     = bbbbb = c     = ddddd = 1
+  aaa   = bbb   = ccc   = ddd   = 10
+  aaaaa = b     = ccccc = d     = 100
+# TEST_ALIGN_N_EXPECTED_END
+
+#-----------------------------------------------------------------------------
+# TEST_ALIGN_MP_DATA_BEGIN
+  a = 1 /* bbbbb */
+  aaa = 10 /* bbb */
+  aaaaa = 100 /* b*/
+# TEST_ALIGN_MP_DATA_END
+# TEST_ALIGN_MP_EXPECTED_BEGIN
+  a     = 1   /* bbbbb */
+  aaa   = 10  /* bbb   */
+  aaaaa = 100 /* b     */
+# TEST_ALIGN_MP_EXPECTED_END
+
+#-----------------------------------------------------------------------------
 # TEST_ALIGN_0PAD_DATA_BEGIN
   a = 1
   aaa = 10
