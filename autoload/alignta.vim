@@ -3,7 +3,7 @@
 "
 " File		: autoload/alignta.vim
 " Author	: h1mesuke <himesuke@gmail.com>
-" Updated : 2010-11-21
+" Updated : 2010-11-22
 " Version : 0.0.1
 " License : MIT license {{{
 "
@@ -28,8 +28,8 @@
 " }}}
 "=============================================================================
 
-function! alignta#aligner(region, args)
-  return s:Aligner.new(a:region, a:args)
+function! alignta#aligner(region, args, escape_regex)
+  return s:Aligner.new(a:region, a:args, a:escape_regex)
 endfunction
 
 "-----------------------------------------------------------------------------
@@ -45,16 +45,17 @@ let s:Aligner = {
       \ },
       \}
 
-function! s:Aligner.new(region, args)
+function! s:Aligner.new(region, args, escape_regex)
   let obj = copy(self)
   let obj.class = s:Aligner
-  call obj.initialize(a:region, a:args)
+  call obj.initialize(a:region, a:args, a:escape_regex)
   return obj
 endfunction
 
-function! s:Aligner.initialize(region, args)
+function! s:Aligner.initialize(region, args, escape_regex)
   let self.region = s:Region.new(a:region)
   let self.arguments = a:args
+  let self.escape_regex = a:escape_regex
   call self.init_options()
   let self._lines = self.region.lines
   let self._match_start = map(range(0, len(self._lines) - 1), '0')
@@ -103,13 +104,16 @@ function! s:Aligner.align()
 
   for value in self.arguments
     let opts = s:parse_options(value)
-    if len(opts) > 0
+    if !empty(opts)
       " options
       call self.apply_options(opts)
     else
       " pattern
       let nstr = matchstr(value, '{\zs\(\d\+\|+\)\ze}$')
-      let value = substitute(value, '{\(\d\+\|+\)}$', '', '')
+      let pattern = substitute(value, '{\(\d\+\|+\)}$', '', '')
+      if self.escape_regex
+        let pattern = s:string_escape_regex(pattern)
+      endif
       if nstr == ""
         let n = 1
       elseif nstr == '+'
@@ -120,7 +124,7 @@ function! s:Aligner.align()
         let n = str2nr(nstr)
       endif
       while n > 0
-        if !self._align_with(value)
+        if !self._align_with(pattern)
           break
         endif
         let n -= 1
@@ -189,6 +193,7 @@ function! s:Aligner._align_with(pat)
     endif
     let idx += 1
   endwhile
+  call s:decho(self._lines)
 
   return 1
 endfunction
@@ -201,12 +206,22 @@ endfunction
 
 function! s:decho(msg)
   if exists('g:alignta_debug') && g:alignta_debug
-    echomsg "alignta: " . a:msg
+    if type(a:msg) == type([])
+      for line in a:msg
+        echomsg line
+      endfor
+    else
+      echomsg "alignta: " . a:msg
+    endif
   endif
 endfunction
 
 "-----------------------------------------------------------------------------
 " String
+
+function! s:string_escape_regex(str)
+  return escape(a:str, '^$[].*\~')
+endfunction
 
 function! s:string_is_ascii(str)
   return (a:str =~ '^[\x00-\x7f]*$')
@@ -438,11 +453,11 @@ function! s:Vimenv.initialize(args)
   for value in a:args
     if value == '.'
       let save_cursor = 1
-    elseif match(value, "^'[a-zA-Z[\\]']$") >= 0
+    elseif value =~# "^'[a-zA-Z[\\]']$"
       call add(save_marks, substitute(value, '^.', '', ''))
-    elseif match(value, '^&\(l:\)\=\w\+') >= 0
+    elseif value =~# '^&\(l:\)\=\w\+'
       call add(save_opts,  substitute(value, '^.', '', ''))
-    elseif match(value, '^@[\"a-z01-9\-*+~/]$') >= 0
+    elseif value =~# '^@[\"a-z01-9\-*+~/]$'
       call add(save_regs,  substitute(value, '^.', '', ''))
     elseif value ==# 'R'
       let save_regs += ['1', '2', '3', '4', '5', '6', '7', '8', '9', '-']
