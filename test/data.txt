@@ -3,91 +3,94 @@
 #=============================================================================
 # ASCII
 
-#-----------------------------------------------------------------------------
-# TEST_ALIGN_1_DATA_BEGIN
+#---------------------------------------
+# TEST_ALIGN_1_PATTERN_DATA_BEGIN
   a = 1
   aaa = 10
   aaaaa = 100
-# TEST_ALIGN_1_DATA_END
-# TEST_ALIGN_1_EXPECTED_BEGIN
+# TEST_ALIGN_1_PATTERN_DATA_END
+# TEST_ALIGN_1_PATTERN_EXPECTED_BEGIN
   a     = 1
   aaa   = 10
   aaaaa = 100
-# TEST_ALIGN_1_EXPECTED_END
+# TEST_ALIGN_1_PATTERN_EXPECTED_END
 
-#-----------------------------------------------------------------------------
-# TEST_ALIGN_1_LLL_DATA_BEGIN
+#---------------------------------------
+# TEST_ALIGN_1_PATTERN_LLL_DATA_BEGIN
   a = 1
   aaa = 10
   aaaaa = 100
-# TEST_ALIGN_1_LLL_DATA_END
-# TEST_ALIGN_1_LLL_EXPECTED_BEGIN
+# TEST_ALIGN_1_PATTERN_LLL_DATA_END
+# TEST_ALIGN_1_PATTERN_LLL_EXPECTED_BEGIN
   a     = 1
   aaa   = 10
   aaaaa = 100
-# TEST_ALIGN_1_LLL_EXPECTED_END
+# TEST_ALIGN_1_PATTERN_LLL_EXPECTED_END
 
-#-----------------------------------------------------------------------------
-# TEST_ALIGN_1_CCC_DATA_BEGIN
+#---------------------------------------
+# TEST_ALIGN_1_PATTERN_CCC_DATA_BEGIN
   a = 1
   aaa = 10
   aaaaa = 100
-# TEST_ALIGN_1_CCC_DATA_END
-# TEST_ALIGN_1_CCC_EXPECTED_BEGIN
+# TEST_ALIGN_1_PATTERN_CCC_DATA_END
+# TEST_ALIGN_1_PATTERN_CCC_EXPECTED_BEGIN
     a   =  1
    aaa  = 10
   aaaaa = 100
-# TEST_ALIGN_1_CCC_EXPECTED_END
+# TEST_ALIGN_1_PATTERN_CCC_EXPECTED_END
 
-#-----------------------------------------------------------------------------
-# TEST_ALIGN_1_RRR_DATA_BEGIN
+#---------------------------------------
+# TEST_ALIGN_1_PATTERN_RRR_DATA_BEGIN
   a = 1
   aaa = 10
   aaaaa = 100
-# TEST_ALIGN_1_RRR_DATA_END
-# TEST_ALIGN_1_RRR_EXPECTED_BEGIN
+# TEST_ALIGN_1_PATTERN_RRR_DATA_END
+# TEST_ALIGN_1_PATTERN_RRR_EXPECTED_BEGIN
       a =   1
     aaa =  10
   aaaaa = 100
-# TEST_ALIGN_1_RRR_EXPECTED_END
+# TEST_ALIGN_1_PATTERN_RRR_EXPECTED_END
 
-#-----------------------------------------------------------------------------
-# TEST_ALIGN_2_DATA_BEGIN
+#---------------------------------------
+# TEST_ALIGN_1_PATTERN_2_TIMES_DATA_BEGIN
   a = bbbbb = 1
   aaa = bbb = 10
   aaaaa = b =100
-# TEST_ALIGN_2_DATA_END
-# TEST_ALIGN_2_EXPECTED_BEGIN
+# TEST_ALIGN_1_PATTERN_2_TIMES_DATA_END
+# TEST_ALIGN_1_PATTERN_2_TIMES_EXPECTED_BEGIN
   a     = bbbbb = 1
   aaa   = bbb   = 10
   aaaaa = b     = 100
-# TEST_ALIGN_2_EXPECTED_END
+# TEST_ALIGN_1_PATTERN_2_TIMES_EXPECTED_END
 
-#-----------------------------------------------------------------------------
-# TEST_ALIGN_N_DATA_BEGIN
+#---------------------------------------
+# TEST_ALIGN_1_PATTERN_N_TIMES_DATA_BEGIN
   a = bbbbb = c = ddddd = 1
   aaa = bbb = ccc = ddd = 10
   aaaaa = b = ccccc = d =100
-# TEST_ALIGN_N_DATA_END
-# TEST_ALIGN_N_EXPECTED_BEGIN
+# TEST_ALIGN_1_PATTERN_N_TIMES_DATA_END
+# TEST_ALIGN_1_PATTERN_N_TIMES_EXPECTED_BEGIN
   a     = bbbbb = c     = ddddd = 1
   aaa   = bbb   = ccc   = ddd   = 10
   aaaaa = b     = ccccc = d     = 100
-# TEST_ALIGN_N_EXPECTED_END
+# TEST_ALIGN_1_PATTERN_N_TIMES_EXPECTED_END
 
 #-----------------------------------------------------------------------------
-# TEST_ALIGN_MP_DATA_BEGIN
+# Padding
+
+#---------------------------------------
+# TEST_ALIGN_MULTI_PATTERNS_DATA_BEGIN
   a = 1 /* bbbbb */
   aaa = 10 /* bbb */
   aaaaa = 100 /* b*/
-# TEST_ALIGN_MP_DATA_END
-# TEST_ALIGN_MP_EXPECTED_BEGIN
+# TEST_ALIGN_MULTI_PATTERNS_DATA_END
+# TEST_ALIGN_MULTI_PATTERNS_EXPECTED_BEGIN
   a     = 1   /* bbbbb */
   aaa   = 10  /* bbb   */
   aaaaa = 100 /* b     */
-# TEST_ALIGN_MP_EXPECTED_END
+# TEST_ALIGN_MULTI_PATTERNS_EXPECTED_END
 
-#-----------------------------------------------------------------------------
+#---------------------------------------
 # TEST_ALIGN_0PAD_DATA_BEGIN
   a = 1
   aaa = 10
@@ -99,7 +102,7 @@
   aaaaa=100
 # TEST_ALIGN_0PAD_EXPECTED_END
 
-#-----------------------------------------------------------------------------
+#---------------------------------------
 # TEST_ALIGN_3PAD_DATA_BEGIN
   a = 1
   aaa = 10
@@ -111,7 +114,7 @@
   aaaaa   =   100
 # TEST_ALIGN_3PAD_EXPECTED_END
 
-#-----------------------------------------------------------------------------
+#---------------------------------------
 # TEST_ALIGN_LPAD_DATA_BEGIN
   a = 1
   aaa = 10
@@ -123,7 +126,7 @@
   aaaaa   = 100
 # TEST_ALIGN_LPAD_EXPECTED_END
 
-#-----------------------------------------------------------------------------
+#---------------------------------------
 # TEST_ALIGN_RPAD_DATA_BEGIN
   a = 1
   aaa = 10
@@ -135,55 +138,70 @@
   aaaaa =   100
 # TEST_ALIGN_RPAD_EXPECTED_END
 
+#-----------------------------------------------------------------------------
+# Block
+
+#---------------------------------------
+# TEST_ALIGN_BLOCK_DATA_BEGIN
+  *** a = 1       ***
+  *** aaa = 10    ***
+  *** aaaaa = 100 ***
+# TEST_ALIGN_BLOCK_DATA_END
+# TEST_ALIGN_BLOCK_EXPECTED_BEGIN
+  *** a     = 1   ***
+  *** aaa   = 10  ***
+  *** aaaaa = 100 ***
+# TEST_ALIGN_BLOCK_EXPECTED_END
+
 #=============================================================================
 # Multi-byte
 
-#-----------------------------------------------------------------------------
-# TEST_MB_ALIGN_1_DATA_BEGIN
+#---------------------------------------
+# TEST_MB_ALIGN_1_PATTERN_DATA_BEGIN
   あ ＝ 壱
   あいう ＝ 壱十
   あいうえお ＝ 壱十百
-# TEST_MB_ALIGN_1_DATA_END
-# TEST_MB_ALIGN_1_EXPECTED_BEGIN
+# TEST_MB_ALIGN_1_PATTERN_DATA_END
+# TEST_MB_ALIGN_1_PATTERN_EXPECTED_BEGIN
   あ         ＝ 壱
   あいう     ＝ 壱十
   あいうえお ＝ 壱十百
-# TEST_MB_ALIGN_1_EXPECTED_END
+# TEST_MB_ALIGN_1_PATTERN_EXPECTED_END
 
-#-----------------------------------------------------------------------------
-# TEST_MB_ALIGN_1_LLL_DATA_BEGIN
+#---------------------------------------
+# TEST_MB_ALIGN_1_PATTERN_LLL_DATA_BEGIN
   あ ＝ 壱
   あいう ＝ 壱十
   あいうえお ＝ 壱十百
-# TEST_MB_ALIGN_1_LLL_DATA_END
-# TEST_MB_ALIGN_1_LLL_EXPECTED_BEGIN
+# TEST_MB_ALIGN_1_PATTERN_LLL_DATA_END
+# TEST_MB_ALIGN_1_PATTERN_LLL_EXPECTED_BEGIN
   あ         ＝ 壱
   あいう     ＝ 壱十
   あいうえお ＝ 壱十百
-# TEST_MB_ALIGN_1_LLL_EXPECTED_END
+# TEST_MB_ALIGN_1_PATTERN_LLL_EXPECTED_END
 
-#-----------------------------------------------------------------------------
-# TEST_MB_ALIGN_1_CCC_DATA_BEGIN
+#---------------------------------------
+# TEST_MB_ALIGN_1_PATTERN_CCC_DATA_BEGIN
   あ ＝ 壱
   あいう ＝ 壱十
   あいうえお ＝ 壱十百
-# TEST_MB_ALIGN_1_CCC_DATA_END
-# TEST_MB_ALIGN_1_CCC_EXPECTED_BEGIN
+# TEST_MB_ALIGN_1_PATTERN_CCC_DATA_END
+# TEST_MB_ALIGN_1_PATTERN_CCC_EXPECTED_BEGIN
       あ     ＝   壱
     あいう   ＝  壱十
   あいうえお ＝ 壱十百
-# TEST_MB_ALIGN_1_CCC_EXPECTED_END
+# TEST_MB_ALIGN_1_PATTERN_CCC_EXPECTED_END
 
-#-----------------------------------------------------------------------------
-# TEST_MB_ALIGN_1_RRR_DATA_BEGIN
+#---------------------------------------
+# TEST_MB_ALIGN_1_PATTERN_RRR_DATA_BEGIN
   あ ＝ 壱
   あいう ＝ 壱十
   あいうえお ＝ 壱十百
-# TEST_MB_ALIGN_1_RRR_DATA_END
-# TEST_MB_ALIGN_1_RRR_EXPECTED_BEGIN
+# TEST_MB_ALIGN_1_PATTERN_RRR_DATA_END
+# TEST_MB_ALIGN_1_PATTERN_RRR_EXPECTED_BEGIN
           あ ＝     壱
       あいう ＝   壱十
   あいうえお ＝ 壱十百
-# TEST_MB_ALIGN_1_RRR_EXPECTED_END
+# TEST_MB_ALIGN_1_PATTERN_RRR_EXPECTED_END
 
 # vim: filetype=conf

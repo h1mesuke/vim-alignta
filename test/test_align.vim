@@ -6,9 +6,9 @@ let tc.context_file = expand('<sfile>:p:h') . '/data.txt'
 "-----------------------------------------------------------------------------
 " ASCII
 
-function! tc.test_align_1()
-  let tag = 'align_1'
-  execute ':' . s:data_range(tag) . 'Alignta ='
+function! tc.test_align_1_pattern()
+  let tag = 'test_align_1_pattern'
+  execute ':' . join(s:data_range(tag), ',') . 'Alignta ='
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
@@ -17,9 +17,9 @@ function! tc.test_align_1()
   call self.print_lines(value)
 endfunction
 
-function! tc.test_align_1_lll()
-  let tag = 'align_1_lll'
-  execute ':' . s:data_range(tag) . 'Alignta <<< ='
+function! tc.test_align_1_pattern_lll()
+  let tag = 'test_align_1_pattern_lll'
+  execute ':' . join(s:data_range(tag), ',') . 'Alignta <<< ='
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
@@ -28,9 +28,9 @@ function! tc.test_align_1_lll()
   call self.print_lines(value)
 endfunction
 
-function! tc.test_align_1_ccc()
-  let tag = 'align_1_ccc'
-  execute ':' . s:data_range(tag) . 'Alignta ||| ='
+function! tc.test_align_1_pattern_ccc()
+  let tag = 'test_align_1_pattern_ccc'
+  execute ':' . join(s:data_range(tag), ',') . 'Alignta ||| ='
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
@@ -39,9 +39,9 @@ function! tc.test_align_1_ccc()
   call self.print_lines(value)
 endfunction
 
-function! tc.test_align_1_rrr()
-  let tag = 'align_1_rrr'
-  execute ':' . s:data_range(tag) . 'Alignta >>> ='
+function! tc.test_align_1_pattern_rrr()
+  let tag = 'test_align_1_pattern_rrr'
+  execute ':' . join(s:data_range(tag), ',') . 'Alignta >>> ='
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
@@ -50,9 +50,9 @@ function! tc.test_align_1_rrr()
   call self.print_lines(value)
 endfunction
 
-function! tc.test_align_2()
-  let tag = 'align_2'
-  execute ':' . s:data_range(tag) . 'Alignta ={2}'
+function! tc.test_align_1_pattern_2_times()
+  let tag = 'test_align_1_pattern_2_times'
+  execute ':' . join(s:data_range(tag), ',') . 'Alignta ={2}'
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
@@ -61,9 +61,9 @@ function! tc.test_align_2()
   call self.print_lines(value)
 endfunction
 
-function! tc.test_align_n()
-  let tag = 'align_n'
-  execute ':' . s:data_range(tag) . 'Alignta ={+}'
+function! tc.test_align_1_pattern_n_times()
+  let tag = 'test_align_1_pattern_n_times'
+  execute ':' . join(s:data_range(tag), ',') . 'Alignta ={+}'
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
@@ -72,9 +72,9 @@ function! tc.test_align_n()
   call self.print_lines(value)
 endfunction
 
-function! tc.test_align_mp()
-  let tag = 'align_mp'
-  execute ':' . s:data_range(tag) . 'Alignta = /* */'
+function! tc.test_align_multi_patterns()
+  let tag = 'test_align_multi_patterns'
+  execute ':' . join(s:data_range(tag), ',') . 'Alignta = /* */'
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
@@ -87,9 +87,9 @@ endfunction
 " Padding
 
 " \d notation
-function! tc.test_align_0pad()
-  let tag = 'align_0pad'
-  execute ':' . s:data_range(tag) . 'Alignta <<<0 ='
+function! tc.test_align_0pad_d()
+  let tag = 'test_align_0pad'
+  execute ':' . join(s:data_range(tag), ',') . 'Alignta <<<0 ='
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
@@ -98,9 +98,9 @@ function! tc.test_align_0pad()
   call self.print_lines(value)
 endfunction
 
-function! tc.test_align_3pad()
-  let tag = 'align_3pad'
-  execute ':' . s:data_range(tag) . 'Alignta <<<3 ='
+function! tc.test_align_3pad_d()
+  let tag = 'test_align_3pad'
+  execute ':' . join(s:data_range(tag), ',') . 'Alignta <<<3 ='
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
@@ -110,9 +110,9 @@ function! tc.test_align_3pad()
 endfunction
 
 " \d\d notation
-function! tc.test_align_00pad()
-  let tag = 'align_0pad'
-  execute ':' . s:data_range(tag) . 'Alignta <<<00 ='
+function! tc.test_align_0pad()
+  let tag = 'test_align_0pad'
+  execute ':' . join(s:data_range(tag), ',') . 'Alignta <<<00 ='
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
@@ -122,8 +122,8 @@ function! tc.test_align_00pad()
 endfunction
 
 function! tc.test_align_lpad()
-  let tag = 'align_lpad'
-  execute ':' . s:data_range(tag) . 'Alignta <<<31 ='
+  let tag = 'test_align_lpad'
+  execute ':' . join(s:data_range(tag), ',') . 'Alignta <<<31 ='
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
@@ -133,8 +133,8 @@ function! tc.test_align_lpad()
 endfunction
 
 function! tc.test_align_rpad()
-  let tag = 'align_rpad'
-  execute ':' . s:data_range(tag) . 'Alignta <<<13 ='
+  let tag = 'test_align_rpad'
+  execute ':' . join(s:data_range(tag), ',') . 'Alignta <<<13 ='
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
@@ -144,9 +144,9 @@ function! tc.test_align_rpad()
 endfunction
 
 " \d\+:\d\+ notation
-function! tc.test_align_00pad_colon()
-  let tag = 'align_0pad'
-  execute ':' . s:data_range(tag) . 'Alignta <<<0:0 ='
+function! tc.test_align_0pad_colon()
+  let tag = 'test_align_0pad'
+  execute ':' . join(s:data_range(tag), ',') . 'Alignta <<<0:0 ='
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
@@ -156,8 +156,8 @@ function! tc.test_align_00pad_colon()
 endfunction
 
 function! tc.test_align_lpad_colon()
-  let tag = 'align_lpad'
-  execute ':' . s:data_range(tag) . 'Alignta <<<3:1 ='
+  let tag = 'test_align_lpad'
+  execute ':' . join(s:data_range(tag), ',') . 'Alignta <<<3:1 ='
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
@@ -167,8 +167,25 @@ function! tc.test_align_lpad_colon()
 endfunction
 
 function! tc.test_align_rpad_colon()
-  let tag = 'align_rpad'
-  execute ':' . s:data_range(tag) . 'Alignta <<<1:3 ='
+  let tag = 'test_align_rpad'
+  execute ':' . join(s:data_range(tag), ',') . 'Alignta <<<1:3 ='
+  let value = s:data_lines(tag)
+  silent undo
+  let expected = s:expected_lines(tag)
+  call assert#equals_C(expected, value)
+  call self.print_lines(expected)
+  call self.print_lines(value)
+endfunction
+
+"---------------------------------------
+" Block
+
+function! tc.test_align_block()
+  let tag = 'test_align_block'
+  let range = s:data_range(tag)
+  execute range[0]
+  execute "normal! 06l\<C-v>" . (range[1] - range[0]) . "jf*2h\<Esc>"
+  execute ":'<,'>Alignta ="
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
@@ -180,9 +197,9 @@ endfunction
 "-----------------------------------------------------------------------------
 " Multi-byte
 
-function! tc.test_mb_align_1()
-  let tag = 'mb_align_1'
-  execute ':' . s:data_range(tag) . 'Alignta ＝'
+function! tc.test_mb_align_1_pattern()
+  let tag = 'test_mb_align_1_pattern'
+  execute ':' . join(s:data_range(tag), ',') . 'Alignta ＝'
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
@@ -191,9 +208,9 @@ function! tc.test_mb_align_1()
   call self.print_lines(value)
 endfunction
 
-function! tc.test_mb_align_1_lll()
-  let tag = 'mb_align_1_lll'
-  execute ':' . s:data_range(tag) . 'Alignta <<< ＝'
+function! tc.test_mb_align_1_pattern_lll()
+  let tag = 'test_mb_align_1_pattern_lll'
+  execute ':' . join(s:data_range(tag), ',') . 'Alignta <<< ＝'
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
@@ -202,9 +219,9 @@ function! tc.test_mb_align_1_lll()
   call self.print_lines(value)
 endfunction
 
-function! tc.test_mb_align_1_ccc()
-  let tag = 'mb_align_1_ccc'
-  execute ':' . s:data_range(tag) . 'Alignta ||| ＝'
+function! tc.test_mb_align_1_pattern_ccc()
+  let tag = 'test_mb_align_1_pattern_ccc'
+  execute ':' . join(s:data_range(tag), ',') . 'Alignta ||| ＝'
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
@@ -213,9 +230,9 @@ function! tc.test_mb_align_1_ccc()
   call self.print_lines(value)
 endfunction
 
-function! tc.test_mb_align_1_rrr()
-  let tag = 'mb_align_1_rrr'
-  execute ':' . s:data_range(tag) . 'Alignta >>> ＝'
+function! tc.test_mb_align_1_pattern_rrr()
+  let tag = 'test_mb_align_1_pattern_rrr'
+  execute ':' . join(s:data_range(tag), ',') . 'Alignta >>> ＝'
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
@@ -228,16 +245,15 @@ endfunction
 " Utils
 
 function! s:tag_range(tag)
-  call search('^# TEST_' . toupper(a:tag) . '_BEGIN', 'w')
+  call search('^# ' . toupper(a:tag) . '_BEGIN', 'w')
   let from = line('.') + 1
-  call search('^# TEST_' . toupper(a:tag) . '_END', 'w')
+  call search('^# ' . toupper(a:tag) . '_END', 'w')
   let to = line('.') - 1
   return [from, to]
 endfunction
 
 function! s:data_range(tag)
-  let range = s:tag_range(a:tag . '_data')
-  return range[0] . ',' . range[1]
+  return s:tag_range(a:tag . '_data')
 endfunction
 
 function! s:data_lines(tag)
