@@ -398,6 +398,7 @@ function! s:Region.update()
     if self.type ==# 'block'
       " calculate the block width
       let max_width = max(map(copy(self.lines), 's:string_width(v:val)'))
+      call map(self.lines, 's:string_pad(v:val, max_width, "left")')
       let regtype .= max_width
     endif
     call setreg('v', join(self.lines, "\n"), regtype)
