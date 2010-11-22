@@ -3,7 +3,7 @@
 "
 " File		: autoload/alignta.vim
 " Author	: h1mesuke <himesuke@gmail.com>
-" Updated : 2010-11-22
+" Updated : 2010-11-23
 " Version : 0.0.1
 " License : MIT license {{{
 "
@@ -57,7 +57,10 @@ function! s:Aligner.initialize(region, args, escape_regex)
   let self.arguments = a:args
   let self.escape_regex = a:escape_regex
   call self.init_options()
-  let self._lines = self.region.lines
+  let self._lines = copy(self.region.lines)
+  if self.region.type ==# 'block'
+    call map(self._lines, 'substitute(v:val, "\\s*$", "", "")')
+  endif
   let self._match_start = map(range(0, len(self._lines) - 1), '0')
 endfunction
 
@@ -96,7 +99,9 @@ function! s:parse_options(value)
 endfunction
 
 function! s:Aligner.align()
+  call s:decho("region = " . string(self.region))
   call s:decho("arguments = " . string(self.arguments))
+  call s:decho(self._lines)
 
   if exists('g:alignta_profile') && g:alignta_profile && has("reltime")
     let start_time = reltime()
@@ -151,7 +156,7 @@ function! s:Aligner._align_with(pattern)
   let n_lines = len(self._lines)
 
   " phase 1
-  " match and split self._lines
+  " match and split lines
   let matched = 0
   let idx = 0
   while idx < n_lines
@@ -194,7 +199,7 @@ function! s:Aligner._align_with(pattern)
     endif
     let idx += 1
   endwhile
-  call s:decho("pattern = " . a:pattern)
+  call s:decho("pattern = " . string(a:pattern))
   call s:decho(self._lines)
 
   return 1
@@ -210,7 +215,7 @@ function! s:decho(msg)
   if exists('g:alignta_debug') && g:alignta_debug
     if type(a:msg) == type([])
       for line in a:msg
-        echomsg line
+        echomsg string(line)
       endfor
     else
       echomsg "alignta: " . a:msg
