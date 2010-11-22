@@ -269,9 +269,8 @@ else
     if s:string_is_ascii(a:str)
       return strlen(a:str)
     endif
-    " borrowed from Charles E. Campbell, Jr's align.vim
+    " borrowed from Charles Campbell's Align.vim
     " http://www.vim.org/scripts/script.php?script_id=294
-    "
     let save_mod = &l:modified
     execute "normal! o\<Esc>"
     call setline(line('.'), a:str)
@@ -344,8 +343,10 @@ function! s:Region.initialize(type, line_range, char_range)
     let lines = split(@v, "\n")
     let ragged = {}
 
-    " NOTE: If a line ends before the left most column of a block, the block
-    " will be filled with spaces for the line. It's "ragged right".
+    " NOTE: If a line ends before the left most column of the blockwise
+    " selection, the yanked block will be filled with spaces for the line.
+    " They are "ragged right". I borrowed this term from Charles Campbell's
+    " Align.vim
     "
     if a:type ==# 'block'
       " collect and copy lines that cause ragged rights to avoid the extra
@@ -408,8 +409,8 @@ function! s:Region.update()
     call save_vimenv.restore()
 
     " NOTE: Pasting a block with ragged rights appends extra white spaces to
-    " the ends of their corresponding lines. To avoid this behavior, we
-    " overwrite the lines with their saved copies if they are still blank.
+    " the ends of their corresponding lines. To avoid this behavior, overwrite
+    " the lines with their saved copies if they are still blank.
     "
     if self.type ==# 'block'
       for [lnum, line] in items(self.ragged)
