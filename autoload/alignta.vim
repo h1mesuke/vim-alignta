@@ -99,6 +99,10 @@ function! s:parse_options(value)
 endfunction
 
 function! s:Aligner.align()
+  if self.region.is_broken
+    throw "alignta: BlockError: broken multi-byte character detected"
+  endif
+
   call s:decho("region = " . string(self.region))
   call s:decho("arguments = " . string(self.arguments))
   call s:decho(self._lines)
@@ -316,7 +320,7 @@ function! s:Region.new(...)
     let line_range = args
     let char_range = []
   else
-    throw "ArgumentError: wrong number of arguments (" . argc . " for 1..2)"
+    throw "Region: ArgumentError: wrong number of arguments (" . argc . " for 1..2)"
   endif
 
   call obj.initialize(type, line_range, char_range)
@@ -369,22 +373,19 @@ function! s:Region.initialize(type, line_range, char_range)
   let self.char_range = a:char_range
   let self.lines = lines
   let self.ragged = ragged
-  let self._broken = 0
+  let self.is_broken = 0
 
   if a:type ==# 'block'
     " check the block for any broken multi-byte chars
+    let original = getline(a:line_range[0], a:line_range[1])
     call self.update()
-    let self._broken = (getline(a:line_range[0], a:line_range[1]) !=# lines)
+    let self.is_broken = (getline(a:line_range[0], a:line_range[1]) !=# original)
     silent undo
   endif
 endfunction
 
 function! s:Region.has_ragged(lnum)
   return has_key(self.ragged, a:lnum)
-endfunction
-
-function! s:Region.is_broken()
-  return self._broken
 endfunction
 
 function! s:Region.update()
@@ -474,7 +475,7 @@ function! s:Vimenv.initialize(args)
       let save_vsel = 1
       let visualmode = value
     else
-      throw "ArgumentError: invalid name " . string(value)
+      throw "Vimenv: ArgumentError: invalid name " . string(value)
     endif
   endfor
 
