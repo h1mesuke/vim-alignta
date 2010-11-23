@@ -3,7 +3,7 @@
 "
 " File		: plugin/alignta.vim
 " Author	: h1mesuke <himesuke@gmail.com>
-" Updated : 2010-11-22
+" Updated : 2010-11-23
 " Version : 0.0.1
 " License : MIT license {{{
 "
@@ -28,10 +28,12 @@
 " }}}
 "=============================================================================
 
-if &cp || exists("g:loaded_alignta")
+if v:version < 700
+  echoerr "alignta: Vim 7.0 or later required"
+  finish
+elseif &cp || exists('g:loaded_alignta')
   finish
 endif
-let g:loaded_alignta = 1
 
 let s:save_cpo = &cpo
 set cpo&vim
@@ -57,5 +59,7 @@ endif
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
+
+let g:loaded_alignta = 1
 
 " vim: filetype=vim
