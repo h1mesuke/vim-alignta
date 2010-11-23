@@ -3,7 +3,7 @@
 "
 " File		: autoload/alignta.vim
 " Author	: h1mesuke <himesuke@gmail.com>
-" Updated : 2010-11-23
+" Updated : 2010-11-24
 " Version : 0.0.1
 " License : MIT license {{{
 "
@@ -187,7 +187,7 @@ function! s:Aligner._align_with(pattern)
   let max_width = max(map(values(L_flds), 's:string_width(v:val)'))
   call map(L_flds, 's:string_pad(v:val, max_width, self.options.L_fld_align)')
   let max_width = max(map(values(M_flds), 's:string_width(v:val)'))
-  call map(M_flds, 's:string_pad(v:val, max_width, self.options.M_fld_align)')
+  call map(M_flds, 's:string_pad(v:val, max_width, self.options.M_fld_align, (R_flds[v:key] == ""))')
   let max_width = max(map(values(R_flds), 's:string_width(v:val)'))
   call map(R_flds, 's:string_pad(v:val, max_width, self.options.R_fld_align, 1)')
 
