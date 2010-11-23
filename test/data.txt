@@ -53,14 +53,14 @@
 
 #---------------------------------------
 # TEST_ALIGN_1_PATTERN_2_TIMES_DATA_BEGIN
-  a = bbbbb = 1
-  aaa = bbb = 10
-  aaaaa = b =100
+  a = bbbbb = c = ddddd = 1
+  aaa = bbb = ccc = ddd = 10
+  aaaaa = b = ccccc = d = 100
 # TEST_ALIGN_1_PATTERN_2_TIMES_DATA_END
 # TEST_ALIGN_1_PATTERN_2_TIMES_EXPECTED_BEGIN
-  a     = bbbbb = 1
-  aaa   = bbb   = 10
-  aaaaa = b     = 100
+  a     = bbbbb = c = ddddd = 1
+  aaa   = bbb   = ccc = ddd = 10
+  aaaaa = b     = ccccc = d = 100
 # TEST_ALIGN_1_PATTERN_2_TIMES_EXPECTED_END
 
 #---------------------------------------
@@ -75,9 +75,6 @@
   aaaaa = b     = ccccc = d     = 100
 # TEST_ALIGN_1_PATTERN_N_TIMES_EXPECTED_END
 
-#-----------------------------------------------------------------------------
-# Padding
-
 #---------------------------------------
 # TEST_ALIGN_MULTI_PATTERNS_DATA_BEGIN
   a = 1 /* bbbbb */
@@ -89,6 +86,48 @@
   aaa   = 10  /* bbb   */
   aaaaa = 100 /* b     */
 # TEST_ALIGN_MULTI_PATTERNS_EXPECTED_END
+
+#-----------------------------------------------------------------------------
+# Regex
+
+#---------------------------------------
+# TEST_ALIGN_REGEX_1_PATTERN_DATA_BEGIN
+  a 1
+  aaa 20
+  aaaaa 300
+# TEST_ALIGN_REGEX_1_PATTERN_DATA_END
+# TEST_ALIGN_REGEX_1_PATTERN_EXPECTED_BEGIN
+  a     1
+  aaa   20
+  aaaaa 300
+# TEST_ALIGN_REGEX_1_PATTERN_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_REGEX_1_PATTERN_2_TIMES_DATA_BEGIN
+  a 1 100 1 100
+  aaa 20 20 20 20
+  aaaaa 300 3 300 3
+# TEST_ALIGN_REGEX_1_PATTERN_2_TIMES_DATA_END
+# TEST_ALIGN_REGEX_1_PATTERN_2_TIMES_EXPECTED_BEGIN
+  a     1   100 1 100
+  aaa   20  20  20 20
+  aaaaa 300 3   300 3
+# TEST_ALIGN_REGEX_1_PATTERN_2_TIMES_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_REGEX_1_PATTERN_N_TIMES_DATA_BEGIN
+  a 1 100 1 100
+  aaa 20 20 20 20
+  aaaaa 300 3 300 3
+# TEST_ALIGN_REGEX_1_PATTERN_N_TIMES_DATA_END
+# TEST_ALIGN_REGEX_1_PATTERN_N_TIMES_EXPECTED_BEGIN
+  a     1   100 1   100
+  aaa   20  20  20  20
+  aaaaa 300 3   300 3
+# TEST_ALIGN_REGEX_1_PATTERN_N_TIMES_EXPECTED_END
+
+#-----------------------------------------------------------------------------
+# Padding
 
 #---------------------------------------
 # TEST_ALIGN_0PAD_DATA_BEGIN

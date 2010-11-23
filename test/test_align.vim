@@ -84,6 +84,42 @@ function! tc.test_align_multi_patterns()
 endfunction
 
 "---------------------------------------
+" Regex
+
+function! tc.test_align_regex_1_pattern()
+  let tag = 'test_align_regex_1_pattern'
+  execute ':' . join(s:data_range(tag), ',') . 'Alignta! \d\+'
+  let value = s:data_lines(tag)
+  silent undo
+  let expected = s:expected_lines(tag)
+  call assert#equal_C(expected, value)
+  call self.print_lines(expected)
+  call self.print_lines(value)
+endfunction
+
+function! tc.test_align_regex_1_pattern_2_times()
+  let tag = 'test_align_regex_1_pattern_2_times'
+  execute ':' . join(s:data_range(tag), ',') . 'Alignta! \d\+{2}'
+  let value = s:data_lines(tag)
+  silent undo
+  let expected = s:expected_lines(tag)
+  call assert#equal_C(expected, value)
+  call self.print_lines(expected)
+  call self.print_lines(value)
+endfunction
+
+function! tc.test_align_regex_1_pattern_n_times()
+  let tag = 'test_align_regex_1_pattern_n_times'
+  execute ':' . join(s:data_range(tag), ',') . 'Alignta! \d\+{+}'
+  let value = s:data_lines(tag)
+  silent undo
+  let expected = s:expected_lines(tag)
+  call assert#equal_C(expected, value)
+  call self.print_lines(expected)
+  call self.print_lines(value)
+endfunction
+
+"---------------------------------------
 " Padding
 
 " \d notation
