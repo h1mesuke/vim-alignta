@@ -219,4 +219,11 @@
   外外外 あいうえお ＝ 壱十百 *外外外
 # TEST_MB_ALIGN_BLOCK_EXPECTED_END
 
+#---------------------------------------
+# TEST_MB_ALIGN_BLOCK_IS_BROKEN_DATA_BEGIN
+  word word word word word word word word
+   単語 単語 単語 単語 単語 単語 単語 単語
+  word word word word word word word word
+# TEST_MB_ALIGN_BLOCK_IS_BROKEN_DATA_END
+
 # vim: filetype=conf

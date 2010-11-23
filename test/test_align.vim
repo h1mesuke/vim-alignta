@@ -12,7 +12,7 @@ function! tc.test_align_1_pattern()
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
-  call assert#equals_C(expected, value)
+  call assert#equal_C(expected, value)
   call self.print_lines(expected)
   call self.print_lines(value)
 endfunction
@@ -23,7 +23,7 @@ function! tc.test_align_1_pattern_lll()
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
-  call assert#equals_C(expected, value)
+  call assert#equal_C(expected, value)
   call self.print_lines(expected)
   call self.print_lines(value)
 endfunction
@@ -34,7 +34,7 @@ function! tc.test_align_1_pattern_ccc()
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
-  call assert#equals_C(expected, value)
+  call assert#equal_C(expected, value)
   call self.print_lines(expected)
   call self.print_lines(value)
 endfunction
@@ -45,7 +45,7 @@ function! tc.test_align_1_pattern_rrr()
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
-  call assert#equals_C(expected, value)
+  call assert#equal_C(expected, value)
   call self.print_lines(expected)
   call self.print_lines(value)
 endfunction
@@ -56,7 +56,7 @@ function! tc.test_align_1_pattern_2_times()
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
-  call assert#equals_C(expected, value)
+  call assert#equal_C(expected, value)
   call self.print_lines(expected)
   call self.print_lines(value)
 endfunction
@@ -67,7 +67,7 @@ function! tc.test_align_1_pattern_n_times()
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
-  call assert#equals_C(expected, value)
+  call assert#equal_C(expected, value)
   call self.print_lines(expected)
   call self.print_lines(value)
 endfunction
@@ -78,7 +78,7 @@ function! tc.test_align_multi_patterns()
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
-  call assert#equals_C(expected, value)
+  call assert#equal_C(expected, value)
   call self.print_lines(expected)
   call self.print_lines(value)
 endfunction
@@ -93,7 +93,7 @@ function! tc.test_align_0pad_d()
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
-  call assert#equals_C(expected, value)
+  call assert#equal_C(expected, value)
   call self.print_lines(expected)
   call self.print_lines(value)
 endfunction
@@ -104,7 +104,7 @@ function! tc.test_align_3pad_d()
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
-  call assert#equals_C(expected, value)
+  call assert#equal_C(expected, value)
   call self.print_lines(expected)
   call self.print_lines(value)
 endfunction
@@ -116,7 +116,7 @@ function! tc.test_align_0pad()
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
-  call assert#equals_C(expected, value)
+  call assert#equal_C(expected, value)
   call self.print_lines(expected)
   call self.print_lines(value)
 endfunction
@@ -127,7 +127,7 @@ function! tc.test_align_lpad()
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
-  call assert#equals_C(expected, value)
+  call assert#equal_C(expected, value)
   call self.print_lines(expected)
   call self.print_lines(value)
 endfunction
@@ -138,7 +138,7 @@ function! tc.test_align_rpad()
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
-  call assert#equals_C(expected, value)
+  call assert#equal_C(expected, value)
   call self.print_lines(expected)
   call self.print_lines(value)
 endfunction
@@ -150,7 +150,7 @@ function! tc.test_align_0pad_colon()
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
-  call assert#equals_C(expected, value)
+  call assert#equal_C(expected, value)
   call self.print_lines(expected)
   call self.print_lines(value)
 endfunction
@@ -161,7 +161,7 @@ function! tc.test_align_lpad_colon()
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
-  call assert#equals_C(expected, value)
+  call assert#equal_C(expected, value)
   call self.print_lines(expected)
   call self.print_lines(value)
 endfunction
@@ -172,7 +172,7 @@ function! tc.test_align_rpad_colon()
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
-  call assert#equals_C(expected, value)
+  call assert#equal_C(expected, value)
   call self.print_lines(expected)
   call self.print_lines(value)
 endfunction
@@ -189,7 +189,7 @@ function! tc.test_align_block()
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
-  call assert#equals_C(expected, value)
+  call assert#equal_C(expected, value)
   call self.print_lines(expected)
   call self.print_lines(value)
 endfunction
@@ -203,7 +203,7 @@ function! tc.test_mb_align_1_pattern()
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
-  call assert#equals_C(expected, value)
+  call assert#equal_C(expected, value)
   call self.print_lines(expected)
   call self.print_lines(value)
 endfunction
@@ -214,7 +214,7 @@ function! tc.test_mb_align_1_pattern_lll()
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
-  call assert#equals_C(expected, value)
+  call assert#equal_C(expected, value)
   call self.print_lines(expected)
   call self.print_lines(value)
 endfunction
@@ -225,7 +225,7 @@ function! tc.test_mb_align_1_pattern_ccc()
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
-  call assert#equals_C(expected, value)
+  call assert#equal_C(expected, value)
   call self.print_lines(expected)
   call self.print_lines(value)
 endfunction
@@ -236,7 +236,7 @@ function! tc.test_mb_align_1_pattern_rrr()
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
-  call assert#equals_C(expected, value)
+  call assert#equal_C(expected, value)
   call self.print_lines(expected)
   call self.print_lines(value)
 endfunction
@@ -253,12 +253,20 @@ function! tc.test_mb_align_block()
   let value = s:data_lines(tag)
   silent undo
   let expected = s:expected_lines(tag)
-  call assert#equals_C(expected, value)
+  call assert#equal_C(expected, value)
   call self.print_lines(expected)
   call self.print_lines(value)
 endfunction
 
-"---------------------------------------
+function! tc.test_mb_align_block_is_broken()
+  let tag = 'test_mb_align_block_is_broken'
+  let range = s:data_range(tag)
+  execute range[0]
+  execute "normal! 02l\<C-v>" . (range[1] - range[0]) . "3e\<Esc>"
+  call assert#raise(":'<,'>Alignta ＝", 'broken')
+endfunction
+
+"-----------------------------------------------------------------------------
 " Utils
 
 function! s:tag_range(tag)
