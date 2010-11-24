@@ -87,6 +87,18 @@
   aaaaa = 100 /* b     */
 # TEST_ALIGN_MULTI_PATTERNS_EXPECTED_END
 
+#---------------------------------------
+# TEST_ALIGN_BLANK_LFLDS_DATA_BEGIN
+  a = 1
+    aaa = 10
+      aaaaa = 100
+# TEST_ALIGN_BLANK_LFLDS_DATA_END
+# TEST_ALIGN_BLANK_LFLDS_EXPECTED_BEGIN
+  a     = 1
+  aaa   = 10
+  aaaaa = 100
+# TEST_ALIGN_BLANK_LFLDS_EXPECTED_END
+
 #-----------------------------------------------------------------------------
 # Regex
 

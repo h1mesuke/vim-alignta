@@ -83,6 +83,17 @@ function! tc.test_align_multi_patterns()
   call self.print_lines(value)
 endfunction
 
+function! tc.test_align_blank_Lflds()
+  let tag = 'test_align_blank_Lflds'
+  execute ':' . join(s:data_range(tag), ',') . 'Alignta! \w\+'
+  let value = s:data_lines(tag)
+  silent undo
+  let expected = s:expected_lines(tag)
+  call assert#equal_C(expected, value)
+  call self.print_lines(expected)
+  call self.print_lines(value)
+endfunction
+
 "---------------------------------------
 " Regex
 
