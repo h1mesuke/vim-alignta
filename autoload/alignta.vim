@@ -159,8 +159,9 @@ function! s:Aligner._align_with(pattern)
   let R_flds = {}
   let n_lines = len(self._lines)
 
-  " phase 1
-  " match and split lines
+  "---------------------------------------
+  " Phase 1: Match and Split
+
   let matched = 0
   let idx = 0
   while idx < n_lines
@@ -169,7 +170,7 @@ function! s:Aligner._align_with(pattern)
       let match_beg = match(line, a:pattern, self._match_start[idx])
       if match_beg >= 0
         let match_end = matchend(line, a:pattern, self._match_start[idx])
-        let L_flds[idx] = substitute(strpart(line, 0, match_beg), '\s*$', '', '')
+        let L_flds[idx] = strpart(line, 0, match_beg)
         let M_flds[idx] = strpart(line, match_beg, match_end - match_beg)
         let R_flds[idx] = substitute(strpart(line, match_end), '^\s*', '', '')
         let matched += 1
@@ -182,12 +183,24 @@ function! s:Aligner._align_with(pattern)
     return 0
   endif
 
-  " phase 2
-  " pad and join
-  let max_width = max(map(values(L_flds), 's:string_width(v:val)'))
-  call map(L_flds, 's:string_pad(v:val, max_width, self.options.L_fld_align)')
+  "---------------------------------------
+  " Phase 2: Pad and Join
+
+  let blank_L_flds = 0
+  if len(filter(copy(L_flds), 'v:val =~ "^\\s*$"')) == len(L_flds)
+    " keep the minmum leadings
+    let min_width = min(map(values(L_flds), 'strlen(v:val)'))
+    let min_leading = s:padding(min_width)
+    let blank_L_flds = 1
+  else
+    call map(L_flds, 'substitute(v:val, "\\s*$", "", "")')
+    let max_width = max(map(values(L_flds), 's:string_width(v:val)'))
+    call map(L_flds, 's:string_pad(v:val, max_width, self.options.L_fld_align)')
+  endif
+
   let max_width = max(map(values(M_flds), 's:string_width(v:val)'))
   call map(M_flds, 's:string_pad(v:val, max_width, self.options.M_fld_align, (R_flds[v:key] == ""))')
+
   let max_width = max(map(values(R_flds), 's:string_width(v:val)'))
   call map(R_flds, 's:string_pad(v:val, max_width, self.options.R_fld_align, 1)')
 
@@ -196,10 +209,17 @@ function! s:Aligner._align_with(pattern)
   let idx = 0
   while idx < n_lines
     if has_key(L_flds, idx)
-      let aligned = L_flds[idx] . lpad . M_flds[idx]
-      let aligned .= (R_flds[idx] != "" ? rpad : "")
+      if blank_L_flds
+        let aligned = min_leading . M_flds[idx]
+      else
+        let aligned = L_flds[idx] . lpad . M_flds[idx]
+      endif
+      if R_flds[idx] != ""
+        let aligned .= rpad
+      endif
       let self._lines[idx] = aligned . R_flds[idx]
       let self._match_start[idx] = strlen(aligned)
+      " the next pattern matching will start from the beginning of R_fld
     endif
     let idx += 1
   endwhile
