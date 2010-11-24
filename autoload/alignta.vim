@@ -3,7 +3,7 @@
 "
 " File		: autoload/alignta.vim
 " Author	: h1mesuke <himesuke@gmail.com>
-" Updated : 2010-11-24
+" Updated : 2010-11-25
 " Version : 0.0.1
 " License : MIT license {{{
 "
@@ -99,13 +99,13 @@ function! s:parse_options(value)
 endfunction
 
 function! s:Aligner.align()
-  if self.region.is_broken
-    throw "alignta: BlockError: broken multi-byte character detected"
-  endif
-
   call s:decho("region = " . string(self.region))
   call s:decho("arguments = " . string(self.arguments))
   call s:decho(self._lines)
+
+  if self.region.is_broken
+    throw "alignta: RegionError: broken multi-byte character detected"
+  endif
 
   if exists('g:alignta_profile') && g:alignta_profile && has("reltime")
     let start_time = reltime()
@@ -351,7 +351,6 @@ function! s:Region.initialize(type, line_range, char_range)
   if a:type ==# 'line'
     " linewise
     let lines = getline(a:line_range[0], a:line_range[1])
-    let ragged = {}
   else
     " characterwise or blockwise
     " get the selection via register 'v'
@@ -365,22 +364,33 @@ function! s:Region.initialize(type, line_range, char_range)
     execute 'silent normal! "vy'
 
     let lines = split(@v, "\n")
-    let ragged = {}
 
     " NOTE: If a line ends before the left most column of the blockwise
     " selection, the yanked block will be filled with spaces for the line.
     " They are "ragged right". I borrowed this term from Charles Campbell's
     " Align.vim
+    "               __________
+    "   Ragged      |  Block  |
+    "   ========|   |         |
+    "               |         |
+    "   Short       |         |
+    "   ==================|   |
+    "               |_________|
     "
     if a:type ==# 'block'
-      " collect and copy lines that cause ragged rights to avoid the extra
-      " spaces issue on s:Region.update()
-      let block_begcol = s:sort_numbers([virtcol("'<"), virtcol("'>")])[0]
+      let ragged = {}
+      let short  = {}
+      let [block_begcol, block_endcol] = s:sort_numbers([virtcol("'<"), virtcol("'>")])
       for lnum in range(a:line_range[0], a:line_range[1])
         execute lnum
-        if virtcol('$') <= block_begcol
+        let line_endcol = virtcol('$')
+        if line_endcol <= block_begcol
+          " collect and copy lines that cause ragged rights to avoid the extra
+          " spaces issue on s:Region.update()
           let ragged[lnum] = getline(lnum)
           let lines[lnum - a:line_range[0]] = ""
+        elseif line_endcol <= block_endcol
+          let short[lnum] = 1
         endif
       endfor
     endif
@@ -392,10 +402,12 @@ function! s:Region.initialize(type, line_range, char_range)
   let self.line_range = a:line_range
   let self.char_range = a:char_range
   let self.lines = lines
-  let self.ragged = ragged
   let self.is_broken = 0
 
   if a:type ==# 'block'
+    let self._ragged = ragged
+    let self._short = short
+
     " check the block for any broken multi-byte chars
     let original = getline(a:line_range[0], a:line_range[1])
     call self.update()
@@ -405,7 +417,7 @@ function! s:Region.initialize(type, line_range, char_range)
 endfunction
 
 function! s:Region.has_ragged(lnum)
-  return has_key(self.ragged, a:lnum)
+  return has_key(self._ragged, a:lnum)
 endfunction
 
 function! s:Region.update()
@@ -419,7 +431,11 @@ function! s:Region.update()
     if self.type ==# 'block'
       " calculate the block width
       let max_width = max(map(copy(self.lines), 's:string_width(v:val)'))
-      call map(self.lines, 's:string_pad(v:val, max_width, "left")')
+      " NOTE: If the block contains any multi-byte characters, Vim may fail to
+      " count the number of paddings and append extra spaces. So, pad them
+      " here.
+      call map(self.lines, 's:string_pad(v:val, max_width, "left",
+            \ (has_key(self._short, self.line_range[0] + v:key) || v:val =~ "^\\s*$"))')
       let regtype .= max_width
     endif
     call setreg('v', join(self.lines, "\n"), regtype)
@@ -435,7 +451,7 @@ function! s:Region.update()
     " the lines with their saved copies if they are still blank.
     "
     if self.type ==# 'block'
-      for [lnum, line] in items(self.ragged)
+      for [lnum, line] in items(self._ragged)
         if self.lines[lnum - self.line_range[0]] == ""
           call setline(lnum, line)
         endif
