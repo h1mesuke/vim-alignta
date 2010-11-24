@@ -3,8 +3,8 @@
 "
 " File		: plugin/alignta.vim
 " Author	: h1mesuke <himesuke@gmail.com>
-" Updated : 2010-11-23
-" Version : 0.0.1
+" Updated : 2010-11-25
+" Version : 0.0.2
 " License : MIT license {{{
 "
 "     Permission is hereby granted, free of charge, to any person obtaining
@@ -38,6 +38,13 @@ endif
 let s:save_cpo = &cpo
 set cpo&vim
 
+command! -bang -range -nargs=+ Alignta <line1>,<line2>call <SID>align([<f-args>], '<bang>')
+
+if !exists(':Align')
+  " :Align is mine, hehehe
+  command! -bang -range -nargs=+ Align Alignta<bang> <args>
+endif
+
 function! s:align(args, bang) range
   let vismode = visualmode()
   if vismode == "\<C-v>" && a:firstline == line("'<") && a:lastline == line("'>")
@@ -49,13 +56,6 @@ function! s:align(args, bang) range
   let aligner = alignta#aligner(region, a:args, escape_regex)
   call aligner.align()
 endfunction
-
-command! -bang -range -nargs=+ Alignta <line1>,<line2>call <SID>align([<f-args>], '<bang>')
-
-if !exists(':Align')
-  " :Align is mine, hehehe
-  command! -bang -range -nargs=+ Align Alignta<bang> <args>
-endif
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
