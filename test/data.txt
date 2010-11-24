@@ -204,6 +204,36 @@
   *** aaaaa = 100 ***
 # TEST_ALIGN_BLOCK_EXPECTED_END
 
+#---------------------------------------
+# TEST_ALIGN_BLOCK_WITH_RAGGED_RIGHTS_DATA_BEGIN
+  *** a = 1       ***
+
+  *** aaa = 10    ***
+
+  *** aaaaa = 100 ***
+# TEST_ALIGN_BLOCK_WITH_RAGGED_RIGHTS_DATA_END
+# TEST_ALIGN_BLOCK_WITH_RAGGED_RIGHTS_EXPECTED_BEGIN
+  *** a     = 1   ***
+
+  *** aaa   = 10  ***
+
+  *** aaaaa = 100 ***
+# TEST_ALIGN_BLOCK_WITH_RAGGED_RIGHTS_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_BLOCK_WITH_SHORT_RIGHTS_DATA_BEGIN
+  *** a = 1       ***
+  *** aaa = 10
+  *** bbb = 10
+  *** aaaaa = 100 ***
+# TEST_ALIGN_BLOCK_WITH_SHORT_RIGHTS_DATA_END
+# TEST_ALIGN_BLOCK_WITH_SHORT_RIGHTS_EXPECTED_BEGIN
+  *** a     = 1   ***
+  *** aaa   = 10
+  *** bbb   = 10
+  *** aaaaa = 100 ***
+# TEST_ALIGN_BLOCK_WITH_SHORT_RIGHTS_EXPECTED_END
+
 #=============================================================================
 # Multi-byte
 

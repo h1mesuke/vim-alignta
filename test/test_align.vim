@@ -241,6 +241,34 @@ function! tc.test_align_block()
   call self.print_lines(value)
 endfunction
 
+function! tc.test_align_block_with_ragged_rights()
+  let tag = 'test_align_block_with_ragged_rights'
+  let range = s:data_range(tag)
+  execute range[0]
+  execute "normal! 06l\<C-v>" . (range[1] - range[0]) . "jf*2h\<Esc>"
+  execute ":'<,'>Alignta ="
+  let value = s:data_lines(tag)
+  silent undo
+  let expected = s:expected_lines(tag)
+  call assert#equal_C(expected, value)
+  call self.print_lines(expected)
+  call self.print_lines(value)
+endfunction
+
+function! tc.test_align_block_with_short_rights()
+  let tag = 'test_align_block_with_short_rights'
+  let range = s:data_range(tag)
+  execute range[0]
+  execute "normal! 06l\<C-v>" . (range[1] - range[0]) . "jf*2h\<Esc>"
+  execute ":'<,'>Alignta ="
+  let value = s:data_lines(tag)
+  silent undo
+  let expected = s:expected_lines(tag)
+  call assert#equal_C(expected, value)
+  call self.print_lines(expected)
+  call self.print_lines(value)
+endfunction
+
 "-----------------------------------------------------------------------------
 " Multi-byte
 
