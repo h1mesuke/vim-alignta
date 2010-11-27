@@ -7,127 +7,50 @@ let tc.context_file = expand('<sfile>:p:h') . '/data.txt'
 " ASCII
 
 function! tc.test_align_1_pattern()
-  let tag = 'test_align_1_pattern'
-  execute ':' . join(s:data_range(tag), ',') . 'Alignta ='
-  let value = s:data_lines(tag)
-  silent undo
-  let expected = s:expected_lines(tag)
-  call assert#equal_C(expected, value)
-  call self.print_lines(expected)
-  call self.print_lines(value)
+  call self._test_align('1_pattern', 'Alignta =')
 endfunction
 
 function! tc.test_align_1_pattern_lll()
-  let tag = 'test_align_1_pattern_lll'
-  execute ':' . join(s:data_range(tag), ',') . 'Alignta <<< ='
-  let value = s:data_lines(tag)
-  silent undo
-  let expected = s:expected_lines(tag)
-  call assert#equal_C(expected, value)
-  call self.print_lines(expected)
-  call self.print_lines(value)
+  call self._test_align('1_pattern_lll', 'Alignta <<< =')
 endfunction
 
 function! tc.test_align_1_pattern_ccc()
-  let tag = 'test_align_1_pattern_ccc'
-  execute ':' . join(s:data_range(tag), ',') . 'Alignta ||| ='
-  let value = s:data_lines(tag)
-  silent undo
-  let expected = s:expected_lines(tag)
-  call assert#equal_C(expected, value)
-  call self.print_lines(expected)
-  call self.print_lines(value)
+  call self._test_align('1_pattern_ccc', 'Alignta ||| =')
 endfunction
 
 function! tc.test_align_1_pattern_rrr()
-  let tag = 'test_align_1_pattern_rrr'
-  execute ':' . join(s:data_range(tag), ',') . 'Alignta >>> ='
-  let value = s:data_lines(tag)
-  silent undo
-  let expected = s:expected_lines(tag)
-  call assert#equal_C(expected, value)
-  call self.print_lines(expected)
-  call self.print_lines(value)
+  call self._test_align('1_pattern_rrr', 'Alignta >>> =')
 endfunction
 
 function! tc.test_align_1_pattern_2_times()
-  let tag = 'test_align_1_pattern_2_times'
-  execute ':' . join(s:data_range(tag), ',') . 'Alignta ={2}'
-  let value = s:data_lines(tag)
-  silent undo
-  let expected = s:expected_lines(tag)
-  call assert#equal_C(expected, value)
-  call self.print_lines(expected)
-  call self.print_lines(value)
+  call self._test_align('1_pattern_2_times', 'Alignta ={2}')
 endfunction
 
 function! tc.test_align_1_pattern_n_times()
-  let tag = 'test_align_1_pattern_n_times'
-  execute ':' . join(s:data_range(tag), ',') . 'Alignta ={+}'
-  let value = s:data_lines(tag)
-  silent undo
-  let expected = s:expected_lines(tag)
-  call assert#equal_C(expected, value)
-  call self.print_lines(expected)
-  call self.print_lines(value)
+  call self._test_align('1_pattern_n_times', 'Alignta ={+}')
 endfunction
 
 function! tc.test_align_multi_patterns()
-  let tag = 'test_align_multi_patterns'
-  execute ':' . join(s:data_range(tag), ',') . 'Alignta = /* */'
-  let value = s:data_lines(tag)
-  silent undo
-  let expected = s:expected_lines(tag)
-  call assert#equal_C(expected, value)
-  call self.print_lines(expected)
-  call self.print_lines(value)
+  call self._test_align('multi_patterns', 'Alignta = /* */')
 endfunction
 
 function! tc.test_align_blank_Lflds()
-  let tag = 'test_align_blank_Lflds'
-  execute ':' . join(s:data_range(tag), ',') . 'Alignta! \w\+'
-  let value = s:data_lines(tag)
-  silent undo
-  let expected = s:expected_lines(tag)
-  call assert#equal_C(expected, value)
-  call self.print_lines(expected)
-  call self.print_lines(value)
+  call self._test_align('blank_Lflds', 'Alignta! \w\+')
 endfunction
 
 "---------------------------------------
 " Regex
 
 function! tc.test_align_regex_1_pattern()
-  let tag = 'test_align_regex_1_pattern'
-  execute ':' . join(s:data_range(tag), ',') . 'Alignta! \d\+'
-  let value = s:data_lines(tag)
-  silent undo
-  let expected = s:expected_lines(tag)
-  call assert#equal_C(expected, value)
-  call self.print_lines(expected)
-  call self.print_lines(value)
+  call self._test_align('regex_1_pattern', 'Alignta! \d\+')
 endfunction
 
 function! tc.test_align_regex_1_pattern_2_times()
-  let tag = 'test_align_regex_1_pattern_2_times'
-  execute ':' . join(s:data_range(tag), ',') . 'Alignta! \d\+{2}'
-  let value = s:data_lines(tag)
-  silent undo
-  let expected = s:expected_lines(tag)
-  call assert#equal_C(expected, value)
-  call self.print_lines(expected)
-  call self.print_lines(value)
+  call self._test_align('regex_1_pattern_2_times', 'Alignta! \d\+{2}')
 endfunction
 
 function! tc.test_align_regex_1_pattern_n_times()
-  let tag = 'test_align_regex_1_pattern_n_times'
-  execute ':' . join(s:data_range(tag), ',') . 'Alignta! \d\+{+}'
-  let value = s:data_lines(tag)
-  silent undo
-  let expected = s:expected_lines(tag)
-  call assert#equal_C(expected, value)
-  call self.print_lines(expected)
-  call self.print_lines(value)
+  call self._test_align('regex_1_pattern_n_times', 'Alignta! \d\+{+}')
 endfunction
 
 "---------------------------------------
@@ -137,14 +60,7 @@ function! tc.test_align_indent_tabs()
   let save_confirm = g:alignta_confirm_for_retab
   let g:alignta_confirm_for_retab = 0
 
-  let tag = 'test_align_indent_tabs'
-  execute ':' . join(s:data_range(tag), ',') . 'Alignta ='
-  let value = s:data_lines(tag)
-  silent undo
-  let expected = s:expected_lines(tag)
-  call assert#equal_C(expected, value)
-  call self.print_lines(expected)
-  call self.print_lines(value)
+  call self._test_align('indent_tabs', 'Alignta =')
 
   let g:alignta_confirm_for_retab = save_confirm
 endfunction
@@ -154,206 +70,82 @@ endfunction
 
 " \d notation
 function! tc.test_align_0pad_d()
-  let tag = 'test_align_0pad'
-  execute ':' . join(s:data_range(tag), ',') . 'Alignta <<<0 ='
-  let value = s:data_lines(tag)
-  silent undo
-  let expected = s:expected_lines(tag)
-  call assert#equal_C(expected, value)
-  call self.print_lines(expected)
-  call self.print_lines(value)
+  call self._test_align('0pad', 'Alignta <<<0 =')
 endfunction
 
 function! tc.test_align_3pad_d()
-  let tag = 'test_align_3pad'
-  execute ':' . join(s:data_range(tag), ',') . 'Alignta <<<3 ='
-  let value = s:data_lines(tag)
-  silent undo
-  let expected = s:expected_lines(tag)
-  call assert#equal_C(expected, value)
-  call self.print_lines(expected)
-  call self.print_lines(value)
+  call self._test_align('3pad', 'Alignta <<<3 =')
 endfunction
 
 " \d\d notation
 function! tc.test_align_0pad()
-  let tag = 'test_align_0pad'
-  execute ':' . join(s:data_range(tag), ',') . 'Alignta <<<00 ='
-  let value = s:data_lines(tag)
-  silent undo
-  let expected = s:expected_lines(tag)
-  call assert#equal_C(expected, value)
-  call self.print_lines(expected)
-  call self.print_lines(value)
+  call self._test_align('0pad', 'Alignta <<<00 =')
 endfunction
 
 function! tc.test_align_lpad()
-  let tag = 'test_align_lpad'
-  execute ':' . join(s:data_range(tag), ',') . 'Alignta <<<31 ='
-  let value = s:data_lines(tag)
-  silent undo
-  let expected = s:expected_lines(tag)
-  call assert#equal_C(expected, value)
-  call self.print_lines(expected)
-  call self.print_lines(value)
+  call self._test_align('lpad', 'Alignta <<<31 =')
 endfunction
 
 function! tc.test_align_rpad()
-  let tag = 'test_align_rpad'
-  execute ':' . join(s:data_range(tag), ',') . 'Alignta <<<13 ='
-  let value = s:data_lines(tag)
-  silent undo
-  let expected = s:expected_lines(tag)
-  call assert#equal_C(expected, value)
-  call self.print_lines(expected)
-  call self.print_lines(value)
+  call self._test_align('rpad', 'Alignta <<<13 =')
 endfunction
 
 " \d\+:\d\+ notation
 function! tc.test_align_0pad_colon()
-  let tag = 'test_align_0pad'
-  execute ':' . join(s:data_range(tag), ',') . 'Alignta <<<0:0 ='
-  let value = s:data_lines(tag)
-  silent undo
-  let expected = s:expected_lines(tag)
-  call assert#equal_C(expected, value)
-  call self.print_lines(expected)
-  call self.print_lines(value)
+  call self._test_align('0pad', 'Alignta <<<0:0 =')
 endfunction
 
 function! tc.test_align_lpad_colon()
-  let tag = 'test_align_lpad'
-  execute ':' . join(s:data_range(tag), ',') . 'Alignta <<<3:1 ='
-  let value = s:data_lines(tag)
-  silent undo
-  let expected = s:expected_lines(tag)
-  call assert#equal_C(expected, value)
-  call self.print_lines(expected)
-  call self.print_lines(value)
+  call self._test_align('lpad', 'Alignta <<<3:1 =')
 endfunction
 
 function! tc.test_align_rpad_colon()
-  let tag = 'test_align_rpad'
-  execute ':' . join(s:data_range(tag), ',') . 'Alignta <<<1:3 ='
-  let value = s:data_lines(tag)
-  silent undo
-  let expected = s:expected_lines(tag)
-  call assert#equal_C(expected, value)
-  call self.print_lines(expected)
-  call self.print_lines(value)
+  call self._test_align('rpad', 'Alignta <<<1:3 =')
 endfunction
 
 "---------------------------------------
 " Block
 
 function! tc.test_align_block()
-  let tag = 'test_align_block'
-  let range = s:data_range(tag)
-  execute range[0]
-  execute "normal! 06l\<C-v>" . (range[1] - range[0]) . "jf*2h\<Esc>"
-  execute ":'<,'>Alignta ="
-  let value = s:data_lines(tag)
-  silent undo
-  let expected = s:expected_lines(tag)
-  call assert#equal_C(expected, value)
-  call self.print_lines(expected)
-  call self.print_lines(value)
+  call self._test_align('block', 'Alignta =')
 endfunction
 
 function! tc.test_align_block_with_ragged_rights()
-  let tag = 'test_align_block_with_ragged_rights'
-  let range = s:data_range(tag)
-  execute range[0]
-  execute "normal! 06l\<C-v>" . (range[1] - range[0]) . "jf*2h\<Esc>"
-  execute ":'<,'>Alignta ="
-  let value = s:data_lines(tag)
-  silent undo
-  let expected = s:expected_lines(tag)
-  call assert#equal_C(expected, value)
-  call self.print_lines(expected)
-  call self.print_lines(value)
+  call self._test_align('block_with_ragged_rights', 'Alignta =')
 endfunction
 
 function! tc.test_align_block_with_short_rights()
-  let tag = 'test_align_block_with_short_rights'
-  let range = s:data_range(tag)
-  execute range[0]
-  execute "normal! 06l\<C-v>" . (range[1] - range[0]) . "jf*2h\<Esc>"
-  execute ":'<,'>Alignta ="
-  let value = s:data_lines(tag)
-  silent undo
-  let expected = s:expected_lines(tag)
-  call assert#equal_C(expected, value)
-  call self.print_lines(expected)
-  call self.print_lines(value)
+  call self._test_align('block_with_short_rights', 'Alignta =')
 endfunction
 
 "-----------------------------------------------------------------------------
 " Multi-byte
 
-function! tc.test_mb_align_1_pattern()
-  let tag = 'test_mb_align_1_pattern'
-  execute ':' . join(s:data_range(tag), ',') . 'Alignta ＝'
-  let value = s:data_lines(tag)
-  silent undo
-  let expected = s:expected_lines(tag)
-  call assert#equal_C(expected, value)
-  call self.print_lines(expected)
-  call self.print_lines(value)
+function! tc.test_align_mb_1_pattern()
+  call self._test_align('mb_1_pattern', 'Alignta ＝')
 endfunction
 
-function! tc.test_mb_align_1_pattern_lll()
-  let tag = 'test_mb_align_1_pattern_lll'
-  execute ':' . join(s:data_range(tag), ',') . 'Alignta <<< ＝'
-  let value = s:data_lines(tag)
-  silent undo
-  let expected = s:expected_lines(tag)
-  call assert#equal_C(expected, value)
-  call self.print_lines(expected)
-  call self.print_lines(value)
+function! tc.test_align_mb_1_pattern_lll()
+  call self._test_align('mb_1_pattern_lll', 'Alignta <<< ＝')
 endfunction
 
-function! tc.test_mb_align_1_pattern_ccc()
-  let tag = 'test_mb_align_1_pattern_ccc'
-  execute ':' . join(s:data_range(tag), ',') . 'Alignta ||| ＝'
-  let value = s:data_lines(tag)
-  silent undo
-  let expected = s:expected_lines(tag)
-  call assert#equal_C(expected, value)
-  call self.print_lines(expected)
-  call self.print_lines(value)
+function! tc.test_align_mb_1_pattern_ccc()
+  call self._test_align('mb_1_pattern_ccc', 'Alignta ||| ＝')
 endfunction
 
-function! tc.test_mb_align_1_pattern_rrr()
-  let tag = 'test_mb_align_1_pattern_rrr'
-  execute ':' . join(s:data_range(tag), ',') . 'Alignta >>> ＝'
-  let value = s:data_lines(tag)
-  silent undo
-  let expected = s:expected_lines(tag)
-  call assert#equal_C(expected, value)
-  call self.print_lines(expected)
-  call self.print_lines(value)
+function! tc.test_align_mb_1_pattern_rrr()
+  call self._test_align('mb_1_pattern_rrr', 'Alignta >>> ＝')
 endfunction
 
 "---------------------------------------
 " Block
 
-function! tc.test_mb_align_block()
-  let tag = 'test_mb_align_block'
-  let range = s:data_range(tag)
-  execute range[0]
-  execute "normal! 06l\<C-v>" . (range[1] - range[0]) . "jf*2h\<Esc>"
-  execute ":'<,'>Alignta ＝"
-  let value = s:data_lines(tag)
-  silent undo
-  let expected = s:expected_lines(tag)
-  call assert#equal_C(expected, value)
-  call self.print_lines(expected)
-  call self.print_lines(value)
+function! tc.test_align_mb_block()
+  call self._test_align('mb_block', 'Alignta ＝')
 endfunction
 
-function! tc.test_mb_align_block_is_broken()
-  let tag = 'test_mb_align_block_is_broken'
+function! tc.test_align_mb_block_is_broken()
+  let tag = 'test_align_mb_block_is_broken'
   let range = s:data_range(tag)
   execute range[0]
   execute "normal! 02l\<C-v>" . (range[1] - range[0]) . "3e\<Esc>"
@@ -362,6 +154,34 @@ endfunction
 
 "-----------------------------------------------------------------------------
 " Utils
+
+function! tc._test_align(tag, align_command)
+  let tag = 'test_align_' . a:tag
+  if tag =~# '^test_align_\(mb_\)\=block'
+    call self._test_align_block(tag, a:align_command)
+    return
+  endif
+  execute ':' . join(s:data_range(tag), ',') . a:align_command
+  let value = s:data_lines(tag)
+  silent undo
+  let expected = s:expected_lines(tag)
+  call assert#equal_C(expected, value)
+  call self.print_lines(expected)
+  call self.print_lines(value)
+endfunction
+
+function! tc._test_align_block(tag, align_command)
+  let range = s:data_range(a:tag)
+  execute range[0]
+  execute "normal! 06l\<C-v>" . (range[1] - range[0]) . "jf*2h\<Esc>"
+  execute ":'<,'>" . a:align_command
+  let value = s:data_lines(a:tag)
+  silent undo
+  let expected = s:expected_lines(a:tag)
+  call assert#equal_C(expected, value)
+  call self.print_lines(expected)
+  call self.print_lines(value)
+endfunction
 
 function! s:tag_range(tag)
   call search('^# ' . toupper(a:tag) . '_BEGIN', 'w')

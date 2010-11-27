@@ -253,73 +253,73 @@
 # Multi-byte
 
 #---------------------------------------
-# TEST_MB_ALIGN_1_PATTERN_DATA_BEGIN
+# TEST_ALIGN_MB_1_PATTERN_DATA_BEGIN
   あ ＝ 壱
   あいう ＝ 壱十
   あいうえお ＝ 壱十百
-# TEST_MB_ALIGN_1_PATTERN_DATA_END
-# TEST_MB_ALIGN_1_PATTERN_EXPECTED_BEGIN
+# TEST_ALIGN_MB_1_PATTERN_DATA_END
+# TEST_ALIGN_MB_1_PATTERN_EXPECTED_BEGIN
   あ         ＝ 壱
   あいう     ＝ 壱十
   あいうえお ＝ 壱十百
-# TEST_MB_ALIGN_1_PATTERN_EXPECTED_END
+# TEST_ALIGN_MB_1_PATTERN_EXPECTED_END
 
 #---------------------------------------
-# TEST_MB_ALIGN_1_PATTERN_LLL_DATA_BEGIN
+# TEST_ALIGN_MB_1_PATTERN_LLL_DATA_BEGIN
   あ ＝ 壱
   あいう ＝ 壱十
   あいうえお ＝ 壱十百
-# TEST_MB_ALIGN_1_PATTERN_LLL_DATA_END
-# TEST_MB_ALIGN_1_PATTERN_LLL_EXPECTED_BEGIN
+# TEST_ALIGN_MB_1_PATTERN_LLL_DATA_END
+# TEST_ALIGN_MB_1_PATTERN_LLL_EXPECTED_BEGIN
   あ         ＝ 壱
   あいう     ＝ 壱十
   あいうえお ＝ 壱十百
-# TEST_MB_ALIGN_1_PATTERN_LLL_EXPECTED_END
+# TEST_ALIGN_MB_1_PATTERN_LLL_EXPECTED_END
 
 #---------------------------------------
-# TEST_MB_ALIGN_1_PATTERN_CCC_DATA_BEGIN
+# TEST_ALIGN_MB_1_PATTERN_CCC_DATA_BEGIN
   あ ＝ 壱
   あいう ＝ 壱十
   あいうえお ＝ 壱十百
-# TEST_MB_ALIGN_1_PATTERN_CCC_DATA_END
-# TEST_MB_ALIGN_1_PATTERN_CCC_EXPECTED_BEGIN
+# TEST_ALIGN_MB_1_PATTERN_CCC_DATA_END
+# TEST_ALIGN_MB_1_PATTERN_CCC_EXPECTED_BEGIN
       あ     ＝   壱
     あいう   ＝  壱十
   あいうえお ＝ 壱十百
-# TEST_MB_ALIGN_1_PATTERN_CCC_EXPECTED_END
+# TEST_ALIGN_MB_1_PATTERN_CCC_EXPECTED_END
 
 #---------------------------------------
-# TEST_MB_ALIGN_1_PATTERN_RRR_DATA_BEGIN
+# TEST_ALIGN_MB_1_PATTERN_RRR_DATA_BEGIN
   あ ＝ 壱
   あいう ＝ 壱十
   あいうえお ＝ 壱十百
-# TEST_MB_ALIGN_1_PATTERN_RRR_DATA_END
-# TEST_MB_ALIGN_1_PATTERN_RRR_EXPECTED_BEGIN
+# TEST_ALIGN_MB_1_PATTERN_RRR_DATA_END
+# TEST_ALIGN_MB_1_PATTERN_RRR_EXPECTED_BEGIN
           あ ＝     壱
       あいう ＝   壱十
   あいうえお ＝ 壱十百
-# TEST_MB_ALIGN_1_PATTERN_RRR_EXPECTED_END
+# TEST_ALIGN_MB_1_PATTERN_RRR_EXPECTED_END
 
 #-----------------------------------------------------------------------------
 # Block
 
 #---------------------------------------
-# TEST_MB_ALIGN_BLOCK_DATA_BEGIN
+# TEST_ALIGN_MB_BLOCK_DATA_BEGIN
   外外外 あ ＝ 壱             *外外外
   外外外 あいう ＝ 壱十       *外外外
   外外外 あいうえお ＝ 壱十百 *外外外
-# TEST_MB_ALIGN_BLOCK_DATA_END
-# TEST_MB_ALIGN_BLOCK_EXPECTED_BEGIN
+# TEST_ALIGN_MB_BLOCK_DATA_END
+# TEST_ALIGN_MB_BLOCK_EXPECTED_BEGIN
   外外外 あ         ＝ 壱     *外外外
   外外外 あいう     ＝ 壱十   *外外外
   外外外 あいうえお ＝ 壱十百 *外外外
-# TEST_MB_ALIGN_BLOCK_EXPECTED_END
+# TEST_ALIGN_MB_BLOCK_EXPECTED_END
 
 #---------------------------------------
-# TEST_MB_ALIGN_BLOCK_IS_BROKEN_DATA_BEGIN
+# TEST_ALIGN_MB_BLOCK_IS_BROKEN_DATA_BEGIN
   word word word word word word word word
    単語 単語 単語 単語 単語 単語 単語 単語
   word word word word word word word word
-# TEST_MB_ALIGN_BLOCK_IS_BROKEN_DATA_END
+# TEST_ALIGN_MB_BLOCK_IS_BROKEN_DATA_END
 
 # vim: filetype=conf
