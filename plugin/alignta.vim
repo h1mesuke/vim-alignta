@@ -3,7 +3,7 @@
 "
 " File		: plugin/alignta.vim
 " Author	: h1mesuke <himesuke@gmail.com>
-" Updated : 2010-11-26
+" Updated : 2010-11-27
 " Version : 0.0.2
 " License : MIT license {{{
 "
@@ -37,6 +37,16 @@ endif
 
 let s:save_cpo = &cpo
 set cpo&vim
+
+"-----------------------------------------------------------------------------
+" Variables
+
+if !exists('g:alignta_confirm_for_retab')
+  let g:alignta_confirm_for_retab = 1
+endif
+
+"-----------------------------------------------------------------------------
+" Command
 
 command! -bang -range -nargs=+ Alignta <line1>,<line2>call <SID>align([<f-args>], '<bang>')
 

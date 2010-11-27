@@ -134,6 +134,9 @@ endfunction
 " Tabs
 
 function! tc.test_align_indent_tabs()
+  let save_confirm = g:alignta_confirm_for_retab
+  let g:alignta_confirm_for_retab = 0
+
   let tag = 'test_align_indent_tabs'
   execute ':' . join(s:data_range(tag), ',') . 'Alignta ='
   let value = s:data_lines(tag)
@@ -142,6 +145,8 @@ function! tc.test_align_indent_tabs()
   call assert#equal_C(expected, value)
   call self.print_lines(expected)
   call self.print_lines(value)
+
+  let g:alignta_confirm_for_retab = save_confirm
 endfunction
 
 "---------------------------------------

@@ -105,7 +105,7 @@ function! s:Aligner.align()
 
   if self.region.is_broken
     throw "alignta: RegionError: broken multi-byte character detected"
-  elseif self.region.has_tab
+  elseif self.region.has_tab && g:alignta_confirm_for_retab
     let resp = input("Region contains tabs, alignta will do :retab, OK? [y/N] ")
     if resp !~? '\s*y\%[es]\s*$'
       return
