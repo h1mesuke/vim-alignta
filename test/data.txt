@@ -139,6 +139,21 @@
 # TEST_ALIGN_REGEX_1_PATTERN_N_TIMES_EXPECTED_END
 
 #-----------------------------------------------------------------------------
+# Tabs
+
+#---------------------------------------
+# TEST_ALIGN_INDENT_TABS_DATA_BEGIN
+  a = 1
+	aaa = 10
+  aaaaa = 100
+# TEST_ALIGN_INDENT_TABS_DATA_END
+# TEST_ALIGN_INDENT_TABS_EXPECTED_BEGIN
+  a     = 1
+  aaa   = 10
+  aaaaa = 100
+# TEST_ALIGN_INDENT_TABS_EXPECTED_END
+
+#-----------------------------------------------------------------------------
 # Padding
 
 #---------------------------------------

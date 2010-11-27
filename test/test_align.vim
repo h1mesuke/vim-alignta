@@ -131,6 +131,20 @@ function! tc.test_align_regex_1_pattern_n_times()
 endfunction
 
 "---------------------------------------
+" Tabs
+
+function! tc.test_align_indent_tabs()
+  let tag = 'test_align_indent_tabs'
+  execute ':' . join(s:data_range(tag), ',') . 'Alignta ='
+  let value = s:data_lines(tag)
+  silent undo
+  let expected = s:expected_lines(tag)
+  call assert#equal_C(expected, value)
+  call self.print_lines(expected)
+  call self.print_lines(value)
+endfunction
+
+"---------------------------------------
 " Padding
 
 " \d notation
