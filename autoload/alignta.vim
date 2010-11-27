@@ -3,7 +3,7 @@
 "
 " File		: autoload/alignta.vim
 " Author	: h1mesuke <himesuke@gmail.com>
-" Updated : 2010-11-26
+" Updated : 2010-11-27
 " Version : 0.0.2
 " License : MIT license {{{
 "
@@ -105,6 +105,11 @@ function! s:Aligner.align()
 
   if self.region.is_broken
     throw "alignta: RegionError: broken multi-byte character detected"
+  elseif self.region.has_tab
+    let resp = input("Region contains tabs, alignta will do :retab, OK? [y/N] ")
+    if resp !~? '\s*y\%[es]\s*$'
+      return
+    endif
   endif
 
   if exists('g:alignta_profile') && g:alignta_profile && has("reltime")
@@ -308,7 +313,9 @@ endif
 "-----------------------------------------------------------------------------
 " Region
 
-let s:Region = {}
+let s:Region = {
+      \ 'normalize_tabs': 1,
+      \ }
 
 function! s:Region.new(...)
   let obj = copy(self)
@@ -348,22 +355,55 @@ function! s:Region.new(...)
 endfunction
 
 function! s:Region.initialize(type, line_range, char_range)
-  if a:type ==# 'line'
+  let self.type = a:type
+  let self.line_range = a:line_range
+  let self.char_range = a:char_range
+  let self.is_broken = 0
+  let self.has_tab = 0
+
+  call self._get_selection()
+
+  if a:type ==# 'block'
+    " check the block for any broken multi-byte chars
+    let original = getline(a:line_range[0], a:line_range[1])
+    call self.update()
+    let self.is_broken = (getline(a:line_range[0], a:line_range[1]) !=# original)
+    silent undo
+  endif
+
+  let self.has_tab = !empty(filter(copy(self.lines), 'v:val =~ "\\t"'))
+  if self.has_tab && self.normalize_tabs
+    " NOTE: If the selection contains any tabs, expand them all to normalize
+    " the selection text for subsequent alignments.
+    let save_et = &l:expandtab
+    set expandtab
+    execute a:line_range[0] . ',' . a:line_range[1] . 'retab'
+    call self._get_selection()
+    silent undo
+    let &l:expandtab = save_et
+  endif
+endfunction
+
+function! s:Region._get_selection()
+  let self._ragged = {}
+  let self._short = {}
+
+  if self.type ==# 'line'
     " linewise
-    let lines = getline(a:line_range[0], a:line_range[1])
+    let self.lines = getline(self.line_range[0], self.line_range[1])
   else
     " characterwise or blockwise
     " get the selection via register 'v'
-    let vismode = { 'char': 'v', 'line': 'V', 'block': "\<C-v>" }[a:type]
-    let save_vimenv = util#vimenv#new('.', '&selection', '@v', vismode)
+    let vismode = { 'char': 'v', 'line': 'V', 'block': "\<C-v>" }[self.type]
+    let save_vimenv = s:Vimenv.new('.', '&selection', '@v', vismode)
     set selection=inclusive
 
-    call setpos('.', a:char_range[0])
+    call setpos('.', self.char_range[0])
     execute 'normal!' vismode
-    call setpos('.', a:char_range[1])
+    call setpos('.', self.char_range[1])
     execute 'silent normal! "vy'
 
-    let lines = split(@v, "\n")
+    let self.lines = split(@v, "\n")
 
     " NOTE: If a line ends before the left most column of the blockwise
     " selection, the yanked block will be filled with spaces for the line.
@@ -377,54 +417,31 @@ function! s:Region.initialize(type, line_range, char_range)
     "   ==================|   |
     "               |_________|
     "
-    if a:type ==# 'block'
-      let ragged = {}
-      let short  = {}
+    if self.type ==# 'block'
       let [block_begcol, block_endcol] = s:sort_numbers([virtcol("'<"), virtcol("'>")])
-      for lnum in range(a:line_range[0], a:line_range[1])
+      for lnum in range(self.line_range[0], self.line_range[1])
         execute lnum
         let line_endcol = virtcol('$')
         if line_endcol <= block_begcol
           " collect and copy lines that cause ragged rights to avoid the extra
           " spaces issue on s:Region.update()
-          let ragged[lnum] = getline(lnum)
-          let lines[lnum - a:line_range[0]] = ""
+          let self._ragged[lnum] = getline(lnum)
+          let self.lines[lnum - self.line_range[0]] = ""
         elseif line_endcol <= block_endcol
-          let short[lnum] = 1
+          let self._short[lnum] = 1
         endif
       endfor
     endif
 
     call save_vimenv.restore()
   endif
-
-  let self.type = a:type
-  let self.line_range = a:line_range
-  let self.char_range = a:char_range
-  let self.lines = lines
-  let self.is_broken = 0
-
-  if a:type ==# 'block'
-    let self._ragged = ragged
-    let self._short = short
-
-    " check the block for any broken multi-byte chars
-    let original = getline(a:line_range[0], a:line_range[1])
-    call self.update()
-    let self.is_broken = (getline(a:line_range[0], a:line_range[1]) !=# original)
-    silent undo
-  endif
-endfunction
-
-function! s:Region.has_ragged(lnum)
-  return has_key(self._ragged, a:lnum)
 endfunction
 
 function! s:Region.update()
   if self.type ==# 'line'
     call setline(self.line_range[0], self.lines)
   else              
-    let save_vimenv = util#vimenv#new('.', '@v')
+    let save_vimenv = s:Vimenv.new('.', '@v')
 
     let vismode = { 'char': 'v', 'line': 'V', 'block': "\<C-v>" }[self.type]
     let regtype = vismode
@@ -457,6 +474,10 @@ function! s:Region.update()
         endif
       endfor
     endif
+  endif
+
+  if self.has_tab && self.normalize_tabs && !&l:expandtab
+    execute a:line_range[0] . ',' . a:line_range[1] . 'retab!'
   endif
 endfunction
 
