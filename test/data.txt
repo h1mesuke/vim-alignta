@@ -1,8 +1,5 @@
 # alignta.vim test suite
 
-#=============================================================================
-# ASCII
-
 #---------------------------------------
 # TEST_ALIGN_1_PATTERN_DATA_BEGIN
   a = 1
@@ -124,58 +121,49 @@
 # TEST_ALIGN_PATTERN_ESCAPE2_EXPECTED_END
 
 #-----------------------------------------------------------------------------
-# Regex
+# Block
 
 #---------------------------------------
-# TEST_ALIGN_REGEX_1_PATTERN_DATA_BEGIN
-  a 1
-  aaa 20
-  aaaaa 300
-# TEST_ALIGN_REGEX_1_PATTERN_DATA_END
-# TEST_ALIGN_REGEX_1_PATTERN_EXPECTED_BEGIN
-  a     1
-  aaa   20
-  aaaaa 300
-# TEST_ALIGN_REGEX_1_PATTERN_EXPECTED_END
+# TEST_ALIGN_BLOCK_DATA_BEGIN
+  *** a = 1       ***
+  *** aaa = 10    ***
+  *** aaaaa = 100 ***
+# TEST_ALIGN_BLOCK_DATA_END
+# TEST_ALIGN_BLOCK_EXPECTED_BEGIN
+  *** a     = 1   ***
+  *** aaa   = 10  ***
+  *** aaaaa = 100 ***
+# TEST_ALIGN_BLOCK_EXPECTED_END
 
 #---------------------------------------
-# TEST_ALIGN_REGEX_1_PATTERN_2_TIMES_DATA_BEGIN
-  a 1 100 1 100
-  aaa 20 20 20 20
-  aaaaa 300 3 300 3
-# TEST_ALIGN_REGEX_1_PATTERN_2_TIMES_DATA_END
-# TEST_ALIGN_REGEX_1_PATTERN_2_TIMES_EXPECTED_BEGIN
-  a     1   100 1 100
-  aaa   20  20  20 20
-  aaaaa 300 3   300 3
-# TEST_ALIGN_REGEX_1_PATTERN_2_TIMES_EXPECTED_END
+# TEST_ALIGN_BLOCK_WITH_RAGGED_RIGHTS_DATA_BEGIN
+  *** a = 1       ***
+
+  *** aaa = 10    ***
+
+  *** aaaaa = 100 ***
+# TEST_ALIGN_BLOCK_WITH_RAGGED_RIGHTS_DATA_END
+# TEST_ALIGN_BLOCK_WITH_RAGGED_RIGHTS_EXPECTED_BEGIN
+  *** a     = 1   ***
+
+  *** aaa   = 10  ***
+
+  *** aaaaa = 100 ***
+# TEST_ALIGN_BLOCK_WITH_RAGGED_RIGHTS_EXPECTED_END
 
 #---------------------------------------
-# TEST_ALIGN_REGEX_1_PATTERN_N_TIMES_DATA_BEGIN
-  a 1 100 1 100
-  aaa 20 20 20 20
-  aaaaa 300 3 300 3
-# TEST_ALIGN_REGEX_1_PATTERN_N_TIMES_DATA_END
-# TEST_ALIGN_REGEX_1_PATTERN_N_TIMES_EXPECTED_BEGIN
-  a     1   100 1   100
-  aaa   20  20  20  20
-  aaaaa 300 3   300 3
-# TEST_ALIGN_REGEX_1_PATTERN_N_TIMES_EXPECTED_END
-
-#-----------------------------------------------------------------------------
-# Tabs
-
-#---------------------------------------
-# TEST_ALIGN_INDENT_TABS_DATA_BEGIN
-  a = 1
-	aaa = 10
-  aaaaa = 100
-# TEST_ALIGN_INDENT_TABS_DATA_END
-# TEST_ALIGN_INDENT_TABS_EXPECTED_BEGIN
-  a     = 1
-  aaa   = 10
-  aaaaa = 100
-# TEST_ALIGN_INDENT_TABS_EXPECTED_END
+# TEST_ALIGN_BLOCK_WITH_SHORT_RIGHTS_DATA_BEGIN
+  *** a = 1       ***
+  *** aaa = 10
+  *** bbb = 10
+  *** aaaaa = 100 ***
+# TEST_ALIGN_BLOCK_WITH_SHORT_RIGHTS_DATA_END
+# TEST_ALIGN_BLOCK_WITH_SHORT_RIGHTS_EXPECTED_BEGIN
+  *** a     = 1   ***
+  *** aaa   = 10
+  *** bbb   = 10
+  *** aaaaa = 100 ***
+# TEST_ALIGN_BLOCK_WITH_SHORT_RIGHTS_EXPECTED_END
 
 #-----------------------------------------------------------------------------
 # Padding
@@ -229,49 +217,145 @@
 # TEST_ALIGN_RPAD_EXPECTED_END
 
 #-----------------------------------------------------------------------------
-# Block
+# Regex
 
 #---------------------------------------
-# TEST_ALIGN_BLOCK_DATA_BEGIN
-  *** a = 1       ***
-  *** aaa = 10    ***
-  *** aaaaa = 100 ***
-# TEST_ALIGN_BLOCK_DATA_END
-# TEST_ALIGN_BLOCK_EXPECTED_BEGIN
-  *** a     = 1   ***
-  *** aaa   = 10  ***
-  *** aaaaa = 100 ***
-# TEST_ALIGN_BLOCK_EXPECTED_END
+# TEST_ALIGN_REGEX_1_PATTERN_DATA_BEGIN
+  a 1
+  aaa 20
+  aaaaa 300
+# TEST_ALIGN_REGEX_1_PATTERN_DATA_END
+# TEST_ALIGN_REGEX_1_PATTERN_EXPECTED_BEGIN
+  a     1
+  aaa   20
+  aaaaa 300
+# TEST_ALIGN_REGEX_1_PATTERN_EXPECTED_END
 
 #---------------------------------------
-# TEST_ALIGN_BLOCK_WITH_RAGGED_RIGHTS_DATA_BEGIN
-  *** a = 1       ***
-
-  *** aaa = 10    ***
-
-  *** aaaaa = 100 ***
-# TEST_ALIGN_BLOCK_WITH_RAGGED_RIGHTS_DATA_END
-# TEST_ALIGN_BLOCK_WITH_RAGGED_RIGHTS_EXPECTED_BEGIN
-  *** a     = 1   ***
-
-  *** aaa   = 10  ***
-
-  *** aaaaa = 100 ***
-# TEST_ALIGN_BLOCK_WITH_RAGGED_RIGHTS_EXPECTED_END
+# TEST_ALIGN_REGEX_1_PATTERN_2_TIMES_DATA_BEGIN
+  a 1 100 1 100
+  aaa 20 20 20 20
+  aaaaa 300 3 300 3
+# TEST_ALIGN_REGEX_1_PATTERN_2_TIMES_DATA_END
+# TEST_ALIGN_REGEX_1_PATTERN_2_TIMES_EXPECTED_BEGIN
+  a     1   100 1 100
+  aaa   20  20  20 20
+  aaaaa 300 3   300 3
+# TEST_ALIGN_REGEX_1_PATTERN_2_TIMES_EXPECTED_END
 
 #---------------------------------------
-# TEST_ALIGN_BLOCK_WITH_SHORT_RIGHTS_DATA_BEGIN
-  *** a = 1       ***
-  *** aaa = 10
-  *** bbb = 10
-  *** aaaaa = 100 ***
-# TEST_ALIGN_BLOCK_WITH_SHORT_RIGHTS_DATA_END
-# TEST_ALIGN_BLOCK_WITH_SHORT_RIGHTS_EXPECTED_BEGIN
-  *** a     = 1   ***
-  *** aaa   = 10
-  *** bbb   = 10
-  *** aaaaa = 100 ***
-# TEST_ALIGN_BLOCK_WITH_SHORT_RIGHTS_EXPECTED_END
+# TEST_ALIGN_REGEX_1_PATTERN_N_TIMES_DATA_BEGIN
+  a 1 100 1 100
+  aaa 20 20 20 20
+  aaaaa 300 3 300 3
+# TEST_ALIGN_REGEX_1_PATTERN_N_TIMES_DATA_END
+# TEST_ALIGN_REGEX_1_PATTERN_N_TIMES_EXPECTED_BEGIN
+  a     1   100 1   100
+  aaa   20  20  20  20
+  aaaaa 300 3   300 3
+# TEST_ALIGN_REGEX_1_PATTERN_N_TIMES_EXPECTED_END
+
+#-----------------------------------------------------------------------------
+# Shift
+
+#---------------------------------------
+# TEST_ALIGN_SHIFT_1_PATTERN_DATA_BEGIN
+  a b c
+  aaa bbb ccc
+  aaaaa bbbbb ccccc
+# TEST_ALIGN_SHIFT_1_PATTERN_DATA_END
+# TEST_ALIGN_SHIFT_1_PATTERN_EXPECTED_BEGIN
+  a     b c
+  aaa   bbb ccc
+  aaaaa bbbbb ccccc
+# TEST_ALIGN_SHIFT_1_PATTERN_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_SHIFT_1_PATTERN_L_DATA_BEGIN
+  a b c
+  aaa bbb ccc
+  aaaaa bbbbb ccccc
+# TEST_ALIGN_SHIFT_1_PATTERN_L_DATA_END
+# TEST_ALIGN_SHIFT_1_PATTERN_L_EXPECTED_BEGIN
+  a     b c
+  aaa   bbb ccc
+  aaaaa bbbbb ccccc
+# TEST_ALIGN_SHIFT_1_PATTERN_L_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_SHIFT_1_PATTERN_C_DATA_BEGIN
+  a b c
+  aaa bbb ccc
+  aaaaa bbbbb ccccc
+# TEST_ALIGN_SHIFT_1_PATTERN_C_DATA_END
+# TEST_ALIGN_SHIFT_1_PATTERN_C_EXPECTED_BEGIN
+    a   b c
+   aaa  bbb ccc
+  aaaaa bbbbb ccccc
+# TEST_ALIGN_SHIFT_1_PATTERN_C_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_SHIFT_1_PATTERN_R_DATA_BEGIN
+  a b c
+  aaa bbb ccc
+  aaaaa bbbbb ccccc
+# TEST_ALIGN_SHIFT_1_PATTERN_R_DATA_END
+# TEST_ALIGN_SHIFT_1_PATTERN_R_EXPECTED_BEGIN
+      a b c
+    aaa bbb ccc
+  aaaaa bbbbb ccccc
+# TEST_ALIGN_SHIFT_1_PATTERN_R_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_SHIFT_1_PATTERN_2_TIMES_DATA_BEGIN
+  a b bbbbb c
+  aaa bbb bbb ccc
+  aaaaa bbbbb b ccccc
+# TEST_ALIGN_SHIFT_1_PATTERN_2_TIMES_DATA_END
+# TEST_ALIGN_SHIFT_1_PATTERN_2_TIMES_EXPECTED_BEGIN
+  a     b     bbbbb c
+  aaa   bbb   bbb ccc
+  aaaaa bbbbb b ccccc
+# TEST_ALIGN_SHIFT_1_PATTERN_2_TIMES_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_SHIFT_1_PATTERN_N_TIMES_DATA_BEGIN
+  a b bbbbb b bbbbb c
+  aaa bbb bbb bbb bbb ccc
+  aaaaa bbbbb b bbbbb b ccccc
+# TEST_ALIGN_SHIFT_1_PATTERN_N_TIMES_DATA_END
+# TEST_ALIGN_SHIFT_1_PATTERN_N_TIMES_EXPECTED_BEGIN
+  a     b     bbbbb b     bbbbb c
+  aaa   bbb   bbb   bbb   bbb ccc
+  aaaaa bbbbb b     bbbbb b ccccc
+# TEST_ALIGN_SHIFT_1_PATTERN_N_TIMES_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_SHIFT_BLOCK_DATA_BEGIN
+  *** a b c             ***
+  *** aaa bbb ccc       ***
+  *** aaaaa bbbbb ccccc ***
+# TEST_ALIGN_SHIFT_BLOCK_DATA_END
+# TEST_ALIGN_SHIFT_BLOCK_EXPECTED_BEGIN
+  *** a     b c         ***
+  *** aaa   bbb ccc     ***
+  *** aaaaa bbbbb ccccc ***
+# TEST_ALIGN_SHIFT_BLOCK_EXPECTED_END
+
+#-----------------------------------------------------------------------------
+# Tabs
+
+#---------------------------------------
+# TEST_ALIGN_INDENT_TABS_DATA_BEGIN
+  a = 1
+	aaa = 10
+  aaaaa = 100
+# TEST_ALIGN_INDENT_TABS_DATA_END
+# TEST_ALIGN_INDENT_TABS_EXPECTED_BEGIN
+  a     = 1
+  aaa   = 10
+  aaaaa = 100
+# TEST_ALIGN_INDENT_TABS_EXPECTED_END
 
 #=============================================================================
 # Multi-byte

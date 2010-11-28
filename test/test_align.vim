@@ -4,7 +4,6 @@ let tc = unittest#testcase(expand('<sfile>:p'))
 let tc.context_file = expand('<sfile>:p:h') . '/data.txt'
 
 "-----------------------------------------------------------------------------
-" ASCII
 
 function! tc.test_align_1_pattern()
   call self._test_align('1_pattern', 'Alignta =')
@@ -38,6 +37,9 @@ function! tc.test_align_blank_Lflds()
   call self._test_align('blank_Lflds', 'Alignta! \w\+')
 endfunction
 
+"---------------------------------------
+" -p
+
 function! tc.test_align_pattern_escape()
   call self._test_align('pattern_escape', 'Alignta -p <<<')
 endfunction
@@ -47,30 +49,18 @@ function! tc.test_align_pattern_escape2()
 endfunction
 
 "---------------------------------------
-" Regex
+" Block
 
-function! tc.test_align_regex_1_pattern()
-  call self._test_align('regex_1_pattern', 'Alignta! \d\+')
+function! tc.test_align_block()
+  call self._test_align('block', 'Alignta =')
 endfunction
 
-function! tc.test_align_regex_1_pattern_2_times()
-  call self._test_align('regex_1_pattern_2_times', 'Alignta! \d\+{2}')
+function! tc.test_align_block_with_ragged_rights()
+  call self._test_align('block_with_ragged_rights', 'Alignta =')
 endfunction
 
-function! tc.test_align_regex_1_pattern_n_times()
-  call self._test_align('regex_1_pattern_n_times', 'Alignta! \d\+{+}')
-endfunction
-
-"---------------------------------------
-" Tabs
-
-function! tc.test_align_indent_tabs()
-  let save_confirm = g:alignta_confirm_for_retab
-  let g:alignta_confirm_for_retab = 0
-
-  call self._test_align('indent_tabs', 'Alignta =')
-
-  let g:alignta_confirm_for_retab = save_confirm
+function! tc.test_align_block_with_short_rights()
+  call self._test_align('block_with_short_rights', 'Alignta =')
 endfunction
 
 "---------------------------------------
@@ -112,21 +102,64 @@ function! tc.test_align_rpad_colon()
 endfunction
 
 "---------------------------------------
-" Block
+" Regex
 
-function! tc.test_align_block()
-  call self._test_align('block', 'Alignta =')
+function! tc.test_align_regex_1_pattern()
+  call self._test_align('regex_1_pattern', 'Alignta! \d\+')
 endfunction
 
-function! tc.test_align_block_with_ragged_rights()
-  call self._test_align('block_with_ragged_rights', 'Alignta =')
+function! tc.test_align_regex_1_pattern_2_times()
+  call self._test_align('regex_1_pattern_2_times', 'Alignta! \d\+{2}')
 endfunction
 
-function! tc.test_align_block_with_short_rights()
-  call self._test_align('block_with_short_rights', 'Alignta =')
+function! tc.test_align_regex_1_pattern_n_times()
+  call self._test_align('regex_1_pattern_n_times', 'Alignta! \d\+{+}')
 endfunction
 
-"-----------------------------------------------------------------------------
+"---------------------------------------
+" Shift
+
+function! tc.test_align_shift_1_pattern()
+  call self._test_align('shift_1_pattern', 'Alignta <= b')
+endfunction
+
+function! tc.test_align_shift_1_pattern_l()
+  call self._test_align('shift_1_pattern_l', 'Alignta <= b')
+endfunction
+
+function! tc.test_align_shift_1_pattern_c()
+  call self._test_align('shift_1_pattern_c', 'Alignta |= b')
+endfunction
+
+function! tc.test_align_shift_1_pattern_r()
+  call self._test_align('shift_1_pattern_r', 'Alignta >= b')
+endfunction
+
+function! tc.test_align_shift_1_pattern_2_times()
+  call self._test_align('shift_1_pattern_2_times', 'Alignta! <= b\+{2}')
+endfunction
+
+function! tc.test_align_shift_1_pattern_n_times()
+  call self._test_align('shift_1_pattern_n_times', 'Alignta! <= b\+{+}')
+endfunction
+
+function! tc.test_align_shift_block()
+  call self._test_align('shift_block', 'Alignta <= b')
+endfunction
+
+"---------------------------------------
+" Tabs
+
+function! tc.test_align_indent_tabs()
+  let save_confirm = g:alignta_confirm_for_retab
+  let g:alignta_confirm_for_retab = 0
+
+  call self._test_align('indent_tabs', 'Alignta =')
+
+  let g:alignta_confirm_for_retab = save_confirm
+endfunction
+
+"=============================================================================
 " Multi-byte
 
 function! tc.test_align_mb_1_pattern()
@@ -165,7 +198,7 @@ endfunction
 
 function! tc._test_align(tag, align_command)
   let tag = 'test_align_' . a:tag
-  if tag =~# '^test_align_\(mb_\)\=block'
+  if tag =~# '_block'
     call self._test_align_block(tag, a:align_command)
     return
   endif
