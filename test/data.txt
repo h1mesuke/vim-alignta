@@ -99,6 +99,30 @@
   aaaaa = 100
 # TEST_ALIGN_BLANK_LFLDS_EXPECTED_END
 
+#---------------------------------------
+# TEST_ALIGN_PATTERN_ESCAPE_DATA_BEGIN
+  a <<< 1
+  aaa <<< 10
+  aaaaa <<< 100
+# TEST_ALIGN_PATTERN_ESCAPE_DATA_END
+# TEST_ALIGN_PATTERN_ESCAPE_EXPECTED_BEGIN
+  a     <<< 1
+  aaa   <<< 10
+  aaaaa <<< 100
+# TEST_ALIGN_PATTERN_ESCAPE_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_PATTERN_ESCAPE2_DATA_BEGIN
+  a -p 1
+  aaa -p 10
+  aaaaa -p 100
+# TEST_ALIGN_PATTERN_ESCAPE2_DATA_END
+# TEST_ALIGN_PATTERN_ESCAPE2_EXPECTED_BEGIN
+  a     -p 1
+  aaa   -p 10
+  aaaaa -p 100
+# TEST_ALIGN_PATTERN_ESCAPE2_EXPECTED_END
+
 #-----------------------------------------------------------------------------
 # Regex
 

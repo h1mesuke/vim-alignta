@@ -38,6 +38,14 @@ function! tc.test_align_blank_Lflds()
   call self._test_align('blank_Lflds', 'Alignta! \w\+')
 endfunction
 
+function! tc.test_align_pattern_escape()
+  call self._test_align('pattern_escape', 'Alignta -p <<<')
+endfunction
+
+function! tc.test_align_pattern_escape2()
+  call self._test_align('pattern_escape2', 'Alignta -p -p')
+endfunction
+
 "---------------------------------------
 " Regex
 
