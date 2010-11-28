@@ -37,6 +37,10 @@ function! tc.test_align_blank_Lflds()
   call self._test_align('blank_Lflds', 'Alignta! \w\+')
 endfunction
 
+function! tc.test_align_freeze_aligned()
+  call self._test_align('freeze_aligned', 'Alignta! \S\+{+}')
+endfunction
+
 "---------------------------------------
 " -p
 

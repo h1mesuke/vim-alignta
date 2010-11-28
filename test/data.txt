@@ -97,6 +97,21 @@
 # TEST_ALIGN_BLANK_LFLDS_EXPECTED_END
 
 #---------------------------------------
+# TEST_ALIGN_FREEZE_ALIGNED_DATA_BEGIN
+  a a a
+  bb bb
+  ccc ccc
+# TEST_ALIGN_FREEZE_ALIGNED_DATA_END
+# TEST_ALIGN_FREEZE_ALIGNED_EXPECTED_BEGIN
+  a   a   a
+  bb  bb
+  ccc ccc
+# TEST_ALIGN_FREEZE_ALIGNED_EXPECTED_END
+
+#-----------------------------------------------------------------------------
+# -p
+
+#---------------------------------------
 # TEST_ALIGN_PATTERN_ESCAPE_DATA_BEGIN
   a <<< 1
   aaa <<< 10
