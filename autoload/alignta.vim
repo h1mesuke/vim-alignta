@@ -3,7 +3,7 @@
 "
 " File		: autoload/alignta.vim
 " Author	: h1mesuke <himesuke@gmail.com>
-" Updated : 2010-11-27
+" Updated : 2010-11-28
 " Version : 0.0.3
 " License : MIT license {{{
 "
@@ -68,8 +68,60 @@ function! s:Aligner.init_options()
   let self.options = copy(s:Aligner.defalut_options)
 endfunction
 
-function! s:Aligner.apply_options(opts)
-  call extend(self.options, a:opts, 'force')
+function! s:Aligner.apply_options(options)
+  call extend(self.options, a:options, 'force')
+endfunction
+
+function! s:Aligner.align()
+  call s:decho("region = " . string(self.region))
+  call s:decho("arguments = " . string(self.arguments))
+  call s:decho(self._lines)
+
+  if self.region.is_broken
+    throw "alignta: RegionError: broken multi-byte character detected"
+  elseif self.region.has_tab && g:alignta_confirm_for_retab
+    let resp = input("Region contains tabs, alignta will do :retab, OK? [y/N] ")
+    if resp !~? '\s*y\%[es]\s*$'
+      return
+    endif
+  endif
+
+  if exists('g:alignta_profile') && g:alignta_profile && has("reltime")
+    let start_time = reltime()
+  endif
+
+  " process arguments
+  let next_as_pattern = 0
+  for value in self.arguments
+    if !next_as_pattern && value =~ '^-p\%[attern]$'
+      let next_as_pattern = 1
+      continue
+    endif
+    let opts = s:parse_options(value)
+    if !next_as_pattern && !empty(opts)
+      " options
+      call self.apply_options(opts)
+    else
+      " pattern
+      let [pattern, times] = s:parse_pattern(value, self.escape_regex)
+      while times > 0
+        if !self._align_with(pattern)
+          break
+        endif
+        let times -= 1
+      endwhile
+    endif
+    let next_as_pattern = 0
+  endfor
+
+  " update!
+  let self.region.lines = self._lines
+  call self.region.update()
+
+  if exists('g:alignta_profile') && g:alignta_profile && has("reltime")
+    let used_time = split(reltimestr(reltime(start_time)))[0]
+    echomsg "alignta: used=" . used_time . "s"
+  endif
 endfunction
 
 function! s:parse_options(value)
@@ -98,62 +150,22 @@ function! s:parse_options(value)
   return opts
 endfunction
 
-function! s:Aligner.align()
-  call s:decho("region = " . string(self.region))
-  call s:decho("arguments = " . string(self.arguments))
-  call s:decho(self._lines)
-
-  if self.region.is_broken
-    throw "alignta: RegionError: broken multi-byte character detected"
-  elseif self.region.has_tab && g:alignta_confirm_for_retab
-    let resp = input("Region contains tabs, alignta will do :retab, OK? [y/N] ")
-    if resp !~? '\s*y\%[es]\s*$'
-      return
-    endif
+function! s:parse_pattern(value, escape_regex)
+  let times_str = matchstr(a:value, '{\zs\(\d\+\|+\)\ze}$')
+  let pattern = substitute(a:value, '{\(\d\+\|+\)}$', '', '')
+  if a:escape_regex
+    let pattern = s:string_escape_regex(pattern)
   endif
-
-  if exists('g:alignta_profile') && g:alignta_profile && has("reltime")
-    let start_time = reltime()
+  if times_str == ""
+    let times = 1
+  elseif times_str == '+'
+    " pattern{+}
+    let times = 9999
+  else
+    " pattern{\d\+}
+    let times = str2nr(times_str)
   endif
-
-  for value in self.arguments
-    let opts = s:parse_options(value)
-    if !empty(opts)
-      " options
-      call self.apply_options(opts)
-    else
-      " pattern
-      let nstr = matchstr(value, '{\zs\(\d\+\|+\)\ze}$')
-      let pattern = substitute(value, '{\(\d\+\|+\)}$', '', '')
-      if self.escape_regex
-        let pattern = s:string_escape_regex(pattern)
-      endif
-      if nstr == ""
-        let n = 1
-      elseif nstr == '+'
-        " pattern{+}
-        let n = 9999
-      else
-        " pattern{\d\+}
-        let n = str2nr(nstr)
-      endif
-      while n > 0
-        if !self._align_with(pattern)
-          break
-        endif
-        let n -= 1
-      endwhile
-    endif
-  endfor
-
-  " update!
-  let self.region.lines = self._lines
-  call self.region.update()
-
-  if exists('g:alignta_profile') && g:alignta_profile && has("reltime")
-    let used_time = split(reltimestr(reltime(start_time)))[0]
-    echomsg "alignta: used=" . used_time . "s"
-  endif
+  return [pattern, times]
 endfunction
 
 function! s:Aligner._align_with(pattern)
