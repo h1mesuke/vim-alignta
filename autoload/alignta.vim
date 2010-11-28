@@ -62,6 +62,7 @@ function! s:Aligner.initialize(region, args, escape_regex)
     call map(self._lines, 'substitute(v:val, "\\s*$", "", "")')
   endif
   let self._match_start = map(range(0, len(self._lines) - 1), '0')
+  let self._aligned_width = 0
 endfunction
 
 function! s:Aligner.init_options()
@@ -226,15 +227,16 @@ function! s:Aligner._align_with(pattern)
     let blank_L_flds = 1
   else
     call map(L_flds, 'substitute(v:val, "\\s*$", "", "")')
-    let max_width = max(map(values(L_flds), 's:string_width(v:val)'))
+    let max_width = max(map(values(L_flds), 's:string_width(v:val)') + [self._aligned_width])
     call map(L_flds, 's:string_pad(v:val, max_width, self.options.L_fld_align)')
   endif
 
   if !shift_only
+    call map(R_flds, 'substitute(v:val, "^\\s*", "", "")')
+
     let max_width = max(map(values(M_flds), 's:string_width(v:val)'))
     call map(M_flds, 's:string_pad(v:val, max_width, self.options.M_fld_align, (R_flds[v:key] == ""))')
 
-    call map(R_flds, 'substitute(v:val, "^\\s*", "", "")')
     let max_width = max(map(values(R_flds), 's:string_width(v:val)'))
     call map(R_flds, 's:string_pad(v:val, max_width, self.options.R_fld_align, 1)')
   endif
@@ -250,14 +252,20 @@ function! s:Aligner._align_with(pattern)
         let aligned = L_flds[idx] . lpad . M_flds[idx]
       endif
       if R_flds[idx] != ""
-        let aligned .= rpad
+        let self._lines[idx] = aligned . rpad . R_flds[idx]
+        let self._match_start[idx] = strlen(aligned . rpad)
+        " the next pattern matching will start from the beginning of R_fld
+      else
+        let self._lines[idx] = aligned
+        let self._match_start[idx] = strlen(aligned)
       endif
-      let self._lines[idx] = aligned . R_flds[idx]
-      let self._match_start[idx] = strlen(aligned)
-      " the next pattern matching will start from the beginning of R_fld
     endif
     let idx += 1
   endwhile
+  if matched == n_lines
+    " if all lines are matched, freeze aligned parts
+    let self._aligned_width = s:string_width(aligned)
+  endif
   call s:decho("pattern = " . string(a:pattern))
   call s:decho(self._lines)
 
