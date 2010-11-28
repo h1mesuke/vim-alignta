@@ -4,7 +4,7 @@
 " File		: plugin/alignta.vim
 " Author	: h1mesuke <himesuke@gmail.com>
 " Updated : 2010-11-27
-" Version : 0.0.3
+" Version : 0.0.5
 " License : MIT license {{{
 "
 "   Permission is hereby granted, free of charge, to any person obtaining
