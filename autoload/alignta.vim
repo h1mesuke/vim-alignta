@@ -128,6 +128,7 @@ function! s:parse_options(value)
   let align = { '<': 'left', '|': 'center', '>': 'right' }
   let opts = {}
 
+  " options for padding alignment
   " <<< or <<<1 or <<<11 or <<<1:1
   let matched = matchlist(a:value,
         \ '^\([<|>]\)\([<|>]\)\([<|>]\)\%(\(\d\)\(\d\)\=\|\(\d\+\):\(\d\+\)\)\=$')
@@ -143,6 +144,19 @@ function! s:parse_options(value)
       let opts.L_padding = str2nr(matched[6])
       let opts.R_padding = str2nr(matched[7])
     endif
+    call s:decho(" parsed options = " . string(opts))
+    return opts
+  endif
+
+  " options for shifting alignment
+  " <= or <=1
+  let matched = matchlist(a:value, '^\([<|>]\)=\(\d\+\)\=$')
+  if len(matched) > 0
+    let opts.L_fld_align = align[matched[1]]
+    let opts.M_fld_align = 'none'
+    let opts.R_fld_align = 'none'
+    let opts.L_padding = (matched[2] != "" ? str2nr(matched[2]) : 1)
+    let opts.R_padding = 0
     call s:decho(" parsed options = " . string(opts))
     return opts
   endif
@@ -171,6 +185,7 @@ endfunction
 function! s:Aligner._align_with(pattern)
   call s:decho("current options = " . string(self.options))
 
+  let shift_only = (self.options.M_fld_align ==# 'none')
   let L_flds = {}
   let M_flds = {}
   let R_flds = {}
@@ -189,7 +204,7 @@ function! s:Aligner._align_with(pattern)
         let match_end = matchend(line, a:pattern, self._match_start[idx])
         let L_flds[idx] = strpart(line, 0, match_beg)
         let M_flds[idx] = strpart(line, match_beg, match_end - match_beg)
-        let R_flds[idx] = substitute(strpart(line, match_end), '^\s*', '', '')
+        let R_flds[idx] = strpart(line, match_end)
         let matched += 1
       endif
     endif
@@ -215,11 +230,14 @@ function! s:Aligner._align_with(pattern)
     call map(L_flds, 's:string_pad(v:val, max_width, self.options.L_fld_align)')
   endif
 
-  let max_width = max(map(values(M_flds), 's:string_width(v:val)'))
-  call map(M_flds, 's:string_pad(v:val, max_width, self.options.M_fld_align, (R_flds[v:key] == ""))')
+  if !shift_only
+    let max_width = max(map(values(M_flds), 's:string_width(v:val)'))
+    call map(M_flds, 's:string_pad(v:val, max_width, self.options.M_fld_align, (R_flds[v:key] == ""))')
 
-  let max_width = max(map(values(R_flds), 's:string_width(v:val)'))
-  call map(R_flds, 's:string_pad(v:val, max_width, self.options.R_fld_align, 1)')
+    call map(R_flds, 'substitute(v:val, "^\\s*", "", "")')
+    let max_width = max(map(values(R_flds), 's:string_width(v:val)'))
+    call map(R_flds, 's:string_pad(v:val, max_width, self.options.R_fld_align, 1)')
+  endif
 
   let lpad = s:padding(self.options.L_padding)
   let rpad = s:padding(self.options.R_padding)
