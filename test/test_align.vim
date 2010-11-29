@@ -252,7 +252,9 @@ endfunction
 
 function! tc.print_lines(lines)
   call self.puts()
-  call self.puts(a:lines)
+  for line in a:lines
+    call self.puts(string(line))
+  endfor
 endfunction
 
 unlet tc

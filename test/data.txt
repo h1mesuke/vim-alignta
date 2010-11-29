@@ -1,5 +1,58 @@
 # alignta.vim test suite
 
+#=============================================================================
+# Region
+
+#---------------------------------------
+# TEST_REGION_DATA_BEGIN
+word wo|rd word word wo|rd
+
+ word word word word wo|rd
+
+単語 単語 単語 単語 単語
+
+ 単語 単語 単語 単語 単語
+# TEST_REGION_DATA_END
+
+#---------------------------------------
+# TEST_REGION_BLOCK_DATA_BEGIN
+*** word wo|rd word word wo|rd ***
+
+***  word word word word wo|rd ***
+
+*** 単語 単語 単語 単語 単語   ***
+
+***  単語 単語 単語 単語 単語  ***
+# TEST_REGION_BLOCK_DATA_END
+
+#-----------------------------------------------------------------------------
+# has_tab
+
+#---------------------------------------
+# TEST_REGION_HAS_TAB_DATA_BEGIN
+word	wo|rd	word	word	wo|rd
+
+	word	word	word	word	wo|rd
+
+単語	単語	単語	単語	単語
+
+	単語	単語	単語	単語	単語
+# TEST_REGION_HAS_TAB_DATA_END
+
+#---------------------------------------
+# TEST_REGION_BLOCK_HAS_TAB_DATA_BEGIN
+***	word	wo|rd	word	word	wo|rd ***
+
+***	word	word	word	word	wo|rd ***
+
+***	単語	単語	単語	単語	単語  ***
+
+***	単語	単語	単語	単語	単語  ***
+# TEST_REGION_BLOCK_HAS_TAB_DATA_END
+
+#=============================================================================
+# Aligner
+
 #---------------------------------------
 # TEST_ALIGN_1_PATTERN_DATA_BEGIN
   a = 1
@@ -363,17 +416,19 @@
 #---------------------------------------
 # TEST_ALIGN_INDENT_TABS_DATA_BEGIN
   a = 1
-	aaa = 10
+	tab = 10
+	tab = 11
   aaaaa = 100
 # TEST_ALIGN_INDENT_TABS_DATA_END
 # TEST_ALIGN_INDENT_TABS_EXPECTED_BEGIN
   a     = 1
-  aaa   = 10
+  tab   = 10
+  tab   = 11
   aaaaa = 100
 # TEST_ALIGN_INDENT_TABS_EXPECTED_END
 
 #=============================================================================
-# Multi-byte
+# Aligner: Multi-byte
 
 #---------------------------------------
 # TEST_ALIGN_MB_1_PATTERN_DATA_BEGIN

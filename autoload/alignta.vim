@@ -3,7 +3,7 @@
 "
 " File		: autoload/alignta.vim
 " Author	: h1mesuke <himesuke@gmail.com>
-" Updated : 2010-11-28
+" Updated : 2010-11-29
 " Version : 0.0.5
 " License : MIT license {{{
 "
@@ -351,6 +351,11 @@ endif
 "-----------------------------------------------------------------------------
 " Region
 
+" for test-use only
+function! alignta#_region(args)
+  return s:Region.new(a:args)
+endfunction
+
 let s:Region = {
       \ 'normalize_tabs': 1,
       \ }
@@ -501,9 +506,9 @@ function! s:Region.update()
 
     call save_vimenv.restore()
 
-    " NOTE: Pasting a block with ragged rights appends extra white spaces to
-    " the ends of their corresponding lines. To avoid this behavior, overwrite
-    " the lines with their saved copies if they are still blank.
+    " NOTE: Pasting a block with ragged rights appends extra spaces to the
+    " ends of their corresponding lines. To avoid this behavior, overwrite the
+    " lines with their saved copies if they are still blank.
     "
     if self.type ==# 'block'
       for [lnum, line] in items(self._ragged)
@@ -515,7 +520,7 @@ function! s:Region.update()
   endif
 
   if self.has_tab && self.normalize_tabs && !&l:expandtab
-    execute a:line_range[0] . ',' . a:line_range[1] . 'retab!'
+    execute self.line_range[0] . ',' . self.line_range[1] . 'retab!'
   endif
 endfunction
 
@@ -636,7 +641,7 @@ function! s:Vimenv.restore()
       call setreg(reg_name, reg_data.value, reg_data.type)
     endfor
     " NOTE: As a side effect, setreg() to numbered or named registers always
-    " updates @" too. So, we need to setreg() to @" again at the last.
+    " updates @" too. So, need to setreg() to @" again at the last.
     if has_key(self.registers, '"')
       let reg_data = self.registers['"']
       call setreg('"', reg_data.value, reg_data.type)
