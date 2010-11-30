@@ -61,8 +61,14 @@ function! s:Aligner.initialize(region, args, escape_regex)
   if self.region.type ==# 'block'
     call map(self._lines, 'substitute(v:val, "\\s*$", "", "")')
   endif
-  let self._match_start = map(range(0, len(self._lines) - 1), '0')
-  let self._aligned_width = 0
+  let n_lines = len(self._lines)
+  let self._aligned = s:init_list(n_lines, "")
+  let self._aligned_width = s:init_list(n_lines, '0')
+  let self._align_shift = 0
+endfunction
+
+function! s:init_list(length, value)
+  return map(range(0, a:length - 1), 'a:value')
 endfunction
 
 function! s:Aligner.init_options()
@@ -116,7 +122,7 @@ function! s:Aligner.align()
   endfor
 
   " update!
-  let self.region.lines = self._lines
+  let self.region.lines = map(self._aligned, 'v:val . self._lines[v:key]')
   call self.region.update()
 
   if exists('g:alignta_profile') && g:alignta_profile && has("reltime")
@@ -131,19 +137,19 @@ function! s:parse_options(value)
 
   " options for padding alignment
   " <<< or <<<1 or <<<11 or <<<1:1
-  let matched = matchlist(a:value,
+  let matched_list = matchlist(a:value,
         \ '^\([<|>]\)\([<|>]\)\([<|>]\)\%(\(\d\)\(\d\)\=\|\(\d\+\):\(\d\+\)\)\=$')
-  if len(matched) > 0
-    let opts.L_fld_align = align[matched[1]]
-    let opts.M_fld_align = align[matched[2]]
-    let opts.R_fld_align = align[matched[3]]
-    if matched[4] != ""
-      let opts.L_padding = str2nr(matched[4])
-      let opts.R_padding = (matched[5] != "" ? str2nr(matched[5]) : opts.L_padding)
+  if len(matched_list) > 0
+    let opts.L_fld_align = align[matched_list[1]]
+    let opts.M_fld_align = align[matched_list[2]]
+    let opts.R_fld_align = align[matched_list[3]]
+    if matched_list[4] != ""
+      let opts.L_padding = str2nr(matched_list[4])
+      let opts.R_padding = (matched_list[5] != "" ? str2nr(matched_list[5]) : opts.L_padding)
     endif
-    if matched[6] != ""
-      let opts.L_padding = str2nr(matched[6])
-      let opts.R_padding = str2nr(matched[7])
+    if matched_list[6] != ""
+      let opts.L_padding = str2nr(matched_list[6])
+      let opts.R_padding = str2nr(matched_list[7])
     endif
     call s:decho(" parsed options = " . string(opts))
     return opts
@@ -151,12 +157,12 @@ function! s:parse_options(value)
 
   " options for shifting alignment
   " <= or <=1
-  let matched = matchlist(a:value, '^\([<|>]\)=\(\d\+\)\=$')
-  if len(matched) > 0
-    let opts.L_fld_align = align[matched[1]]
+  let matched_list = matchlist(a:value, '^\([<|>]\)=\(\d\+\)\=$')
+  if len(matched_list) > 0
+    let opts.L_fld_align = align[matched_list[1]]
     let opts.M_fld_align = 'none'
     let opts.R_fld_align = 'none'
-    let opts.L_padding = (matched[2] != "" ? str2nr(matched[2]) : 1)
+    let opts.L_padding = (matched_list[2] != "" ? str2nr(matched_list[2]) : 1)
     let opts.R_padding = 0
     call s:decho(" parsed options = " . string(opts))
     return opts
@@ -195,44 +201,43 @@ function! s:Aligner._align_with(pattern)
   "---------------------------------------
   " Phase 1: Match and Split
 
-  let matched = 0
+  let matched_count = 0
   let idx = 0
   while idx < n_lines
     let line = self._lines[idx]
     if line != ""
-      let match_beg = match(line, a:pattern, self._match_start[idx])
+      let match_beg = match(line, a:pattern)
       if match_beg >= 0
-        let match_end = matchend(line, a:pattern, self._match_start[idx])
+        let match_end = matchend(line, a:pattern)
         let L_flds[idx] = strpart(line, 0, match_beg)
         let M_flds[idx] = strpart(line, match_beg, match_end - match_beg)
         let R_flds[idx] = strpart(line, match_end)
-        let matched += 1
+        let matched_count += 1
       endif
     endif
     let idx += 1
   endwhile
 
-  if matched == 0
+  if matched_count == 0
     return 0
   endif
 
   "---------------------------------------
   " Phase 2: Pad and Join
 
-  let blank_L_flds = 0
-  if len(filter(copy(L_flds), 'v:val =~ "^\\s*$"')) == len(L_flds)
-    " keep the minmum leadings
-    let min_width = min(map(values(L_flds), 'strlen(v:val)'))
-    let min_leading = s:padding(min_width)
-    let blank_L_flds = 1
-  else
-    call map(L_flds, 'substitute(v:val, "\\s*$", "", "")')
-    let max_width = max(map(values(L_flds), 's:string_width(v:val)') + [self._aligned_width])
-    call map(L_flds, 's:string_pad(v:val, max_width, self.options.L_fld_align)')
-  endif
+  " keep the minmum leadings
+  let L_fld_leadings = map(values(L_flds), 'matchstr(v:val, "^\\s*")')
+  let min_width = min(map(L_fld_leadings, 'strlen(v:val)'))
+  let leading = s:padding(min_width)
+
+  call map(L_flds, 's:string_trim(v:val)')
+  let blank_L_flds = (len(filter(copy(L_flds), 'v:val == ""')) == len(L_flds))
+
+  let max_width = max(map(values(L_flds), 's:string_width(v:val)'))
+  call map(L_flds, 's:string_pad(v:val, max_width, self.options.L_fld_align)')
 
   if !shift_only
-    call map(R_flds, 'substitute(v:val, "^\\s*", "", "")')
+    call map(R_flds, 's:string_trim(v:val)')
 
     let max_width = max(map(values(M_flds), 's:string_width(v:val)'))
     call map(M_flds, 's:string_pad(v:val, max_width, self.options.M_fld_align, (R_flds[v:key] == ""))')
@@ -241,32 +246,21 @@ function! s:Aligner._align_with(pattern)
     call map(R_flds, 's:string_pad(v:val, max_width, self.options.R_fld_align, 1)')
   endif
 
-  let lpad = s:padding(self.options.L_padding)
+  let lpad = (blank_L_flds ? "" : s:padding(self.options.L_padding))
   let rpad = s:padding(self.options.R_padding)
   let idx = 0
   while idx < n_lines
     if has_key(L_flds, idx)
-      if blank_L_flds
-        let aligned = min_leading . M_flds[idx]
-      else
-        let aligned = L_flds[idx] . lpad . M_flds[idx]
-      endif
-      if R_flds[idx] != ""
-        let self._lines[idx] = aligned . rpad . R_flds[idx]
-        let self._match_start[idx] = strlen(aligned . rpad)
-        " the next pattern matching will start from the beginning of R_fld
-      else
-        let self._lines[idx] = aligned
-        let self._match_start[idx] = strlen(aligned)
-      endif
+      let aligned = leading . L_flds[idx] . lpad . M_flds[idx]
+      let aligned .= (R_flds[idx] != "" ? rpad : "")
+      let self._aligned[idx] .= aligned
+      let self._lines[idx] = R_flds[idx]
+      " the next pattern matching will start from the beginning of R_fld
     endif
     let idx += 1
   endwhile
-  if matched == n_lines
-    " if all lines are matched, freeze aligned parts
-    let self._aligned_width = s:string_width(aligned)
-  endif
   call s:decho("pattern = " . string(a:pattern))
+  call s:decho(self._aligned)
   call s:decho(self._lines)
 
   return 1
@@ -324,6 +318,10 @@ endfunction
 
 function! s:padding(width)
   return printf('%*s', a:width, "")
+endfunction
+
+function! s:string_trim(str)
+  return substitute(substitute(a:str, '^\s*', '', ''), '\s*$', '', '')
 endfunction
 
 if v:version >= 703
