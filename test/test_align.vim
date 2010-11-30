@@ -57,6 +57,22 @@ function! tc.test_align_multi_patterns()
   call self._test_align('multi_patterns', 'Alignta = /* */')
 endfunction
 
+function! tc.test_align_aligned_width_shift()
+  call self._test_align('aligned_width_shift', 'Alignta = :')
+endfunction
+
+function! tc.test_align_aligned_width_shift_lll()
+  call self._test_align('aligned_width_shift_lll', 'Alignta <<< = :')
+endfunction
+
+function! tc.test_align_aligned_width_shift_ccc()
+  call self._test_align('aligned_width_shift_ccc', 'Alignta ||| = :')
+endfunction
+
+function! tc.test_align_aligned_width_shift_rrr()
+  call self._test_align('aligned_width_shift_rrr', 'Alignta >>> = :')
+endfunction
+
 function! tc.test_align_blank_Lflds()
   call self._test_align('blank_Lflds', 'Alignta! \w\+')
 endfunction
@@ -147,22 +163,22 @@ endfunction
 "---------------------------------------
 " Shift
 
-function! tc.test_align_shift_1_pattern()
-  call self._test_align('shift_1_pattern', 'Alignta <= b')
-endfunction
-
-function! tc.test_align_shift_1_pattern_l()
-  call self._test_align('shift_1_pattern_l', 'Alignta <= b')
-endfunction
-
-function! tc.test_align_shift_1_pattern_c()
-  call self._test_align('shift_1_pattern_c', 'Alignta |= b')
-endfunction
-
-function! tc.test_align_shift_1_pattern_r()
-  call self._test_align('shift_1_pattern_r', 'Alignta >= b')
-endfunction
-
+"function! tc.test_align_shift_1_pattern()
+" call self._test_align('shift_1_pattern', 'Alignta <= b')
+"endfunction
+"
+"function! tc.test_align_shift_1_pattern_l()
+" call self._test_align('shift_1_pattern_l', 'Alignta <= b')
+"endfunction
+"
+"function! tc.test_align_shift_1_pattern_c()
+" call self._test_align('shift_1_pattern_c', 'Alignta |= b')
+"endfunction
+"
+"function! tc.test_align_shift_1_pattern_r()
+" call self._test_align('shift_1_pattern_r', 'Alignta >= b')
+"endfunction
+"
 "function! tc.test_align_shift_1_pattern_2_times()
 " call self._test_align('shift_1_pattern_2_times', 'Alignta! <= b\+{2}')
 "endfunction
@@ -170,10 +186,10 @@ endfunction
 "function! tc.test_align_shift_1_pattern_n_times()
 " call self._test_align('shift_1_pattern_n_times', 'Alignta! <= b\+{+}')
 "endfunction
-
-function! tc.test_align_shift_block()
-  call self._test_align('shift_block', 'Alignta <= b')
-endfunction
+"
+"function! tc.test_align_shift_block()
+" call self._test_align('shift_block', 'Alignta <= b')
+"endfunction
 
 "---------------------------------------
 " Tabs
