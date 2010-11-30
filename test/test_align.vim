@@ -25,8 +25,32 @@ function! tc.test_align_1_pattern_2_times()
   call self._test_align('1_pattern_2_times', 'Alignta ={2}')
 endfunction
 
+function! tc.test_align_1_pattern_2_times_lll()
+  call self._test_align('1_pattern_2_times_lll', 'Alignta <<< ={2}')
+endfunction
+
+function! tc.test_align_1_pattern_2_times_ccc()
+  call self._test_align('1_pattern_2_times_ccc', 'Alignta ||| ={2}')
+endfunction
+
+function! tc.test_align_1_pattern_2_times_rrr()
+  call self._test_align('1_pattern_2_times_rrr', 'Alignta >>> ={2}')
+endfunction
+
 function! tc.test_align_1_pattern_n_times()
   call self._test_align('1_pattern_n_times', 'Alignta ={+}')
+endfunction
+
+function! tc.test_align_1_pattern_n_times_lll()
+  call self._test_align('1_pattern_n_times_lll', 'Alignta <<< ={+}')
+endfunction
+
+function! tc.test_align_1_pattern_n_times_ccc()
+  call self._test_align('1_pattern_n_times_ccc', 'Alignta ||| ={+}')
+endfunction
+
+function! tc.test_align_1_pattern_n_times_rrr()
+  call self._test_align('1_pattern_n_times_rrr', 'Alignta >>> ={+}')
 endfunction
 
 function! tc.test_align_multi_patterns()
@@ -139,13 +163,13 @@ function! tc.test_align_shift_1_pattern_r()
   call self._test_align('shift_1_pattern_r', 'Alignta >= b')
 endfunction
 
-function! tc.test_align_shift_1_pattern_2_times()
-  call self._test_align('shift_1_pattern_2_times', 'Alignta! <= b\+{2}')
-endfunction
-
-function! tc.test_align_shift_1_pattern_n_times()
-  call self._test_align('shift_1_pattern_n_times', 'Alignta! <= b\+{+}')
-endfunction
+"function! tc.test_align_shift_1_pattern_2_times()
+" call self._test_align('shift_1_pattern_2_times', 'Alignta! <= b\+{2}')
+"endfunction
+"
+"function! tc.test_align_shift_1_pattern_n_times()
+" call self._test_align('shift_1_pattern_n_times', 'Alignta! <= b\+{+}')
+"endfunction
 
 function! tc.test_align_shift_block()
   call self._test_align('shift_block', 'Alignta <= b')

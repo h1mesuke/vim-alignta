@@ -56,49 +56,49 @@ word	wo|rd	word	word	wo|rd
 #---------------------------------------
 # TEST_ALIGN_1_PATTERN_DATA_BEGIN
   a = 1
-  aaa = 10
-  aaaaa = 100
+  bbb = 10
+  ccccc = 100
 # TEST_ALIGN_1_PATTERN_DATA_END
 # TEST_ALIGN_1_PATTERN_EXPECTED_BEGIN
   a     = 1
-  aaa   = 10
-  aaaaa = 100
+  bbb   = 10
+  ccccc = 100
 # TEST_ALIGN_1_PATTERN_EXPECTED_END
 
 #---------------------------------------
 # TEST_ALIGN_1_PATTERN_LLL_DATA_BEGIN
   a = 1
-  aaa = 10
-  aaaaa = 100
+  bbb = 10
+  ccccc = 100
 # TEST_ALIGN_1_PATTERN_LLL_DATA_END
 # TEST_ALIGN_1_PATTERN_LLL_EXPECTED_BEGIN
   a     = 1
-  aaa   = 10
-  aaaaa = 100
+  bbb   = 10
+  ccccc = 100
 # TEST_ALIGN_1_PATTERN_LLL_EXPECTED_END
 
 #---------------------------------------
 # TEST_ALIGN_1_PATTERN_CCC_DATA_BEGIN
   a = 1
-  aaa = 10
-  aaaaa = 100
+  bbb = 10
+  ccccc = 100
 # TEST_ALIGN_1_PATTERN_CCC_DATA_END
 # TEST_ALIGN_1_PATTERN_CCC_EXPECTED_BEGIN
     a   =  1
-   aaa  = 10
-  aaaaa = 100
+   bbb  = 10
+  ccccc = 100
 # TEST_ALIGN_1_PATTERN_CCC_EXPECTED_END
 
 #---------------------------------------
 # TEST_ALIGN_1_PATTERN_RRR_DATA_BEGIN
   a = 1
-  aaa = 10
-  aaaaa = 100
+  bbb = 10
+  ccccc = 100
 # TEST_ALIGN_1_PATTERN_RRR_DATA_END
 # TEST_ALIGN_1_PATTERN_RRR_EXPECTED_BEGIN
       a =   1
-    aaa =  10
-  aaaaa = 100
+    bbb =  10
+  ccccc = 100
 # TEST_ALIGN_1_PATTERN_RRR_EXPECTED_END
 
 #---------------------------------------
@@ -114,6 +114,42 @@ word	wo|rd	word	word	wo|rd
 # TEST_ALIGN_1_PATTERN_2_TIMES_EXPECTED_END
 
 #---------------------------------------
+# TEST_ALIGN_1_PATTERN_2_TIMES_LLL_DATA_BEGIN
+  a = bbbbb = c = ddddd = 1
+  aaa = bbb = ccc = ddd = 10
+  aaaaa = b = ccccc = d = 100
+# TEST_ALIGN_1_PATTERN_2_TIMES_LLL_DATA_END
+# TEST_ALIGN_1_PATTERN_2_TIMES_LLL_EXPECTED_BEGIN
+  a     = bbbbb = c = ddddd = 1
+  aaa   = bbb   = ccc = ddd = 10
+  aaaaa = b     = ccccc = d = 100
+# TEST_ALIGN_1_PATTERN_2_TIMES_LLL_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_1_PATTERN_2_TIMES_CCC_DATA_BEGIN
+  a = bbbbb = c = ddddd = 1
+  aaa = bbb = ccc = ddd = 10
+  aaaaa = b = ccccc = d = 100
+# TEST_ALIGN_1_PATTERN_2_TIMES_CCC_DATA_END
+# TEST_ALIGN_1_PATTERN_2_TIMES_CCC_EXPECTED_BEGIN
+    a   = bbbbb =  c = ddddd = 1
+   aaa  =  bbb  = ccc = ddd = 10
+  aaaaa =   b   = ccccc = d = 100
+# TEST_ALIGN_1_PATTERN_2_TIMES_CCC_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_1_PATTERN_2_TIMES_RRR_DATA_BEGIN
+  a = bbbbb = c = ddddd = 1
+  aaa = bbb = ccc = ddd = 10
+  aaaaa = b = ccccc = d = 100
+# TEST_ALIGN_1_PATTERN_2_TIMES_RRR_DATA_END
+# TEST_ALIGN_1_PATTERN_2_TIMES_RRR_EXPECTED_BEGIN
+      a = bbbbb =   c = ddddd = 1
+    aaa =   bbb =  ccc = ddd = 10
+  aaaaa =     b = ccccc = d = 100
+# TEST_ALIGN_1_PATTERN_2_TIMES_RRR_EXPECTED_END
+
+#---------------------------------------
 # TEST_ALIGN_1_PATTERN_N_TIMES_DATA_BEGIN
   a = bbbbb = c = ddddd = 1
   aaa = bbb = ccc = ddd = 10
@@ -124,6 +160,42 @@ word	wo|rd	word	word	wo|rd
   aaa   = bbb   = ccc   = ddd   = 10
   aaaaa = b     = ccccc = d     = 100
 # TEST_ALIGN_1_PATTERN_N_TIMES_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_1_PATTERN_N_TIMES_LLL_DATA_BEGIN
+  a = bbbbb = c = ddddd = 1
+  aaa = bbb = ccc = ddd = 10
+  aaaaa = b = ccccc = d =100
+# TEST_ALIGN_1_PATTERN_N_TIMES_LLL_DATA_END
+# TEST_ALIGN_1_PATTERN_N_TIMES_LLL_EXPECTED_BEGIN
+  a     = bbbbb = c     = ddddd = 1
+  aaa   = bbb   = ccc   = ddd   = 10
+  aaaaa = b     = ccccc = d     = 100
+# TEST_ALIGN_1_PATTERN_N_TIMES_LLL_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_1_PATTERN_N_TIMES_CCC_DATA_BEGIN
+  a = bbbbb = c = ddddd = 1
+  aaa = bbb = ccc = ddd = 10
+  aaaaa = b = ccccc = d =100
+# TEST_ALIGN_1_PATTERN_N_TIMES_CCC_DATA_END
+# TEST_ALIGN_1_PATTERN_N_TIMES_CCC_EXPECTED_BEGIN
+    a   = bbbbb =   c   = ddddd =  1
+   aaa  =  bbb  =  ccc  =  ddd  = 10
+  aaaaa =   b   = ccccc =   d   = 100
+# TEST_ALIGN_1_PATTERN_N_TIMES_CCC_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_1_PATTERN_N_TIMES_RRR_DATA_BEGIN
+  a = bbbbb = c = ddddd = 1
+  aaa = bbb = ccc = ddd = 10
+  aaaaa = b = ccccc = d =100
+# TEST_ALIGN_1_PATTERN_N_TIMES_RRR_DATA_END
+# TEST_ALIGN_1_PATTERN_N_TIMES_RRR_EXPECTED_BEGIN
+      a = bbbbb =     c = ddddd =   1
+    aaa =   bbb =   ccc =   ddd =  10
+  aaaaa =     b = ccccc =     d = 100
+# TEST_ALIGN_1_PATTERN_N_TIMES_RRR_EXPECTED_END
 
 #---------------------------------------
 # TEST_ALIGN_MULTI_PATTERNS_DATA_BEGIN
