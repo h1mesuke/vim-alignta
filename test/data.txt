@@ -210,7 +210,7 @@ word	wo|rd	word	word	wo|rd
 # TEST_ALIGN_MULTI_PATTERNS_EXPECTED_END
 
 #---------------------------------------
-# TEST_ALIGN_ALIGNED_WIDTH_SHIFT_DATA_BEGIN
+# TEST_ALIGN_ALIGNED_WIDTH_DATA_BEGIN
   a = 1
   a = A : 1
   A : 1
@@ -220,21 +220,21 @@ word	wo|rd	word	word	wo|rd
   ccccc = 100
   ccccc = CCCCC : 100
   CCCCC : 100
-# TEST_ALIGN_ALIGNED_WIDTH_SHIFT_DATA_END
-# TEST_ALIGN_ALIGNED_WIDTH_SHIFT_EXPECTED_BEGIN
+# TEST_ALIGN_ALIGNED_WIDTH_DATA_END
+# TEST_ALIGN_ALIGNED_WIDTH_EXPECTED_BEGIN
   a     = 1
   a     = A     : 1
-          A     : 1
+  A             : 1
   bbb   = 10
   bbb   = BBB   : 10
-          BBB   : 10
+  BBB           : 10
   ccccc = 100
   ccccc = CCCCC : 100
-          CCCCC : 100
-# TEST_ALIGN_ALIGNED_WIDTH_SHIFT_EXPECTED_END
+  CCCCC         : 100
+# TEST_ALIGN_ALIGNED_WIDTH_EXPECTED_END
 
 #---------------------------------------
-# TEST_ALIGN_ALIGNED_WIDTH_SHIFT_LLL_DATA_BEGIN
+# TEST_ALIGN_ALIGNED_WIDTH_LLL_DATA_BEGIN
   a = 1
   a = A : 1
   A : 1
@@ -244,21 +244,21 @@ word	wo|rd	word	word	wo|rd
   ccccc = 100
   ccccc = CCCCC : 100
   CCCCC : 100
-# TEST_ALIGN_ALIGNED_WIDTH_SHIFT_LLL_DATA_END
-# TEST_ALIGN_ALIGNED_WIDTH_SHIFT_LLL_EXPECTED_BEGIN
+# TEST_ALIGN_ALIGNED_WIDTH_LLL_DATA_END
+# TEST_ALIGN_ALIGNED_WIDTH_LLL_EXPECTED_BEGIN
   a     = 1
   a     = A     : 1
-          A     : 1
+  A             : 1
   bbb   = 10
   bbb   = BBB   : 10
-          BBB   : 10
+  BBB           : 10
   ccccc = 100
   ccccc = CCCCC : 100
-          CCCCC : 100
-# TEST_ALIGN_ALIGNED_WIDTH_SHIFT_LLL_EXPECTED_END
+  CCCCC         : 100
+# TEST_ALIGN_ALIGNED_WIDTH_LLL_EXPECTED_END
 
 #---------------------------------------
-# TEST_ALIGN_ALIGNED_WIDTH_SHIFT_CCC_DATA_BEGIN
+# TEST_ALIGN_ALIGNED_WIDTH_CCC_DATA_BEGIN
   a = 1
   a = A : 1
   A : 1
@@ -268,21 +268,21 @@ word	wo|rd	word	word	wo|rd
   ccccc = 100
   ccccc = CCCCC : 100
   CCCCC : 100
-# TEST_ALIGN_ALIGNED_WIDTH_SHIFT_CCC_DATA_END
-# TEST_ALIGN_ALIGNED_WIDTH_SHIFT_CCC_EXPECTED_BEGIN
+# TEST_ALIGN_ALIGNED_WIDTH_CCC_DATA_END
+# TEST_ALIGN_ALIGNED_WIDTH_CCC_EXPECTED_BEGIN
     a   =      1
     a   =   A   :  1
-            A   :  1
+        A       :  1
    bbb  =     10
    bbb  =  BBB  : 10
-           BBB  : 10
+       BBB      : 10
   ccccc =     100
   ccccc = CCCCC : 100
-          CCCCC : 100
-# TEST_ALIGN_ALIGNED_WIDTH_SHIFT_CCC_EXPECTED_END
+      CCCCC     : 100
+# TEST_ALIGN_ALIGNED_WIDTH_CCC_EXPECTED_END
 
 #---------------------------------------
-# TEST_ALIGN_ALIGNED_WIDTH_SHIFT_RRR_DATA_BEGIN
+# TEST_ALIGN_ALIGNED_WIDTH_RRR_DATA_BEGIN
   a = 1
   a = A : 1
   A : 1
@@ -292,8 +292,8 @@ word	wo|rd	word	word	wo|rd
   ccccc = 100
   ccccc = CCCCC : 100
   CCCCC : 100
-# TEST_ALIGN_ALIGNED_WIDTH_SHIFT_RRR_DATA_END
-# TEST_ALIGN_ALIGNED_WIDTH_SHIFT_RRR_EXPECTED_BEGIN
+# TEST_ALIGN_ALIGNED_WIDTH_RRR_DATA_END
+# TEST_ALIGN_ALIGNED_WIDTH_RRR_EXPECTED_BEGIN
       a =           1
       a =     A :   1
               A :   1
@@ -303,19 +303,19 @@ word	wo|rd	word	word	wo|rd
   ccccc =         100
   ccccc = CCCCC : 100
           CCCCC : 100
-# TEST_ALIGN_ALIGNED_WIDTH_SHIFT_RRR_EXPECTED_END
+# TEST_ALIGN_ALIGNED_WIDTH_RRR_EXPECTED_END
 
 #---------------------------------------
-# TEST_ALIGN_BLANK_LFLDS_DATA_BEGIN
+# TEST_ALIGN_BLANK_L_FLDS_DATA_BEGIN
   a = 1
     aaa = 10
       aaaaa = 100
-# TEST_ALIGN_BLANK_LFLDS_DATA_END
-# TEST_ALIGN_BLANK_LFLDS_EXPECTED_BEGIN
+# TEST_ALIGN_BLANK_L_FLDS_DATA_END
+# TEST_ALIGN_BLANK_L_FLDS_EXPECTED_BEGIN
   a     = 1
   aaa   = 10
   aaaaa = 100
-# TEST_ALIGN_BLANK_LFLDS_EXPECTED_END
+# TEST_ALIGN_BLANK_L_FLDS_EXPECTED_END
 
 #---------------------------------------
 # TEST_ALIGN_FREEZE_ALIGNED_DATA_BEGIN

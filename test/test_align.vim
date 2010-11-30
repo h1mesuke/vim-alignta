@@ -57,24 +57,24 @@ function! tc.test_align_multi_patterns()
   call self._test_align('multi_patterns', 'Alignta = /* */')
 endfunction
 
-function! tc.test_align_aligned_width_shift()
-  call self._test_align('aligned_width_shift', 'Alignta = :')
+function! tc.test_align_aligned_width()
+  call self._test_align('aligned_width', 'Alignta = :')
 endfunction
 
-function! tc.test_align_aligned_width_shift_lll()
-  call self._test_align('aligned_width_shift_lll', 'Alignta <<< = :')
+function! tc.test_align_aligned_width_lll()
+  call self._test_align('aligned_width_lll', 'Alignta <<< = :')
 endfunction
 
-function! tc.test_align_aligned_width_shift_ccc()
-  call self._test_align('aligned_width_shift_ccc', 'Alignta ||| = :')
+function! tc.test_align_aligned_width_ccc()
+  call self._test_align('aligned_width_ccc', 'Alignta ||| = :')
 endfunction
 
-function! tc.test_align_aligned_width_shift_rrr()
-  call self._test_align('aligned_width_shift_rrr', 'Alignta >>> = :')
+function! tc.test_align_aligned_width_rrr()
+  call self._test_align('aligned_width_rrr', 'Alignta >>> = :')
 endfunction
 
-function! tc.test_align_blank_Lflds()
-  call self._test_align('blank_Lflds', 'Alignta! \w\+')
+function! tc.test_align_blank_L_flds()
+  call self._test_align('blank_L_flds', 'Alignta! \w\+')
 endfunction
 
 function! tc.test_align_freeze_aligned()
