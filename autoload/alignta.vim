@@ -3,7 +3,7 @@
 "
 " File		: autoload/alignta.vim
 " Author	: h1mesuke <himesuke@gmail.com>
-" Updated : 2010-11-29
+" Updated : 2010-11-30
 " Version : 0.0.5
 " License : MIT license {{{
 "
@@ -342,7 +342,7 @@ else
     execute "normal! o\<Esc>"
     call setline(line('.'), a:str)
     let width = virtcol('$') - 1
-    silent delete
+    silent delete _
     let &l:modified = save_mod
     return width
   endfunction
