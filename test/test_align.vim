@@ -82,6 +82,27 @@ function! tc.test_align_freeze_aligned()
 endfunction
 
 "---------------------------------------
+" g:alignta_align_as_many_as_possible
+
+function! tc.test_align_as_many_as_possible_true()
+  let save_var = g:alignta_align_as_many_as_possible
+  let g:alignta_align_as_many_as_possible = 1
+
+  call self._test_align('1_pattern_n_times', 'Alignta =')
+
+  let g:alignta_align_as_many_as_possible = save_var
+endfunction
+
+function! tc.test_align_as_many_as_possible_false()
+  let save_var = g:alignta_align_as_many_as_possible
+  let g:alignta_align_as_many_as_possible = 0
+
+  call self._test_align('1_pattern_1_time', 'Alignta =')
+
+  let g:alignta_align_as_many_as_possible = save_var
+endfunction
+
+"---------------------------------------
 " -p
 
 function! tc.test_align_pattern_escape()

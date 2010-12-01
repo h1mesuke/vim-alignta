@@ -102,6 +102,18 @@ word	wo|rd	word	word	wo|rd
 # TEST_ALIGN_1_PATTERN_RRR_EXPECTED_END
 
 #---------------------------------------
+# TEST_ALIGN_1_PATTERN_1_TIME_DATA_BEGIN
+  a = bbbbb = c = ddddd = 1
+  aaa = bbb = ccc = ddd = 10
+  aaaaa = b = ccccc = d = 100
+# TEST_ALIGN_1_PATTERN_1_TIME_DATA_END
+# TEST_ALIGN_1_PATTERN_1_TIME_EXPECTED_BEGIN
+  a     = bbbbb = c = ddddd = 1
+  aaa   = bbb = ccc = ddd = 10
+  aaaaa = b = ccccc = d = 100
+# TEST_ALIGN_1_PATTERN_1_TIME_EXPECTED_END
+
+#---------------------------------------
 # TEST_ALIGN_1_PATTERN_2_TIMES_DATA_BEGIN
   a = bbbbb = c = ddddd = 1
   aaa = bbb = ccc = ddd = 10
