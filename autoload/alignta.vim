@@ -37,6 +37,8 @@ endfunction
 "-----------------------------------------------------------------------------
 " Aligner
 
+let s:HUGE_VALUE = 9999
+
 let s:Aligner = {
       \ 'defalut_options': {
       \   'L_fld_align': 'left',
@@ -94,6 +96,10 @@ function! s:Aligner.apply_options(options)
   call extend(self.options, a:options, 'force')
 endfunction
 
+function! s:Aligner.alignment_method()
+  return (self.options.M_fld_align ==# 'none' ?  'shift' : 'pad')
+endfunction
+
 function! s:Aligner.align()
   call s:decho("region = " . string(self.region))
   call s:decho("arguments = " . string(self.arguments))
@@ -119,13 +125,13 @@ function! s:Aligner.align()
       let next_as_pattern = 1
       continue
     endif
-    let opts = s:parse_options(value)
+    let opts = self._parse_options(value)
     if !next_as_pattern && !empty(opts)
       " options
       call self.apply_options(opts)
     else
       " pattern
-      let [pattern, times] = s:parse_pattern(value, self.use_regex)
+      let [pattern, times] = self._parse_pattern(value)
       while times > 0
         if !self._align_with(pattern)
           break
@@ -146,7 +152,7 @@ function! s:Aligner.align()
   endif
 endfunction
 
-function! s:parse_options(value)
+function! s:Aligner._parse_options(value)
   let align = { '<': 'left', '|': 'center', '>': 'right' }
   let opts = {}
 
@@ -186,21 +192,21 @@ function! s:parse_options(value)
   return opts
 endfunction
 
-function! s:parse_pattern(value, use_regex)
+function! s:Aligner._parse_pattern(value)
   let times_str = matchstr(a:value, '{\zs\(\d\+\|+\)\ze}$')
   let pattern = substitute(a:value, '{\(\d\+\|+\)}$', '', '')
-  if !a:use_regex
+  if !self.use_regex
     let pattern = s:string_escape_regex(pattern)
   endif
   if times_str == ""
-    if g:alignta_align_as_many_as_possible
-      let times = 9999
+    if self.alignment_method() ==# 'pad' && g:alignta_align_as_many_as_possible
+      let times = s:HUGE_VALUE
     else
       let times = 1
     endif
   elseif times_str == '+'
     " pattern{+}
-    let times = 9999
+    let times = s:HUGE_VALUE
   else
     " pattern{\d\+}
     let times = str2nr(times_str)
@@ -211,7 +217,6 @@ endfunction
 function! s:Aligner._align_with(pattern)
   call s:decho("current options = " . string(self.options))
 
-  let shift_only = (self.options.M_fld_align ==# 'none')
   let L_flds = {}
   let M_flds = {}
   let R_flds = {}
@@ -244,13 +249,21 @@ function! s:Aligner._align_with(pattern)
   "---------------------------------------
   " Phase 2: Pad and Join
 
+  if self.alignment_method() ==# 'shift'
+    " keep the minmum leadings
+    let leading_width = s:min_leading_width(values(L_flds))
+    let leading = s:padding(leading_width)
+  else
+    let leading = ""
+  endif
+
   call map(L_flds, 's:string_trim(v:val)')
   let blank_L_flds = (len(filter(copy(L_flds), 'v:val == ""')) == len(L_flds))
 
   let L_fld_width = max(map(values(L_flds), 'self._aligned_width[v:key] + s:string_width(v:val)'))
   call map(L_flds, 's:string_pad(v:val, L_fld_width - self._aligned_width[v:key], self.options.L_fld_align)')
 
-  if !shift_only
+  if self.alignment_method() ==# 'pad'
     call map(R_flds, 's:string_trim(v:val)')
 
     let M_fld_width = max(map(values(M_flds), 's:string_width(v:val)'))
@@ -266,7 +279,7 @@ function! s:Aligner._align_with(pattern)
   let idx = 0
   while idx < n_lines
     if has_key(L_flds, idx)
-      let aligned = L_flds[idx] . lpad . M_flds[idx]
+      let aligned = leading . L_flds[idx] . lpad . M_flds[idx]
       let aligned .= (R_flds[idx] != "" ? rpad : "")
       let self._aligned_width[idx] += s:string_width(aligned)
       let self._aligned[idx] .= aligned
