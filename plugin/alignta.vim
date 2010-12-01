@@ -3,7 +3,7 @@
 "
 " File		: plugin/alignta.vim
 " Author	: h1mesuke <himesuke@gmail.com>
-" Updated : 2010-12-01
+" Updated : 2010-12-02
 " Version : 0.0.5
 " License : MIT license {{{
 "
@@ -43,10 +43,6 @@ set cpo&vim
 
 if !exists('g:alignta_default_options')
   let g:alignta_default_options = '<<<1:1'
-endif
-
-if !exists('g:alignta_align_as_many_as_possible')
-  let g:alignta_align_as_many_as_possible = 1
 endif
 
 if !exists('g:alignta_confirm_for_retab')

@@ -3,7 +3,7 @@
 "
 " File		: autoload/alignta.vim
 " Author	: h1mesuke <himesuke@gmail.com>
-" Updated : 2010-12-01
+" Updated : 2010-12-02
 " Version : 0.0.5
 " License : MIT license {{{
 "
@@ -219,7 +219,7 @@ function! s:Aligner._parse_pattern(value)
     let pattern = s:string_escape_regex(pattern)
   endif
   if times_str == ""
-    if self.alignment_method() ==# 'pad' && g:alignta_align_as_many_as_possible
+    if self.alignment_method() ==# 'pad'
       let times = s:HUGE_VALUE
     else
       let times = 1
