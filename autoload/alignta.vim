@@ -193,7 +193,11 @@ function! s:parse_pattern(value, use_regex)
     let pattern = s:string_escape_regex(pattern)
   endif
   if times_str == ""
-    let times = 1
+    if g:alignta_align_as_many_as_possible
+      let times = 9999
+    else
+      let times = 1
+    endif
   elseif times_str == '+'
     " pattern{+}
     let times = 9999

@@ -28,10 +28,10 @@
 " }}}
 "=============================================================================
 
-if v:version < 700
+if v:version < 700 || &cp
   echoerr "alignta: Vim 7.0 or later required"
   finish
-elseif &cp || exists('g:loaded_alignta')
+elseif exists('g:loaded_alignta')
   finish
 endif
 
@@ -40,6 +40,10 @@ set cpo&vim
 
 "-----------------------------------------------------------------------------
 " Variables
+
+if !exists('g:alignta_align_as_many_as_possible')
+  let g:alignta_align_as_many_as_possible = 1
+endif
 
 if !exists('g:alignta_confirm_for_retab')
   let g:alignta_confirm_for_retab = 1
