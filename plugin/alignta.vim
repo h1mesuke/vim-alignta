@@ -3,7 +3,7 @@
 "
 " File		: plugin/alignta.vim
 " Author	: h1mesuke <himesuke@gmail.com>
-" Updated : 2010-11-27
+" Updated : 2010-12-01
 " Version : 0.0.5
 " License : MIT license {{{
 "
@@ -55,16 +55,15 @@ if !exists(':Align')
   command! -bang -range -nargs=+ Align Alignta<bang> <args>
 endif
 
-function! s:align(args, bang) range
+function! s:align(align_args, bang) range
   let vismode = visualmode()
   if vismode == "\<C-v>" && a:firstline == line("'<") && a:lastline == line("'>")
     let region = vismode
   else
     let region = [a:firstline, a:lastline]
   endif
-  let escape_regex = (a:bang != '!')
-  let aligner = alignta#aligner(region, a:args, escape_regex)
-  call aligner.align()
+  let use_regex = (a:bang == '!')
+  call alignta#align(region, a:align_args, use_regex)
 endfunction
 
 let &cpo = s:save_cpo

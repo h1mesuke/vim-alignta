@@ -28,8 +28,10 @@
 " }}}
 "=============================================================================
 
-function! alignta#aligner(region, args, escape_regex)
-  return s:Aligner.new(a:region, a:args, a:escape_regex)
+function! alignta#align(region, align_args, ...)
+  let use_regex = (a:0 ? a:1 : 0)
+  let aligner = s:Aligner.new(a:region, a:align_args, use_regex)
+  call aligner.align()
 endfunction
 
 "-----------------------------------------------------------------------------
@@ -45,17 +47,17 @@ let s:Aligner = {
       \ },
       \}
 
-function! s:Aligner.new(region, args, escape_regex)
+function! s:Aligner.new(region, args, use_regex)
   let obj = copy(self)
   let obj.class = s:Aligner
-  call obj.initialize(a:region, a:args, a:escape_regex)
+  call obj.initialize(a:region, a:args, a:use_regex)
   return obj
 endfunction
 
-function! s:Aligner.initialize(region, args, escape_regex)
+function! s:Aligner.initialize(region, args, use_regex)
   let self.region = s:Region.new(a:region)
   let self.arguments = a:args
-  let self.escape_regex = a:escape_regex
+  let self.use_regex = a:use_regex
   call self.init_options()
 
   " lines to align
@@ -123,7 +125,7 @@ function! s:Aligner.align()
       call self.apply_options(opts)
     else
       " pattern
-      let [pattern, times] = s:parse_pattern(value, self.escape_regex)
+      let [pattern, times] = s:parse_pattern(value, self.use_regex)
       while times > 0
         if !self._align_with(pattern)
           break
@@ -184,10 +186,10 @@ function! s:parse_options(value)
   return opts
 endfunction
 
-function! s:parse_pattern(value, escape_regex)
+function! s:parse_pattern(value, use_regex)
   let times_str = matchstr(a:value, '{\zs\(\d\+\|+\)\ze}$')
   let pattern = substitute(a:value, '{\(\d\+\|+\)}$', '', '')
-  if a:escape_regex
+  if !a:use_regex
     let pattern = s:string_escape_regex(pattern)
   endif
   if times_str == ""
