@@ -41,6 +41,10 @@ set cpo&vim
 "-----------------------------------------------------------------------------
 " Variables
 
+if !exists('g:alignta_default_options')
+  let g:alignta_default_options = '<<<1:1'
+endif
+
 if !exists('g:alignta_align_as_many_as_possible')
   let g:alignta_align_as_many_as_possible = 1
 endif

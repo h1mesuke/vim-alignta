@@ -34,20 +34,30 @@ function! alignta#align(region, align_args, ...)
   call aligner.align()
 endfunction
 
+" for unite-alignta
+function! alignta#get_default_options()
+  return s:Aligner.default_options
+endfunction
+
+function! alignta#set_default_options(options)
+  let s:Aligner.default_options = a:options
+endfunction
+
+function! alignta#reset_default_options()
+  let s:Aligner.default_options = g:alignta_default_options
+endfunction
+
 "-----------------------------------------------------------------------------
-" Aligner
+" Constant
 
 let s:HUGE_VALUE = 9999
 
+"-----------------------------------------------------------------------------
+" Aligner
+
 let s:Aligner = {
-      \ 'defalut_options': {
-      \   'L_fld_align': 'left',
-      \   'M_fld_align': 'left',
-      \   'R_fld_align': 'left',
-      \   'L_padding': 1,
-      \   'R_padding': 1,
-      \ },
-      \}
+      \ 'default_options': g:alignta_default_options,
+      \ }
 
 function! s:Aligner.new(region, args, use_regex)
   let obj = copy(self)
@@ -89,7 +99,17 @@ function! s:min_leading_width(lines)
 endfunction
 
 function! s:Aligner.init_options()
-  let self.options = copy(s:Aligner.defalut_options)
+  let self.options = {
+        \  'L_fld_align': 'left',
+        \  'M_fld_align': 'left',
+        \  'R_fld_align': 'left',
+        \  'L_padding': 1,
+        \  'R_padding': 1,
+        \ }
+  let opts = self._parse_options(s:Aligner.default_options)
+  if !empty(opts)
+    call self.apply_options(opts)
+  endif
 endfunction
 
 function! s:Aligner.apply_options(options)
