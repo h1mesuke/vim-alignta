@@ -184,33 +184,33 @@ endfunction
 "---------------------------------------
 " Shift
 
-"function! tc.test_align_shift_1_pattern()
-" call self._test_align('shift_1_pattern', 'Alignta <= b')
-"endfunction
-"
-"function! tc.test_align_shift_1_pattern_l()
-" call self._test_align('shift_1_pattern_l', 'Alignta <= b')
-"endfunction
-"
-"function! tc.test_align_shift_1_pattern_c()
-" call self._test_align('shift_1_pattern_c', 'Alignta |= b')
-"endfunction
-"
-"function! tc.test_align_shift_1_pattern_r()
-" call self._test_align('shift_1_pattern_r', 'Alignta >= b')
-"endfunction
-"
-"function! tc.test_align_shift_1_pattern_2_times()
-" call self._test_align('shift_1_pattern_2_times', 'Alignta! <= b\+{2}')
-"endfunction
-"
-"function! tc.test_align_shift_1_pattern_n_times()
-" call self._test_align('shift_1_pattern_n_times', 'Alignta! <= b\+{+}')
-"endfunction
-"
-"function! tc.test_align_shift_block()
-" call self._test_align('shift_block', 'Alignta <= b')
-"endfunction
+function! tc.test_align_shift_1_pattern()
+  call self._test_align('shift_1_pattern', 'Alignta <= b')
+endfunction
+
+function! tc.test_align_shift_1_pattern_l()
+  call self._test_align('shift_1_pattern_l', 'Alignta <= b')
+endfunction
+
+function! tc.test_align_shift_1_pattern_c()
+  call self._test_align('shift_1_pattern_c', 'Alignta |= b')
+endfunction
+
+function! tc.test_align_shift_1_pattern_r()
+  call self._test_align('shift_1_pattern_r', 'Alignta >= b')
+endfunction
+
+function! tc.test_align_shift_1_pattern_2_times()
+  call self._test_align('shift_1_pattern_2_times', 'Alignta! <= b\+{2}')
+endfunction
+
+function! tc.test_align_shift_1_pattern_n_times()
+  call self._test_align('shift_1_pattern_n_times', 'Alignta! <= b\+{+}')
+endfunction
+
+function! tc.test_align_shift_block()
+  call self._test_align('shift_block', 'Alignta <= b')
+endfunction
 
 "---------------------------------------
 " Tabs
