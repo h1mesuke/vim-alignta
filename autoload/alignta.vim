@@ -125,10 +125,15 @@ function! s:Aligner.align()
   call s:decho("arguments = " . string(self.arguments))
   call s:decho(self._lines)
 
+  if self.region.type ==# 'block' && self.region.has_tab
+    throw "alignta: RegionError: block contains tabs"
+  endif
   if self.region.is_broken
     throw "alignta: RegionError: broken multi-byte character detected"
-  elseif self.region.has_tab && g:alignta_confirm_for_retab
-    let resp = input("Region contains tabs, alignta will do :retab, OK? [y/N] ")
+  endif
+
+  if self.region.has_tab && g:alignta_confirm_for_retab
+    let resp = input("Region contains tabs, alignta will use :retab, OK? [y/n] ")
     if resp !~? '\s*y\%[es]\s*$'
       return
     endif
