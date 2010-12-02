@@ -370,8 +370,13 @@ function! s:string_pad(str, width, align, ...)
   return lpad . a:str . rpad
 endfunction
 
-function! s:padding(width)
-  return printf('%*s', a:width, "")
+function! s:padding(width, ...)
+  if a:0
+    let char = a:1
+    return substitute(printf('%*s', a:width, ""), ' ', char, 'g')
+  else
+    return printf('%*s', a:width, "")
+  endif
 endfunction
 
 function! s:string_trim(str)
@@ -533,6 +538,10 @@ function! s:Region._get_selection()
 endfunction
 
 function! s:Region.update()
+  if self.has_tab && self.normalize_tabs && !&l:expandtab
+    call map(self.lines, 's:retab(v:val)')
+  endif
+
   if self.type ==# 'line'
     call setline(self.line_range[0], self.lines)
   else              
@@ -570,10 +579,6 @@ function! s:Region.update()
       endfor
     endif
   endif
-
-  if self.has_tab && self.normalize_tabs && !&l:expandtab
-    execute self.line_range[0] . ',' . self.line_range[1] . 'retab!'
-  endif
 endfunction
 
 function! s:sort_numbers(list)
@@ -582,6 +587,13 @@ endfunction
 
 function! s:compare_numbers(n1, n2)
   return a:n1 == a:n2 ? 0 : a:n1 > a:n2 ? 1 : -1
+endfunction
+
+function! s:retab(line)
+  let nsp = len(matchstr(a:line, '^ \+'))
+  let ntab = nsp / &l:tabstop | let nsp = nsp % &l:tabstop
+  let indent = s:padding(ntab, '\t') . s:padding(nsp)
+  return substitute(a:line, '^ \+', indent, '')
 endfunction
 
 "-----------------------------------------------------------------------------
