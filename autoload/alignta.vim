@@ -456,18 +456,19 @@ endfunction
 
 function! s:Region.initialize(type, line_range, char_range)
   let self.type = a:type
+  let self.has_tab = 0 | let self.is_broken = 0
   let self.line_range = a:line_range
   let self.char_range = a:char_range
-  let self.is_broken = 0
-  let self.has_tab = 0
+  let self.original_lines = getline(a:line_range[0], a:line_range[1])
 
+  " initialize self.lines
   call self._get_selection()
 
   if a:type ==# 'block'
     " check the block for any broken multi-byte chars
-    let original = getline(a:line_range[0], a:line_range[1])
     call self.update()
-    let self.is_broken = (getline(a:line_range[0], a:line_range[1]) !=# original)
+    let lines = getline(a:line_range[0], a:line_range[1])
+    let self.is_broken = (lines !=# self.original_lines)
     silent undo
   endif
 
@@ -486,13 +487,13 @@ endfunction
 
 function! s:Region._get_selection()
   let self._ragged = {}
-  let self._short = {}
+  let self._short  = {}
 
   if self.type ==# 'line'
-    " linewise
+    " Linewise
     let self.lines = getline(self.line_range[0], self.line_range[1])
   else
-    " characterwise or blockwise
+    " Characterwise or Blockwise
     " get the selection via register 'v'
     let vismode = { 'char': 'v', 'line': 'V', 'block': "\<C-v>" }[self.type]
     let save_vimenv = s:Vimenv.new('.', '&selection', '@v', vismode)
@@ -509,13 +510,14 @@ function! s:Region._get_selection()
     " selection, the yanked block will be filled with spaces for the line.
     " They are "ragged right". I borrowed this term from Charles Campbell's
     " Align.vim
-    "               __________
-    "   Ragged      |  Block  |
-    "   ========|   |         |
-    "               |         |
-    "   Short       |         |
-    "   ==================|   |
-    "               |_________|
+    "               ____________
+    "               |   Block   |
+    "   Ragged      |           |
+    "   ========|   |@@@@@@@@@@@| <-- Ragged Right
+    "               |           |
+    "   Short       |           |
+    "   ==================|     |
+    "               |___________|
     "
     if self.type ==# 'block'
       let [block_begcol, block_endcol] = s:sort_numbers([virtcol("'<"), virtcol("'>")])
@@ -523,9 +525,9 @@ function! s:Region._get_selection()
         execute lnum
         let line_endcol = virtcol('$')
         if line_endcol <= block_begcol
-          " collect and copy lines that cause ragged rights to avoid the extra
+          " collect lnums of lines that cause ragged rights to avoid the extra
           " spaces issue on s:Region.update()
-          let self._ragged[lnum] = getline(lnum)
+          let self._ragged[lnum] = 1
           let self.lines[lnum - self.line_range[0]] = ""
         elseif line_endcol <= block_endcol
           let self._short[lnum] = 1
@@ -538,7 +540,7 @@ function! s:Region._get_selection()
 endfunction
 
 function! s:Region.update()
-  if self.has_tab && self.normalize_tabs && !&l:expandtab
+  if self.has_tab && s:Region.normalize_tabs && !&l:expandtab
     call map(self.lines, 's:retab(v:val)')
   endif
 
@@ -572,9 +574,10 @@ function! s:Region.update()
     " lines with their saved copies if they are still blank.
     "
     if self.type ==# 'block'
-      for [lnum, line] in items(self._ragged)
-        if self.lines[lnum - self.line_range[0]] == ""
-          call setline(lnum, line)
+      for lnum in keys(self._ragged)
+        let idx = lnum - self.line_range[0]
+        if self.lines[idx] == ""
+          call setline(lnum, self.original_lines[idx])
         endif
       endfor
     endif
