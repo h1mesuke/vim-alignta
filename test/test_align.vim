@@ -186,12 +186,25 @@ endfunction
 "---------------------------------------
 " Tabs
 
-function! tc.test_align_indent_tabs()
+function! tc.test_align_region_has_tab()
   let save_confirm = g:alignta_confirm_for_retab
   let g:alignta_confirm_for_retab = 0
 
-  call self._test_align('indent_tabs', 'Alignta =')
+  call self._test_align('region_has_tab', 'Alignta =')
 
+  let g:alignta_confirm_for_retab = save_confirm
+endfunction
+
+function! tc.test_align_region_has_tab_noexpandtab()
+  let save_confirm = g:alignta_confirm_for_retab
+  let g:alignta_confirm_for_retab = 0
+
+  let save_expandtab = &l:expandtab
+  setlocal noexpandtab
+
+  call self._test_align('region_has_tab_noexpandtab', 'Alignta =')
+
+  let &l:expandtab = save_expandtab
   let g:alignta_confirm_for_retab = save_confirm
 endfunction
 

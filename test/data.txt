@@ -559,18 +559,32 @@ word	wo|rd	word	word	wo|rd
 # Tabs
 
 #---------------------------------------
-# TEST_ALIGN_INDENT_TABS_DATA_BEGIN
+# TEST_ALIGN_REGION_HAS_TAB_DATA_BEGIN
   a = 1
-	tab = 10
-	tab = 11
-  aaaaa = 100
-# TEST_ALIGN_INDENT_TABS_DATA_END
-# TEST_ALIGN_INDENT_TABS_EXPECTED_BEGIN
+	tab	=	10
+	tab	=	11
+  ccccc = 100
+# TEST_ALIGN_REGION_HAS_TAB_DATA_END
+# TEST_ALIGN_REGION_HAS_TAB_EXPECTED_BEGIN
   a     = 1
   tab   = 10
   tab   = 11
-  aaaaa = 100
-# TEST_ALIGN_INDENT_TABS_EXPECTED_END
+  ccccc = 100
+# TEST_ALIGN_REGION_HAS_TAB_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_REGION_HAS_TAB_NOEXPANDTAB_DATA_BEGIN
+  a = 1
+	tab	=	10
+	tab	=	11
+  ccccc = 100
+# TEST_ALIGN_REGION_HAS_TAB_NOEXPANDTAB_DATA_END
+# TEST_ALIGN_REGION_HAS_TAB_NOEXPANDTAB_EXPECTED_BEGIN
+	a     = 1
+	tab   = 10
+	tab   = 11
+	ccccc = 100
+# TEST_ALIGN_REGION_HAS_TAB_NOEXPANDTAB_EXPECTED_END
 
 #=============================================================================
 # Shifting Alignment
