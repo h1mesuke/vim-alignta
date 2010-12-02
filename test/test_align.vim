@@ -135,11 +135,11 @@ function! tc.test_align_3pad_d()
 endfunction
 
 " \d\d notation
-function! tc.test_align_0pad()
+function! tc.test_align_0pad_dd()
   call self._test_align('0pad', 'Alignta <<<00 =')
 endfunction
 
-function! tc.test_align_lpad()
+function! tc.test_align_lpad_dd()
   call self._test_align('lpad', 'Alignta <<<31 =')
 endfunction
 
@@ -148,15 +148,15 @@ function! tc.test_align_rpad()
 endfunction
 
 " \d\+:\d\+ notation
-function! tc.test_align_0pad_colon()
+function! tc.test_align_0pad_d_colon_d()
   call self._test_align('0pad', 'Alignta <<<0:0 =')
 endfunction
 
-function! tc.test_align_lpad_colon()
+function! tc.test_align_lpad_d_colon_d()
   call self._test_align('lpad', 'Alignta <<<3:1 =')
 endfunction
 
-function! tc.test_align_rpad_colon()
+function! tc.test_align_rpad_d_colon_d()
   call self._test_align('rpad', 'Alignta <<<1:3 =')
 endfunction
 
@@ -214,6 +214,20 @@ function! tc.test_align_shift_1_pattern_n_times()
   call self._test_align('shift_1_pattern_n_times', 'Alignta! <= b\+{+}')
 endfunction
 
+"---------------------------------------
+" Padding
+
+function! tc.test_align_shift_0pad()
+  call self._test_align('shift_0pad', 'Alignta <=0 b')
+endfunction
+
+function! tc.test_align_shift_3pad()
+  call self._test_align('shift_3pad', 'Alignta <=3 b')
+endfunction
+
+"---------------------------------------
+" Block
+
 function! tc.test_align_shift_block()
   call self._test_align('shift_block', 'Alignta <= b')
 endfunction
@@ -263,7 +277,7 @@ function! tc.test_align_pattern_escape()
 endfunction
 
 function! tc.test_align_pattern_escape_escape()
-  call self._test_align('pattern_escape2', 'Alignta -p -p')
+  call self._test_align('pattern_escape_escape', 'Alignta -p -p')
 endfunction
 
 "-----------------------------------------------------------------------------

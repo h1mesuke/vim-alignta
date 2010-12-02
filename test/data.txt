@@ -549,7 +549,24 @@ word	wo|rd	word	word	wo|rd
 # TEST_ALIGN_REGEX_1_PATTERN_N_TIMES_EXPECTED_END
 
 #-----------------------------------------------------------------------------
-# Shift
+# Tabs
+
+#---------------------------------------
+# TEST_ALIGN_INDENT_TABS_DATA_BEGIN
+  a = 1
+	tab = 10
+	tab = 11
+  aaaaa = 100
+# TEST_ALIGN_INDENT_TABS_DATA_END
+# TEST_ALIGN_INDENT_TABS_EXPECTED_BEGIN
+  a     = 1
+  tab   = 10
+  tab   = 11
+  aaaaa = 100
+# TEST_ALIGN_INDENT_TABS_EXPECTED_END
+
+#=============================================================================
+# Shifting Alignment
 
 #---------------------------------------
 # TEST_ALIGN_SHIFT_1_PATTERN_DATA_BEGIN
@@ -623,6 +640,9 @@ word	wo|rd	word	word	wo|rd
   aaaaa bbbbb b     bbbbb b ccccc
 # TEST_ALIGN_SHIFT_1_PATTERN_N_TIMES_EXPECTED_END
 
+#-----------------------------------------------------------------------------
+# Block
+
 #---------------------------------------
 # TEST_ALIGN_SHIFT_BLOCK_DATA_BEGIN
   *** a b c             ***
@@ -636,21 +656,31 @@ word	wo|rd	word	word	wo|rd
 # TEST_ALIGN_SHIFT_BLOCK_EXPECTED_END
 
 #-----------------------------------------------------------------------------
-# Tabs
+# Padding
 
 #---------------------------------------
-# TEST_ALIGN_INDENT_TABS_DATA_BEGIN
-  a = 1
-	tab = 10
-	tab = 11
-  aaaaa = 100
-# TEST_ALIGN_INDENT_TABS_DATA_END
-# TEST_ALIGN_INDENT_TABS_EXPECTED_BEGIN
-  a     = 1
-  tab   = 10
-  tab   = 11
-  aaaaa = 100
-# TEST_ALIGN_INDENT_TABS_EXPECTED_END
+# TEST_ALIGN_SHIFT_0PAD_DATA_BEGIN
+  a b c
+  aaa bbb ccc
+  aaaaa bbbbb ccccc
+# TEST_ALIGN_SHIFT_0PAD_DATA_END
+# TEST_ALIGN_SHIFT_0PAD_EXPECTED_BEGIN
+  a    b c
+  aaa  bbb ccc
+  aaaaabbbbb ccccc
+# TEST_ALIGN_SHIFT_0PAD_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_SHIFT_3PAD_DATA_BEGIN
+  a b c
+  aaa bbb ccc
+  aaaaa bbbbb ccccc
+# TEST_ALIGN_SHIFT_3PAD_DATA_END
+# TEST_ALIGN_SHIFT_3PAD_EXPECTED_BEGIN
+  a       b c
+  aaa     bbb ccc
+  aaaaa   bbbbb ccccc
+# TEST_ALIGN_SHIFT_3PAD_EXPECTED_END
 
 #=============================================================================
 # Multi-byte
