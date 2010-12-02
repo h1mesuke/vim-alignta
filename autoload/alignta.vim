@@ -3,7 +3,7 @@
 "
 " File		: autoload/alignta.vim
 " Author	: h1mesuke <himesuke@gmail.com>
-" Updated : 2010-12-02
+" Updated : 2010-12-03
 " Version : 0.0.5
 " License : MIT license {{{
 "
@@ -48,8 +48,10 @@ function! alignta#reset_default_options()
 endfunction
 
 "-----------------------------------------------------------------------------
-" Constant
+" Constants
 
+let s:SUCCESS = 1
+let s:FAILURE = 0
 let s:HUGE_VALUE = 9999
 
 "-----------------------------------------------------------------------------
@@ -268,7 +270,7 @@ function! s:Aligner._align_with(pattern)
   endwhile
 
   if matched_count == 0
-    return 0
+    return s:FAILURE
   endif
 
   "---------------------------------------
@@ -283,9 +285,9 @@ function! s:Aligner._align_with(pattern)
   endif
 
   call map(L_flds, 's:string_trim(v:val)')
-  let blank_L_flds = (len(filter(copy(L_flds), 'v:val == ""')) == len(L_flds))
+  let blank_L_flds = (len(filter(values(L_flds), 'v:val == ""')) == len(L_flds))
 
-  let L_fld_width = max(map(values(L_flds), 'self._aligned_width[v:key] + s:string_width(v:val)'))
+  let L_fld_width = max(values(map(copy(L_flds), 'self._aligned_width[v:key] + s:string_width(v:val)')))
   call map(L_flds, 's:string_pad(v:val, L_fld_width - self._aligned_width[v:key], self.options.L_fld_align)')
 
   if self.alignment_method() ==# 'pad'
@@ -317,7 +319,8 @@ function! s:Aligner._align_with(pattern)
   call s:decho("pattern = " . string(a:pattern))
   call s:decho(self._aligned)
   call s:decho(self._lines)
-  return 1
+
+  return s:SUCCESS
 endfunction
 
 function! s:print_error(msg)
