@@ -122,6 +122,14 @@ function! tc.test_align_block_with_short_rights()
   call self._test_align('block_with_short_rights', 'Alignta =')
 endfunction
 
+function! tc.test_align_block_has_tab()
+  let tag = 'test_align_block_has_tab'
+  let range = s:data_range(tag)
+  execute range[0]
+  execute "normal! 06l\<C-v>" . (range[1] - range[0]) . "jf*2h\<Esc>"
+  call assert#raise(":'<,'>Alignta =", 'tabs')
+endfunction
+
 "---------------------------------------
 " Padding
 
@@ -262,7 +270,7 @@ function! tc.test_align_mb_block_is_broken()
   let tag = 'test_align_mb_block_is_broken'
   let range = s:data_range(tag)
   execute range[0]
-  execute "normal! 02l\<C-v>" . (range[1] - range[0]) . "3e\<Esc>"
+  execute "normal! 06l\<C-v>" . (range[1] - range[0]) . "jf*2h\<Esc>"
   call assert#raise(":'<,'>Alignta ＝", 'broken')
 endfunction
 

@@ -458,6 +458,13 @@ word	wo|rd	word	word	wo|rd
   *** aaaaa = 100 ***
 # TEST_ALIGN_BLOCK_WITH_SHORT_RIGHTS_EXPECTED_END
 
+#---------------------------------------
+# TEST_ALIGN_BLOCK_HAS_TAB_DATA_BEGIN
+  ***	a			=	1		***
+  ***	aaa		=	10	***
+  ***	aaaaa	=	100	***
+# TEST_ALIGN_BLOCK_HAS_TAB_DATA_END
+
 #-----------------------------------------------------------------------------
 # Padding
 
