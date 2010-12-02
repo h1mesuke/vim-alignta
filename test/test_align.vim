@@ -78,27 +78,55 @@ function! tc.test_align_1_pattern_n_times_rcl()
   call self._test_align('1_pattern_n_times_rcl', 'Alignta >|< ={+}')
 endfunction
 
-" need to restruct
 function! tc.test_align_multi_patterns()
   call self._test_align('multi_patterns', 'Alignta = /* */')
 endfunction
 
-function! tc.test_align_aligned_width()
-  call self._test_align('aligned_width', 'Alignta = :')
+function! tc.test_align_multi_patterns_lll()
+  call self._test_align('multi_patterns_lll', 'Alignta <<< = /* */')
 endfunction
 
-function! tc.test_align_aligned_width_lll()
-  call self._test_align('aligned_width_lll', 'Alignta <<< = :')
+function! tc.test_align_multi_patterns_ccc()
+  call self._test_align('multi_patterns_ccc', 'Alignta ||| = /* */')
 endfunction
 
-function! tc.test_align_aligned_width_ccc()
-  call self._test_align('aligned_width_ccc', 'Alignta ||| = :')
+function! tc.test_align_multi_patterns_rrr()
+  call self._test_align('multi_patterns_rrr', 'Alignta >>> = /* */')
 endfunction
 
-function! tc.test_align_aligned_width_rrr()
-  call self._test_align('aligned_width_rrr', 'Alignta >>> = :')
+function! tc.test_align_multi_patterns_lcr()
+  call self._test_align('multi_patterns_lcr', 'Alignta <|> = /* */')
 endfunction
 
+function! tc.test_align_multi_patterns_rcl()
+  call self._test_align('multi_patterns_rcl', 'Alignta >|< = /* */')
+endfunction
+
+function! tc.test_align_complex_multi_patterns()
+  call self._test_align('complex_multi_patterns', 'Alignta = : /* */')
+endfunction
+
+function! tc.test_align_complex_multi_patterns_lll()
+  call self._test_align('complex_multi_patterns_lll', 'Alignta <<< = : /* */')
+endfunction
+
+function! tc.test_align_complex_multi_patterns_ccc()
+  call self._test_align('complex_multi_patterns_ccc', 'Alignta ||| = : /* */')
+endfunction
+
+function! tc.test_align_complex_multi_patterns_rrr()
+  call self._test_align('complex_multi_patterns_rrr', 'Alignta >>> = : /* */')
+endfunction
+
+function! tc.test_align_complex_multi_patterns_lcr()
+  call self._test_align('complex_multi_patterns_lcr', 'Alignta <|> = : /* */')
+endfunction
+
+function! tc.test_align_complex_multi_patterns_rcl()
+  call self._test_align('complex_multi_patterns_rcl', 'Alignta >|< = : /* */')
+endfunction
+
+" need to restruct
 function! tc.test_align_blank_L_flds()
   call self._test_align('blank_L_flds', 'Alignta! \w\+')
 endfunction

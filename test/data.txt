@@ -294,100 +294,184 @@ word	wo|rd	word	word	wo|rd
 # TEST_ALIGN_MULTI_PATTERNS_EXPECTED_END
 
 #---------------------------------------
-# TEST_ALIGN_ALIGNED_WIDTH_DATA_BEGIN
-  a = 1
-  a = A : 1
-  A : 1
-  bbb = 10
-  bbb = BBB : 10
-  BBB : 10
-  ccccc = 100
-  ccccc = CCCCC : 100
-  CCCCC : 100
-# TEST_ALIGN_ALIGNED_WIDTH_DATA_END
-# TEST_ALIGN_ALIGNED_WIDTH_EXPECTED_BEGIN
-  a     = 1
-  a     = A     : 1
-  A             : 1
-  bbb   = 10
-  bbb   = BBB   : 10
-  BBB           : 10
-  ccccc = 100
-  ccccc = CCCCC : 100
-  CCCCC         : 100
-# TEST_ALIGN_ALIGNED_WIDTH_EXPECTED_END
+# TEST_ALIGN_MULTI_PATTERNS_LLL_DATA_BEGIN
+  a = 1 /* AAAAA */
+  bbb = 10 /* BBB */
+  ccccc = 100 /* C */
+# TEST_ALIGN_MULTI_PATTERNS_LLL_DATA_END
+# TEST_ALIGN_MULTI_PATTERNS_LLL_EXPECTED_BEGIN
+  a     = 1   /* AAAAA */
+  bbb   = 10  /* BBB   */
+  ccccc = 100 /* C     */
+# TEST_ALIGN_MULTI_PATTERNS_LLL_EXPECTED_END
 
 #---------------------------------------
-# TEST_ALIGN_ALIGNED_WIDTH_LLL_DATA_BEGIN
-  a = 1
-  a = A : 1
-  A : 1
-  bbb = 10
-  bbb = BBB : 10
-  BBB : 10
-  ccccc = 100
-  ccccc = CCCCC : 100
-  CCCCC : 100
-# TEST_ALIGN_ALIGNED_WIDTH_LLL_DATA_END
-# TEST_ALIGN_ALIGNED_WIDTH_LLL_EXPECTED_BEGIN
-  a     = 1
-  a     = A     : 1
-  A             : 1
-  bbb   = 10
-  bbb   = BBB   : 10
-  BBB           : 10
-  ccccc = 100
-  ccccc = CCCCC : 100
-  CCCCC         : 100
-# TEST_ALIGN_ALIGNED_WIDTH_LLL_EXPECTED_END
+# TEST_ALIGN_MULTI_PATTERNS_CCC_DATA_BEGIN
+  a = 1 /* AAAAA */
+  bbb = 10 /* BBB */
+  ccccc = 100 /* C */
+# TEST_ALIGN_MULTI_PATTERNS_CCC_DATA_END
+# TEST_ALIGN_MULTI_PATTERNS_CCC_EXPECTED_BEGIN
+    a   =  1  /* AAAAA */
+   bbb  = 10  /*  BBB  */
+  ccccc = 100 /*   C   */
+# TEST_ALIGN_MULTI_PATTERNS_CCC_EXPECTED_END
 
 #---------------------------------------
-# TEST_ALIGN_ALIGNED_WIDTH_CCC_DATA_BEGIN
-  a = 1
-  a = A : 1
-  A : 1
-  bbb = 10
-  bbb = BBB : 10
-  BBB : 10
-  ccccc = 100
-  ccccc = CCCCC : 100
-  CCCCC : 100
-# TEST_ALIGN_ALIGNED_WIDTH_CCC_DATA_END
-# TEST_ALIGN_ALIGNED_WIDTH_CCC_EXPECTED_BEGIN
-    a   =      1
-    a   =   A   :  1
-        A       :  1
-   bbb  =     10
-   bbb  =  BBB  : 10
-       BBB      : 10
-  ccccc =     100
-  ccccc = CCCCC : 100
-      CCCCC     : 100
-# TEST_ALIGN_ALIGNED_WIDTH_CCC_EXPECTED_END
+# TEST_ALIGN_MULTI_PATTERNS_RRR_DATA_BEGIN
+  a = 1 /* AAAAA */
+  bbb = 10 /* BBB */
+  ccccc = 100 /* C */
+# TEST_ALIGN_MULTI_PATTERNS_RRR_DATA_END
+# TEST_ALIGN_MULTI_PATTERNS_RRR_EXPECTED_BEGIN
+      a =   1 /* AAAAA */
+    bbb =  10 /*   BBB */
+  ccccc = 100 /*     C */
+# TEST_ALIGN_MULTI_PATTERNS_RRR_EXPECTED_END
 
 #---------------------------------------
-# TEST_ALIGN_ALIGNED_WIDTH_RRR_DATA_BEGIN
-  a = 1
-  a = A : 1
-  A : 1
-  bbb = 10
-  bbb = BBB : 10
-  BBB : 10
-  ccccc = 100
-  ccccc = CCCCC : 100
-  CCCCC : 100
-# TEST_ALIGN_ALIGNED_WIDTH_RRR_DATA_END
-# TEST_ALIGN_ALIGNED_WIDTH_RRR_EXPECTED_BEGIN
-      a =           1
-      a =     A :   1
-              A :   1
-    bbb =          10
-    bbb =   BBB :  10
-            BBB :  10
-  ccccc =         100
-  ccccc = CCCCC : 100
-          CCCCC : 100
-# TEST_ALIGN_ALIGNED_WIDTH_RRR_EXPECTED_END
+# TEST_ALIGN_MULTI_PATTERNS_LCR_DATA_BEGIN
+  a = 1 /* AAAAA */
+  bbb = 10 /* BBB */
+  ccccc = 100 /* C */
+# TEST_ALIGN_MULTI_PATTERNS_LCR_DATA_END
+# TEST_ALIGN_MULTI_PATTERNS_LCR_EXPECTED_BEGIN
+  a     = 1   /* AAAAA */
+  bbb   = 10  /* BBB   */
+  ccccc = 100 /* C     */
+# TEST_ALIGN_MULTI_PATTERNS_LCR_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_MULTI_PATTERNS_RCL_DATA_BEGIN
+  a = 1 /* AAAAA */
+  bbb = 10 /* BBB */
+  ccccc = 100 /* C */
+# TEST_ALIGN_MULTI_PATTERNS_RCL_DATA_END
+# TEST_ALIGN_MULTI_PATTERNS_RCL_EXPECTED_BEGIN
+      a =   1 /* AAAAA */
+    bbb =  10 /*   BBB */
+  ccccc = 100 /*     C */
+# TEST_ALIGN_MULTI_PATTERNS_RCL_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_COMPLEX_MULTI_PATTERNS_DATA_BEGIN
+  a = 1 /* AAAAA */
+  A : 2 /* aaaaa */
+  bbb = 10 /* BBB */
+  BBB : 20 /* bbb */
+  ccccc = 100 /* C */
+  CCCCC : 200 /* c */
+  func() /* FUNC */
+# TEST_ALIGN_COMPLEX_MULTI_PATTERNS_DATA_END
+# TEST_ALIGN_COMPLEX_MULTI_PATTERNS_EXPECTED_BEGIN
+  a     = 1   /* AAAAA */
+  A     : 2   /* aaaaa */
+  bbb   = 10  /* BBB   */
+  BBB   : 20  /* bbb   */
+  ccccc = 100 /* C     */
+  CCCCC : 200 /* c     */
+  func()      /* FUNC  */
+# TEST_ALIGN_COMPLEX_MULTI_PATTERNS_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_COMPLEX_MULTI_PATTERNS_LLL_DATA_BEGIN
+  a = 1 /* AAAAA */
+  A : 2 /* aaaaa */
+  bbb = 10 /* BBB */
+  BBB : 20 /* bbb */
+  ccccc = 100 /* C */
+  CCCCC : 200 /* c */
+  func() /* FUNC */
+# TEST_ALIGN_COMPLEX_MULTI_PATTERNS_LLL_DATA_END
+# TEST_ALIGN_COMPLEX_MULTI_PATTERNS_LLL_EXPECTED_BEGIN
+  a     = 1   /* AAAAA */
+  A     : 2   /* aaaaa */
+  bbb   = 10  /* BBB   */
+  BBB   : 20  /* bbb   */
+  ccccc = 100 /* C     */
+  CCCCC : 200 /* c     */
+  func()      /* FUNC  */
+# TEST_ALIGN_COMPLEX_MULTI_PATTERNS_LLL_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_COMPLEX_MULTI_PATTERNS_CCC_DATA_BEGIN
+  a = 1 /* AAAAA */
+  A : 2 /* aaaaa */
+  bbb = 10 /* BBB */
+  BBB : 20 /* bbb */
+  ccccc = 100 /* C */
+  CCCCC : 200 /* c */
+  func() /* FUNC */
+# TEST_ALIGN_COMPLEX_MULTI_PATTERNS_CCC_DATA_END
+# TEST_ALIGN_COMPLEX_MULTI_PATTERNS_CCC_EXPECTED_BEGIN
+    a   =  1  /* AAAAA */
+    A   :  2  /* aaaaa */
+   bbb  = 10  /*  BBB  */
+   BBB  : 20  /*  bbb  */
+  ccccc = 100 /*   C   */
+  CCCCC : 200 /*   c   */
+    func()    /* FUNC  */
+# TEST_ALIGN_COMPLEX_MULTI_PATTERNS_CCC_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_COMPLEX_MULTI_PATTERNS_RRR_DATA_BEGIN
+  a = 1 /* AAAAA */
+  A : 2 /* aaaaa */
+  bbb = 10 /* BBB */
+  BBB : 20 /* bbb */
+  ccccc = 100 /* C */
+  CCCCC : 200 /* c */
+  func() /* FUNC */
+# TEST_ALIGN_COMPLEX_MULTI_PATTERNS_RRR_DATA_END
+# TEST_ALIGN_COMPLEX_MULTI_PATTERNS_RRR_EXPECTED_BEGIN
+      a =   1 /* AAAAA */
+      A :   2 /* aaaaa */
+    bbb =  10 /*   BBB */
+    BBB :  20 /*   bbb */
+  ccccc = 100 /*     C */
+  CCCCC : 200 /*     c */
+       func() /*  FUNC */
+# TEST_ALIGN_COMPLEX_MULTI_PATTERNS_RRR_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_COMPLEX_MULTI_PATTERNS_LCR_DATA_BEGIN
+  a = 1 /* AAAAA */
+  A : 2 /* aaaaa */
+  bbb = 10 /* BBB */
+  BBB : 20 /* bbb */
+  ccccc = 100 /* C */
+  CCCCC : 200 /* c */
+  func() /* FUNC */
+# TEST_ALIGN_COMPLEX_MULTI_PATTERNS_LCR_DATA_END
+# TEST_ALIGN_COMPLEX_MULTI_PATTERNS_LCR_EXPECTED_BEGIN
+  a     = 1   /* AAAAA */
+  A     : 2   /* aaaaa */
+  bbb   = 10  /* BBB   */
+  BBB   : 20  /* bbb   */
+  ccccc = 100 /* C     */
+  CCCCC : 200 /* c     */
+  func()      /* FUNC  */
+# TEST_ALIGN_COMPLEX_MULTI_PATTERNS_LCR_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_COMPLEX_MULTI_PATTERNS_RCL_DATA_BEGIN
+  a = 1 /* AAAAA */
+  A : 2 /* aaaaa */
+  bbb = 10 /* BBB */
+  BBB : 20 /* bbb */
+  ccccc = 100 /* C */
+  CCCCC : 200 /* c */
+  func() /* FUNC */
+# TEST_ALIGN_COMPLEX_MULTI_PATTERNS_RCL_DATA_END
+# TEST_ALIGN_COMPLEX_MULTI_PATTERNS_RCL_EXPECTED_BEGIN
+      a =   1 /* AAAAA */
+      A :   2 /* aaaaa */
+    bbb =  10 /*   BBB */
+    BBB :  20 /*   bbb */
+  ccccc = 100 /*     C */
+  CCCCC : 200 /*     c */
+       func() /*  FUNC */
+# TEST_ALIGN_COMPLEX_MULTI_PATTERNS_RCL_EXPECTED_END
 
 #---------------------------------------
 # TEST_ALIGN_BLANK_L_FLDS_DATA_BEGIN
