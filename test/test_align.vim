@@ -3,7 +3,8 @@
 let tc = unittest#testcase(expand('<sfile>:p'))
 let tc.context_file = expand('<sfile>:p:h') . '/data.txt'
 
-"-----------------------------------------------------------------------------
+"=============================================================================
+" Padding Alignment
 
 function! tc.test_align_1_pattern()
   call self._test_align('1_pattern', 'Alignta =')
@@ -19,6 +20,14 @@ endfunction
 
 function! tc.test_align_1_pattern_rrr()
   call self._test_align('1_pattern_rrr', 'Alignta >>> =')
+endfunction
+
+function! tc.test_align_1_pattern_lcr()
+  call self._test_align('1_pattern_lcr', 'Alignta <|> =')
+endfunction
+
+function! tc.test_align_1_pattern_rcl()
+  call self._test_align('1_pattern_rcl', 'Alignta >|< =')
 endfunction
 
 function! tc.test_align_1_pattern_2_times()
@@ -37,6 +46,14 @@ function! tc.test_align_1_pattern_2_times_rrr()
   call self._test_align('1_pattern_2_times_rrr', 'Alignta >>> ={2}')
 endfunction
 
+function! tc.test_align_1_pattern_2_times_lcr()
+  call self._test_align('1_pattern_2_times_lcr', 'Alignta <|> ={2}')
+endfunction
+
+function! tc.test_align_1_pattern_2_times_rcl()
+  call self._test_align('1_pattern_2_times_rcl', 'Alignta >|< ={2}')
+endfunction
+
 function! tc.test_align_1_pattern_n_times()
   call self._test_align('1_pattern_n_times', 'Alignta ={+}')
 endfunction
@@ -53,6 +70,15 @@ function! tc.test_align_1_pattern_n_times_rrr()
   call self._test_align('1_pattern_n_times_rrr', 'Alignta >>> ={+}')
 endfunction
 
+function! tc.test_align_1_pattern_n_times_lcr()
+  call self._test_align('1_pattern_n_times_lcr', 'Alignta <|> ={+}')
+endfunction
+
+function! tc.test_align_1_pattern_n_times_rcl()
+  call self._test_align('1_pattern_n_times_rcl', 'Alignta >|< ={+}')
+endfunction
+
+" need to restruct
 function! tc.test_align_multi_patterns()
   call self._test_align('multi_patterns', 'Alignta = /* */')
 endfunction
@@ -79,17 +105,6 @@ endfunction
 
 function! tc.test_align_freeze_aligned()
   call self._test_align('freeze_aligned', 'Alignta! \S\+{+}')
-endfunction
-
-"---------------------------------------
-" -p
-
-function! tc.test_align_pattern_escape()
-  call self._test_align('pattern_escape', 'Alignta -p <<<')
-endfunction
-
-function! tc.test_align_pattern_escape2()
-  call self._test_align('pattern_escape2', 'Alignta -p -p')
 endfunction
 
 "---------------------------------------
@@ -161,7 +176,19 @@ function! tc.test_align_regex_1_pattern_n_times()
 endfunction
 
 "---------------------------------------
-" Shift
+" Tabs
+
+function! tc.test_align_indent_tabs()
+  let save_confirm = g:alignta_confirm_for_retab
+  let g:alignta_confirm_for_retab = 0
+
+  call self._test_align('indent_tabs', 'Alignta =')
+
+  let g:alignta_confirm_for_retab = save_confirm
+endfunction
+
+"=============================================================================
+" Shifting Alignment
 
 function! tc.test_align_shift_1_pattern()
   call self._test_align('shift_1_pattern', 'Alignta <= b')
@@ -189,18 +216,6 @@ endfunction
 
 function! tc.test_align_shift_block()
   call self._test_align('shift_block', 'Alignta <= b')
-endfunction
-
-"---------------------------------------
-" Tabs
-
-function! tc.test_align_indent_tabs()
-  let save_confirm = g:alignta_confirm_for_retab
-  let g:alignta_confirm_for_retab = 0
-
-  call self._test_align('indent_tabs', 'Alignta =')
-
-  let g:alignta_confirm_for_retab = save_confirm
 endfunction
 
 "=============================================================================
@@ -235,6 +250,20 @@ function! tc.test_align_mb_block_is_broken()
   execute range[0]
   execute "normal! 02l\<C-v>" . (range[1] - range[0]) . "3e\<Esc>"
   call assert#raise(":'<,'>Alignta ＝", 'broken')
+endfunction
+
+"=============================================================================
+" Misc
+
+"---------------------------------------
+" -p
+
+function! tc.test_align_pattern_escape()
+  call self._test_align('pattern_escape', 'Alignta -p <<<')
+endfunction
+
+function! tc.test_align_pattern_escape_escape()
+  call self._test_align('pattern_escape2', 'Alignta -p -p')
 endfunction
 
 "-----------------------------------------------------------------------------

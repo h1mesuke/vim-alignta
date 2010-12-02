@@ -51,7 +51,7 @@ word	wo|rd	word	word	wo|rd
 # TEST_REGION_BLOCK_HAS_TAB_DATA_END
 
 #=============================================================================
-# Aligner
+# Padding Alignment
 
 #---------------------------------------
 # TEST_ALIGN_1_PATTERN_DATA_BEGIN
@@ -100,6 +100,30 @@ word	wo|rd	word	word	wo|rd
     bbb =  10
   ccccc = 100
 # TEST_ALIGN_1_PATTERN_RRR_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_1_PATTERN_LCR_DATA_BEGIN
+  a = 1
+  bbb = 10
+  ccccc = 100
+# TEST_ALIGN_1_PATTERN_LCR_DATA_END
+# TEST_ALIGN_1_PATTERN_LCR_EXPECTED_BEGIN
+  a     =   1
+  bbb   =  10
+  ccccc = 100
+# TEST_ALIGN_1_PATTERN_LCR_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_1_PATTERN_RCL_DATA_BEGIN
+  a = 1
+  bbb = 10
+  ccccc = 100
+# TEST_ALIGN_1_PATTERN_RCL_DATA_END
+# TEST_ALIGN_1_PATTERN_RCL_EXPECTED_BEGIN
+      a = 1
+    bbb = 10
+  ccccc = 100
+# TEST_ALIGN_1_PATTERN_RCL_EXPECTED_END
 
 #---------------------------------------
 # TEST_ALIGN_1_PATTERN_1_TIME_DATA_BEGIN
@@ -162,6 +186,30 @@ word	wo|rd	word	word	wo|rd
 # TEST_ALIGN_1_PATTERN_2_TIMES_RRR_EXPECTED_END
 
 #---------------------------------------
+# TEST_ALIGN_1_PATTERN_2_TIMES_LCR_DATA_BEGIN
+  a = bbbbb = c = ddddd = 1
+  aaa = bbb = ccc = ddd = 10
+  aaaaa = b = ccccc = d = 100
+# TEST_ALIGN_1_PATTERN_2_TIMES_LCR_DATA_END
+# TEST_ALIGN_1_PATTERN_2_TIMES_LCR_EXPECTED_BEGIN
+  a     = bbbbb =   c = ddddd = 1
+  aaa   = bbb   =  ccc = ddd = 10
+  aaaaa = b     = ccccc = d = 100
+# TEST_ALIGN_1_PATTERN_2_TIMES_LCR_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_1_PATTERN_2_TIMES_RCL_DATA_BEGIN
+  a = bbbbb = c = ddddd = 1
+  aaa = bbb = ccc = ddd = 10
+  aaaaa = b = ccccc = d = 100
+# TEST_ALIGN_1_PATTERN_2_TIMES_RCL_DATA_END
+# TEST_ALIGN_1_PATTERN_2_TIMES_RCL_EXPECTED_BEGIN
+      a = bbbbb = c = ddddd = 1
+    aaa =   bbb = ccc = ddd = 10
+  aaaaa =     b = ccccc = d = 100
+# TEST_ALIGN_1_PATTERN_2_TIMES_RCL_EXPECTED_END
+
+#---------------------------------------
 # TEST_ALIGN_1_PATTERN_N_TIMES_DATA_BEGIN
   a = bbbbb = c = ddddd = 1
   aaa = bbb = ccc = ddd = 10
@@ -210,15 +258,39 @@ word	wo|rd	word	word	wo|rd
 # TEST_ALIGN_1_PATTERN_N_TIMES_RRR_EXPECTED_END
 
 #---------------------------------------
+# TEST_ALIGN_1_PATTERN_N_TIMES_LCR_DATA_BEGIN
+  a = bbbbb = c = ddddd = 1
+  aaa = bbb = ccc = ddd = 10
+  aaaaa = b = ccccc = d =100
+# TEST_ALIGN_1_PATTERN_N_TIMES_LCR_DATA_END
+# TEST_ALIGN_1_PATTERN_N_TIMES_LCR_EXPECTED_BEGIN
+  a     = bbbbb = c     = ddddd =   1
+  aaa   = bbb   = ccc   = ddd   =  10
+  aaaaa = b     = ccccc = d     = 100
+# TEST_ALIGN_1_PATTERN_N_TIMES_LCR_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_1_PATTERN_N_TIMES_RCL_DATA_BEGIN
+  a = bbbbb = c = ddddd = 1
+  aaa = bbb = ccc = ddd = 10
+  aaaaa = b = ccccc = d =100
+# TEST_ALIGN_1_PATTERN_N_TIMES_RCL_DATA_END
+# TEST_ALIGN_1_PATTERN_N_TIMES_RCL_EXPECTED_BEGIN
+      a = bbbbb =     c = ddddd = 1
+    aaa =   bbb =   ccc =   ddd = 10
+  aaaaa =     b = ccccc =     d = 100
+# TEST_ALIGN_1_PATTERN_N_TIMES_RCL_EXPECTED_END
+
+#---------------------------------------
 # TEST_ALIGN_MULTI_PATTERNS_DATA_BEGIN
-  a = 1 /* bbbbb */
-  aaa = 10 /* bbb */
-  aaaaa = 100 /* b*/
+  a = 1 /* AAAAA */
+  bbb = 10 /* BBB */
+  ccccc = 100 /* C */
 # TEST_ALIGN_MULTI_PATTERNS_DATA_END
 # TEST_ALIGN_MULTI_PATTERNS_EXPECTED_BEGIN
-  a     = 1   /* bbbbb */
-  aaa   = 10  /* bbb   */
-  aaaaa = 100 /* b     */
+  a     = 1   /* AAAAA */
+  bbb   = 10  /* BBB   */
+  ccccc = 100 /* C     */
 # TEST_ALIGN_MULTI_PATTERNS_EXPECTED_END
 
 #---------------------------------------
@@ -342,33 +414,6 @@ word	wo|rd	word	word	wo|rd
 # TEST_ALIGN_FREEZE_ALIGNED_EXPECTED_END
 
 #-----------------------------------------------------------------------------
-# -p
-
-#---------------------------------------
-# TEST_ALIGN_PATTERN_ESCAPE_DATA_BEGIN
-  a <<< 1
-  aaa <<< 10
-  aaaaa <<< 100
-# TEST_ALIGN_PATTERN_ESCAPE_DATA_END
-# TEST_ALIGN_PATTERN_ESCAPE_EXPECTED_BEGIN
-  a     <<< 1
-  aaa   <<< 10
-  aaaaa <<< 100
-# TEST_ALIGN_PATTERN_ESCAPE_EXPECTED_END
-
-#---------------------------------------
-# TEST_ALIGN_PATTERN_ESCAPE2_DATA_BEGIN
-  a -p 1
-  aaa -p 10
-  aaaaa -p 100
-# TEST_ALIGN_PATTERN_ESCAPE2_DATA_END
-# TEST_ALIGN_PATTERN_ESCAPE2_EXPECTED_BEGIN
-  a     -p 1
-  aaa   -p 10
-  aaaaa -p 100
-# TEST_ALIGN_PATTERN_ESCAPE2_EXPECTED_END
-
-#-----------------------------------------------------------------------------
 # Block
 
 #---------------------------------------
@@ -419,49 +464,49 @@ word	wo|rd	word	word	wo|rd
 #---------------------------------------
 # TEST_ALIGN_0PAD_DATA_BEGIN
   a = 1
-  aaa = 10
-  aaaaa = 100
+  bbb = 10
+  ccccc = 100
 # TEST_ALIGN_0PAD_DATA_END
 # TEST_ALIGN_0PAD_EXPECTED_BEGIN
   a    =1
-  aaa  =10
-  aaaaa=100
+  bbb  =10
+  ccccc=100
 # TEST_ALIGN_0PAD_EXPECTED_END
 
 #---------------------------------------
 # TEST_ALIGN_3PAD_DATA_BEGIN
   a = 1
-  aaa = 10
-  aaaaa = 100
+  bbb = 10
+  ccccc = 100
 # TEST_ALIGN_3PAD_DATA_END
 # TEST_ALIGN_3PAD_EXPECTED_BEGIN
   a       =   1
-  aaa     =   10
-  aaaaa   =   100
+  bbb     =   10
+  ccccc   =   100
 # TEST_ALIGN_3PAD_EXPECTED_END
 
 #---------------------------------------
 # TEST_ALIGN_LPAD_DATA_BEGIN
   a = 1
-  aaa = 10
-  aaaaa = 100
+  bbb = 10
+  ccccc = 100
 # TEST_ALIGN_LPAD_DATA_END
 # TEST_ALIGN_LPAD_EXPECTED_BEGIN
   a       = 1
-  aaa     = 10
-  aaaaa   = 100
+  bbb     = 10
+  ccccc   = 100
 # TEST_ALIGN_LPAD_EXPECTED_END
 
 #---------------------------------------
 # TEST_ALIGN_RPAD_DATA_BEGIN
   a = 1
-  aaa = 10
-  aaaaa = 100
+  bbb = 10
+  ccccc = 100
 # TEST_ALIGN_RPAD_DATA_END
 # TEST_ALIGN_RPAD_EXPECTED_BEGIN
   a     =   1
-  aaa   =   10
-  aaaaa =   100
+  bbb   =   10
+  ccccc =   100
 # TEST_ALIGN_RPAD_EXPECTED_END
 
 #-----------------------------------------------------------------------------
@@ -470,37 +515,37 @@ word	wo|rd	word	word	wo|rd
 #---------------------------------------
 # TEST_ALIGN_REGEX_1_PATTERN_DATA_BEGIN
   a 1
-  aaa 20
-  aaaaa 300
+  bbb 20
+  ccccc 300
 # TEST_ALIGN_REGEX_1_PATTERN_DATA_END
 # TEST_ALIGN_REGEX_1_PATTERN_EXPECTED_BEGIN
   a     1
-  aaa   20
-  aaaaa 300
+  bbb   20
+  ccccc 300
 # TEST_ALIGN_REGEX_1_PATTERN_EXPECTED_END
 
 #---------------------------------------
 # TEST_ALIGN_REGEX_1_PATTERN_2_TIMES_DATA_BEGIN
   a 1 100 1 100
-  aaa 20 20 20 20
-  aaaaa 300 3 300 3
+  bbb 20 20 20 20
+  ccccc 300 3 300 3
 # TEST_ALIGN_REGEX_1_PATTERN_2_TIMES_DATA_END
 # TEST_ALIGN_REGEX_1_PATTERN_2_TIMES_EXPECTED_BEGIN
   a     1   100 1 100
-  aaa   20  20  20 20
-  aaaaa 300 3   300 3
+  bbb   20  20  20 20
+  ccccc 300 3   300 3
 # TEST_ALIGN_REGEX_1_PATTERN_2_TIMES_EXPECTED_END
 
 #---------------------------------------
 # TEST_ALIGN_REGEX_1_PATTERN_N_TIMES_DATA_BEGIN
   a 1 100 1 100
-  aaa 20 20 20 20
-  aaaaa 300 3 300 3
+  bbb 20 20 20 20
+  ccccc 300 3 300 3
 # TEST_ALIGN_REGEX_1_PATTERN_N_TIMES_DATA_END
 # TEST_ALIGN_REGEX_1_PATTERN_N_TIMES_EXPECTED_BEGIN
   a     1   100 1   100
-  aaa   20  20  20  20
-  aaaaa 300 3   300 3
+  bbb   20  20  20  20
+  ccccc 300 3   300 3
 # TEST_ALIGN_REGEX_1_PATTERN_N_TIMES_EXPECTED_END
 
 #-----------------------------------------------------------------------------
@@ -608,7 +653,7 @@ word	wo|rd	word	word	wo|rd
 # TEST_ALIGN_INDENT_TABS_EXPECTED_END
 
 #=============================================================================
-# Aligner: Multi-byte
+# Multi-byte
 
 #---------------------------------------
 # TEST_ALIGN_MB_1_PATTERN_DATA_BEGIN
@@ -679,5 +724,35 @@ word	wo|rd	word	word	wo|rd
    単語 単語 単語 単語 単語 単語 単語 単語
   word word word word word word word word
 # TEST_ALIGN_MB_BLOCK_IS_BROKEN_DATA_END
+
+#=============================================================================
+# Misc
+
+#-----------------------------------------------------------------------------
+# -p
+
+#---------------------------------------
+# TEST_ALIGN_PATTERN_ESCAPE_DATA_BEGIN
+  a <<< 1
+  aaa <<< 10
+  aaaaa <<< 100
+# TEST_ALIGN_PATTERN_ESCAPE_DATA_END
+# TEST_ALIGN_PATTERN_ESCAPE_EXPECTED_BEGIN
+  a     <<< 1
+  aaa   <<< 10
+  aaaaa <<< 100
+# TEST_ALIGN_PATTERN_ESCAPE_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_PATTERN_ESCAPE_ESCAPE_DATA_BEGIN
+  a -p 1
+  aaa -p 10
+  aaaaa -p 100
+# TEST_ALIGN_PATTERN_ESCAPE_ESCAPE_DATA_END
+# TEST_ALIGN_PATTERN_ESCAPE_ESCAPE_EXPECTED_BEGIN
+  a     -p 1
+  aaa   -p 10
+  aaaaa -p 100
+# TEST_ALIGN_PATTERN_ESCAPE_ESCAPE_EXPECTED_END
 
 # vim: filetype=conf: ai
