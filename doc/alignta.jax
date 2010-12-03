@@ -25,24 +25,24 @@ License : MIT license {{{
 
 目次						*alignta-contents*
 
-概要				|alignta-introduction|
-インストール			|alignta-install|
-整列				|alignta-alignment|
-  整列方式			  |alignta-alignment-methods|
-  コマンド			  |alignta-commands|
-  パターン			  |alignta-patterns|
-  整列オプション		  |alignta-alignment-options|
-    PADDING ALIGNMENT OPTIONS	    |alignta-padding-alignment-options|
-    SHIFTING ALIGNMENT OPTIONS	    |alignta-shifting-alignment-options|
-    LINE FILTERING		    |alignta-line-filtering|
-設定				|alignta-settings|
-  変数				  |alignta-variables|
-unite-alignta			|unite-alignta|
-  変数				  |unite-source-alignta-variables|
-ToDo				|alignta-todo|
-既知のバグ			|alignta-bugs|
-更新履歴			|alignta-changelog|
-
+	概要				|alignta-introduction|
+	インストール			|alignta-install|
+	整列				|alignta-alignment|
+	  整列方式			  |alignta-alignment-methods|
+	  コマンド			  |alignta-commands|
+	  パターン			  |alignta-patterns|
+	  整列オプション		  |alignta-alignment-options|
+	    PADDING ALIGNMENT OPTIONS	    |alignta-padding-alignment-options|
+	    SHIFTING ALIGNMENT OPTIONS	    |alignta-shifting-alignment-options|
+	    LINE FILTERING		    |alignta-line-filtering|
+	設定				|alignta-settings|
+	  変数				  |alignta-variables|
+	unite-alignta			|unite-alignta|
+	  変数				  |unite-source-alignta-variables|
+	ToDo				|alignta-todo|
+	既知のバグ			|alignta-bugs|
+	更新履歴			|alignta-changelog|
+	
 ==============================================================================
 概要						*alignta-introduction*
 
