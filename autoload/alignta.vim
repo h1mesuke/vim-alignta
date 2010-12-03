@@ -3,7 +3,7 @@
 "
 " File		: autoload/alignta.vim
 " Author	: h1mesuke <himesuke@gmail.com>
-" Updated : 2010-12-03
+" Updated : 2010-12-04
 " Version : 0.0.5
 " License : MIT license {{{
 "
@@ -35,29 +35,15 @@ function! alignta#align(region, align_args, ...)
 endfunction
 
 " API for unite-alignta
-function! alignta#set_default_options(options)
-  let s:Aligner.default_options = a:options
+function! alignta#extend_default_options(idx)
+  let opts_str = g:unite_source_alignta_preset_options[a:idx]
+  call s:Aligner.extend_default_options(opts_str)
+  call s:decho("alignta: current default options: " . string(s:Aligner.default_options))
 endfunction
 
 function! alignta#reset_default_options()
-  let s:Aligner.default_options = g:alignta_default_options
-endfunction
-
-function! alignta#get_default_filters()
-  return s:Aligner.default_filters
-endfunction
-
-function! alignta#set_default_filters(filters)
-  let s:Aligner.default_filters = a:filters
-endfunction
-
-function! alignta#reset_default_filters()
-  let s:Aligner.default_filters = { 'g_pattern': "", 'v_pattern': "" }
-endfunction
-
-function! alignta#reset_all()
-  call alignta#reset_default_options()
-  call alignta#reset_default_filters()
+  call s:Aligner.init_default_options()
+  call s:decho("alignta: current default options: " . string(s:Aligner.default_options))
 endfunction
 
 "-----------------------------------------------------------------------------
@@ -72,10 +58,24 @@ let s:HUGE_VALUE = 9999
 
 let s:Aligner = {}
 
-function! s:Aligner.reset_default_options()
-  let s:Aligner.default_options = g:alignta_default_options
+function! s:Aligner.init_default_options()
+  let s:Aligner.default_options = {
+        \ 'L_fld_align': 'left',
+        \ 'M_fld_align': 'left',
+        \ 'R_fld_align': 'left',
+        \ 'L_padding': 1,
+        \ 'R_padding': 1,
+        \ 'g_pattern': "",
+        \ 'v_pattern': "",
+        \ }
+  let opts = s:Aligner._parse_options(g:alignta_default_options)
+  call extend(s:Aligner.default_options, opts, 'force')
 endfunction
-call s:Aligner.reset_default_options()
+
+function! s:Aligner.extend_default_options(opts_str)
+  let opts = s:Aligner._parse_options(a:opts_str)
+  call extend(s:Aligner.default_options, opts, 'force')
+endfunction
 
 function! s:Aligner.new(region, args, use_regex)
   let obj = copy(self)
@@ -88,7 +88,7 @@ function! s:Aligner.initialize(region, args, use_regex)
   let self.region = s:Region.new(a:region)
   let self.arguments = a:args
   let self.use_regex = a:use_regex
-  call self.init_options()
+  let self.options = copy(s:Aligner.default_options)
 
   " lines to align
   let self._lines = copy(self.region.lines)
@@ -114,22 +114,6 @@ endfunction
 function! s:min_leading_width(lines)
   let leadings = map(copy(a:lines), 'matchstr(v:val, "^\\s*")')
   return min(map(leadings, 'strlen(v:val)'))
-endfunction
-
-function! s:Aligner.init_options()
-  let self.options = {
-        \ 'L_fld_align': 'left',
-        \ 'M_fld_align': 'left',
-        \ 'R_fld_align': 'left',
-        \ 'L_padding': 1,
-        \ 'R_padding': 1,
-        \ 'g_pattern': "",
-        \ 'v_pattern': "",
-        \ }
-  let opts = self._parse_options(s:Aligner.default_options)
-  if !empty(opts)
-    call self.apply_options(opts)
-  endif
 endfunction
 
 function! s:Aligner.apply_options(options)
@@ -382,6 +366,11 @@ function! s:decho(msg)
     endif
   endif
 endfunction
+
+" initialize s:Aligner itself
+call s:Aligner.init_default_options()
+" NOTE: This line must be evaluated AFTER the definition of
+" s:Aligner._parse_options()
 
 "-----------------------------------------------------------------------------
 " String
