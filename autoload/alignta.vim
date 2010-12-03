@@ -35,10 +35,6 @@ function! alignta#align(region, align_args, ...)
 endfunction
 
 " API for unite-alignta
-function! alignta#get_default_options()
-  return s:Aligner.default_options
-endfunction
-
 function! alignta#set_default_options(options)
   let s:Aligner.default_options = a:options
 endfunction
@@ -74,13 +70,12 @@ let s:HUGE_VALUE = 9999
 "-----------------------------------------------------------------------------
 " Aligner
 
-let s:Aligner = {
-      \ 'default_options': g:alignta_default_options,
-      \ 'default_filters': {
-      \   'g_pattern': "",
-      \   'v_pattern': "",
-      \ }
-      \}
+let s:Aligner = {}
+
+function! s:Aligner.reset_default_options()
+  let s:Aligner.default_options = g:alignta_default_options
+endfunction
+call s:Aligner.reset_default_options()
 
 function! s:Aligner.new(region, args, use_regex)
   let obj = copy(self)
@@ -128,8 +123,8 @@ function! s:Aligner.init_options()
         \ 'R_fld_align': 'left',
         \ 'L_padding': 1,
         \ 'R_padding': 1,
-        \ 'g_pattern': s:Aligner.default_filters.g_pattern,
-        \ 'v_pattern': s:Aligner.default_filters.v_pattern,
+        \ 'g_pattern': "",
+        \ 'v_pattern': "",
         \ }
   let opts = self._parse_options(s:Aligner.default_options)
   if !empty(opts)
@@ -206,52 +201,54 @@ function! s:Aligner._parse_options(value)
   let align = { '<': 'left', '|': 'center', '>': 'right' }
   let opts = {}
 
-  " options for padding alignment
-  " <<< or <<<1 or <<<11 or <<<1:1
-  let matched_list = matchlist(a:value,
-        \ '^\([<|>]\)\([<|>]\)\([<|>]\)\%(\(\d\)\(\d\)\=\|\(\d\+\):\(\d\+\)\)\=$')
-  if len(matched_list) > 0
-    let opts.L_fld_align = align[matched_list[1]]
-    let opts.M_fld_align = align[matched_list[2]]
-    let opts.R_fld_align = align[matched_list[3]]
-    if matched_list[4] != ""
-      let opts.L_padding = str2nr(matched_list[4])
-      let opts.R_padding = (matched_list[5] != "" ? str2nr(matched_list[5]) : opts.L_padding)
-    endif
-    if matched_list[6] != ""
-      let opts.L_padding = str2nr(matched_list[6])
-      let opts.R_padding = str2nr(matched_list[7])
-    endif
-    call s:decho(" parsed options = " . string(opts))
-    return opts
-  endif
+  for opts_str in split(a:value, '\(\(^\|[^\\]\)\(\\\{2}\)*\)\@<=\s\s*')
 
-  " options for shifting alignment
-  " <= or <=1
-  let matched_list = matchlist(a:value, '^\([<|>]\)=\(\d\+\)\=$')
-  if len(matched_list) > 0
-    let opts.L_fld_align = align[matched_list[1]]
-    let opts.M_fld_align = 'none'
-    let opts.R_fld_align = 'none'
-    let opts.L_padding = (matched_list[2] != "" ? str2nr(matched_list[2]) : 1)
-    let opts.R_padding = 0
-    call s:decho(" parsed options = " . string(opts))
-    return opts
-  endif
-
-  " filtering pattern
-  let matched_list = matchlist(a:value, '^\([gv]\)/\(.*\)$')
-  if len(matched_list) > 0
-    if matched_list[1] ==# 'g'
-      " g/pattern
-      let opts.g_pattern = matched_list[2]
-    else
-      " v/pattern
-      let opts.v_pattern = matched_list[2]
+    " options for padding alignment
+    " <<< or <<<1 or <<<11 or <<<1:1
+    let matched_list = matchlist(opts_str,
+          \ '^\([<|>]\)\([<|>]\)\([<|>]\)\%(\(\d\)\(\d\)\=\|\(\d\+\):\(\d\+\)\)\=$')
+    if len(matched_list) > 0
+      let opts.L_fld_align = align[matched_list[1]]
+      let opts.M_fld_align = align[matched_list[2]]
+      let opts.R_fld_align = align[matched_list[3]]
+      if matched_list[4] != ""
+        let opts.L_padding = str2nr(matched_list[4])
+        let opts.R_padding = (matched_list[5] != "" ? str2nr(matched_list[5]) : opts.L_padding)
+      endif
+      if matched_list[6] != ""
+        let opts.L_padding = str2nr(matched_list[6])
+        let opts.R_padding = str2nr(matched_list[7])
+      endif
+      call s:decho(" parsed options = " . string(opts))
+      continue
     endif
-    call s:decho(" parsed options = " . string(opts))
-    return opts
-  endif
+
+    " options for shifting alignment
+    " <= or <=1
+    let matched_list = matchlist(opts_str, '^\([<|>]\)=\(\d\+\)\=$')
+    if len(matched_list) > 0
+      let opts.L_fld_align = align[matched_list[1]]
+      let opts.M_fld_align = 'none'
+      let opts.R_fld_align = 'none'
+      let opts.L_padding = (matched_list[2] != "" ? str2nr(matched_list[2]) : 1)
+      let opts.R_padding = 0
+      call s:decho(" parsed options = " . string(opts))
+      continue
+    endif
+
+    " filtering pattern
+    let matched_list = matchlist(opts_str, '^\([gv]\)/\(.*\)$')
+    if len(matched_list) > 0
+      if matched_list[1] ==# 'g'
+        " g/pattern
+        let opts.g_pattern = matched_list[2]
+      else
+        " v/pattern
+        let opts.v_pattern = matched_list[2]
+      endif
+      call s:decho(" parsed options = " . string(opts))
+    endif
+  endfor
 
   return opts
 endfunction
