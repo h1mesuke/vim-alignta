@@ -34,7 +34,7 @@ function! alignta#align(region, align_args, ...)
   call aligner.align()
 endfunction
 
-" for unite-alignta
+" API for unite-alignta
 function! alignta#get_default_options()
   return s:Aligner.default_options
 endfunction
@@ -45,6 +45,23 @@ endfunction
 
 function! alignta#reset_default_options()
   let s:Aligner.default_options = g:alignta_default_options
+endfunction
+
+function! alignta#get_default_filters()
+  return s:Aligner.default_filters
+endfunction
+
+function! alignta#set_default_filters(filters)
+  let s:Aligner.default_filters = a:filters
+endfunction
+
+function! alignta#reset_default_filters()
+  let s:Aligner.default_filters = { 'g_pattern': "", 'v_pattern': "" }
+endfunction
+
+function! alignta#reset_all()
+  call alignta#reset_default_options()
+  call alignta#reset_default_filters()
 endfunction
 
 "-----------------------------------------------------------------------------
@@ -59,7 +76,11 @@ let s:HUGE_VALUE = 9999
 
 let s:Aligner = {
       \ 'default_options': g:alignta_default_options,
+      \ 'default_filters': {
+      \   'g_pattern': "",
+      \   'v_pattern': "",
       \ }
+      \}
 
 function! s:Aligner.new(region, args, use_regex)
   let obj = copy(self)
@@ -80,7 +101,7 @@ function! s:Aligner.initialize(region, args, use_regex)
     call map(self._lines, 'substitute(v:val, "\\s*$", "", "")')
   endif
 
-  " keep the minmum leadings
+  " keep the minimum leadings
   let n_lines = len(self._lines)
   let leading_width = s:min_leading_width(self._lines)
   let leading = s:padding(leading_width)
@@ -102,11 +123,13 @@ endfunction
 
 function! s:Aligner.init_options()
   let self.options = {
-        \  'L_fld_align': 'left',
-        \  'M_fld_align': 'left',
-        \  'R_fld_align': 'left',
-        \  'L_padding': 1,
-        \  'R_padding': 1,
+        \ 'L_fld_align': 'left',
+        \ 'M_fld_align': 'left',
+        \ 'R_fld_align': 'left',
+        \ 'L_padding': 1,
+        \ 'R_padding': 1,
+        \ 'g_pattern': s:Aligner.default_filters.g_pattern,
+        \ 'v_pattern': s:Aligner.default_filters.v_pattern,
         \ }
   let opts = self._parse_options(s:Aligner.default_options)
   if !empty(opts)
@@ -216,6 +239,20 @@ function! s:Aligner._parse_options(value)
     return opts
   endif
 
+  " filtering pattern
+  let matched_list = matchlist(a:value, '^\([gv]\)/\(.*\)$')
+  if len(matched_list) > 0
+    if matched_list[1] ==# 'g'
+      " g/pattern
+      let opts.g_pattern = matched_list[2]
+    else
+      " v/pattern
+      let opts.v_pattern = matched_list[2]
+    endif
+    call s:decho(" parsed options = " . string(opts))
+    return opts
+  endif
+
   return opts
 endfunction
 
@@ -252,11 +289,19 @@ function! s:Aligner._align_with(pattern)
   "---------------------------------------
   " Phase 1: Match and Split
 
+  " eval once
+  let has_g_pattern = (self.options.g_pattern != "")
+  let has_v_pattern = (self.options.v_pattern != "")
+
   let matched_count = 0
   let idx = 0
   while idx < n_lines
     let line = self._lines[idx]
-    if line != ""
+    let orig_line = self.region.original_lines[idx]
+    if ((has_g_pattern && orig_line !~# self.options.g_pattern) ||
+          \ (has_v_pattern && orig_line =~# self.options.v_pattern))
+      " filtered, go to the next line
+    elseif line != ""
       let match_beg = match(line, a:pattern)
       if match_beg >= 0
         let match_end = matchend(line, a:pattern)
@@ -277,7 +322,7 @@ function! s:Aligner._align_with(pattern)
   " Phase 2: Pad and Join
 
   if self.alignment_method() ==# 'shift'
-    " keep the minmum leadings
+    " keep the minimum leadings
     let leading_width = s:min_leading_width(values(L_flds))
     let leading = s:padding(leading_width)
   else
