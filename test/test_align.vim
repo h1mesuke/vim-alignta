@@ -281,6 +281,25 @@ function! tc.test_align_shift_block()
 endfunction
 
 "=============================================================================
+" Filtering
+
+function! tc.test_align_g_pattern_filtering()
+  call self._test_align('g_pattern_filtering', 'Alignta g/^\s*# =')
+endfunction
+
+function! tc.test_align_v_pattern_filtering()
+  call self._test_align('v_pattern_filtering', 'Alignta v/^\s*# =')
+endfunction
+
+function! tc.test_align_block_g_pattern_filtering()
+  call self._test_align('block_g_pattern_filtering', 'Alignta g/^\s*# =')
+endfunction
+
+function! tc.test_align_block_v_pattern_filtering()
+  call self._test_align('block_v_pattern_filtering', 'Alignta v/^\s*# =')
+endfunction
+
+"=============================================================================
 " Multi-byte
 
 function! tc.test_align_mb_1_pattern()

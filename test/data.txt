@@ -788,6 +788,81 @@ word	wo|rd	word	word	wo|rd
 # TEST_ALIGN_SHIFT_3PAD_EXPECTED_END
 
 #=============================================================================
+# Filtering
+
+#---------------------------------------
+# TEST_ALIGN_G_PATTERN_FILTERING_DATA_BEGIN
+  # a = 1
+  # bbb = 10
+  # ccccc = 100
+  a = 1
+  bbb = 10
+  ccccc = 100
+# TEST_ALIGN_G_PATTERN_FILTERING_DATA_END
+# TEST_ALIGN_G_PATTERN_FILTERING_EXPECTED_BEGIN
+  # a     = 1
+  # bbb   = 10
+  # ccccc = 100
+  a = 1
+  bbb = 10
+  ccccc = 100
+# TEST_ALIGN_G_PATTERN_FILTERING_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_V_PATTERN_FILTERING_DATA_BEGIN
+  # a = 1
+  # bbb = 10
+  # ccccc = 100
+  a = 1
+  bbb = 10
+  ccccc = 100
+# TEST_ALIGN_V_PATTERN_FILTERING_DATA_END
+# TEST_ALIGN_V_PATTERN_FILTERING_EXPECTED_BEGIN
+  # a = 1
+  # bbb = 10
+  # ccccc = 100
+  a     = 1
+  bbb   = 10
+  ccccc = 100
+# TEST_ALIGN_V_PATTERN_FILTERING_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_BLOCK_G_PATTERN_FILTERING_DATA_BEGIN
+  #** a = 1       ***
+  #** bbb = 10    ***
+  #** ccccc = 100 ***
+  *** a = 1       ***
+  *** bbb = 10    ***
+  *** ccccc = 100 ***
+# TEST_ALIGN_BLOCK_G_PATTERN_FILTERING_DATA_END
+# TEST_ALIGN_BLOCK_G_PATTERN_FILTERING_EXPECTED_BEGIN
+  #** a     = 1   ***
+  #** bbb   = 10  ***
+  #** ccccc = 100 ***
+  *** a = 1       ***
+  *** bbb = 10    ***
+  *** ccccc = 100 ***
+# TEST_ALIGN_BLOCK_G_PATTERN_FILTERING_EXPECTED_END
+
+#---------------------------------------
+# TEST_ALIGN_BLOCK_V_PATTERN_FILTERING_DATA_BEGIN
+  #** a = 1       ***
+  #** bbb = 10    ***
+  #** ccccc = 100 ***
+  *** a = 1       ***
+  *** bbb = 10    ***
+  *** ccccc = 100 ***
+# TEST_ALIGN_BLOCK_V_PATTERN_FILTERING_DATA_END
+# TEST_ALIGN_BLOCK_V_PATTERN_FILTERING_EXPECTED_BEGIN
+  #** a = 1       ***
+  #** bbb = 10    ***
+  #** ccccc = 100 ***
+  *** a     = 1   ***
+  *** bbb   = 10  ***
+  *** ccccc = 100 ***
+# TEST_ALIGN_BLOCK_V_PATTERN_FILTERING_EXPECTED_END
+
+#=============================================================================
 # Multi-byte
 
 #---------------------------------------
