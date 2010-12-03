@@ -126,13 +126,12 @@ function! tc.test_align_complex_multi_patterns_rcl()
   call self._test_align('complex_multi_patterns_rcl', 'Alignta >|< = : /* */')
 endfunction
 
-" need to restruct
 function! tc.test_align_blank_L_flds()
   call self._test_align('blank_L_flds', 'Alignta! \w\+')
 endfunction
 
-function! tc.test_align_freeze_aligned()
-  call self._test_align('freeze_aligned', 'Alignta! \S\+{+}')
+function! tc.test_align_aligned_width()
+  call self._test_align('aligned_width', 'Alignta! \S\+{+}')
 endfunction
 
 "---------------------------------------

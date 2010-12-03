@@ -476,26 +476,26 @@ word	wo|rd	word	word	wo|rd
 #---------------------------------------
 # TEST_ALIGN_BLANK_L_FLDS_DATA_BEGIN
   a = 1
-    aaa = 10
-      aaaaa = 100
+    bbb = 10
+      ccccc = 100
 # TEST_ALIGN_BLANK_L_FLDS_DATA_END
 # TEST_ALIGN_BLANK_L_FLDS_EXPECTED_BEGIN
   a     = 1
-  aaa   = 10
-  aaaaa = 100
+  bbb   = 10
+  ccccc = 100
 # TEST_ALIGN_BLANK_L_FLDS_EXPECTED_END
 
 #---------------------------------------
-# TEST_ALIGN_FREEZE_ALIGNED_DATA_BEGIN
+# TEST_ALIGN_ALIGNED_WIDTH_DATA_BEGIN
   a a a
-  bb bb
-  ccc ccc
-# TEST_ALIGN_FREEZE_ALIGNED_DATA_END
-# TEST_ALIGN_FREEZE_ALIGNED_EXPECTED_BEGIN
-  a   a   a
-  bb  bb
-  ccc ccc
-# TEST_ALIGN_FREEZE_ALIGNED_EXPECTED_END
+  bbb bbb
+  ccccc ccccc
+# TEST_ALIGN_ALIGNED_WIDTH_DATA_END
+# TEST_ALIGN_ALIGNED_WIDTH_EXPECTED_BEGIN
+  a     a     a
+  bbb   bbb
+  ccccc ccccc
+# TEST_ALIGN_ALIGNED_WIDTH_EXPECTED_END
 
 #-----------------------------------------------------------------------------
 # Block
@@ -503,50 +503,50 @@ word	wo|rd	word	word	wo|rd
 #---------------------------------------
 # TEST_ALIGN_BLOCK_DATA_BEGIN
   *** a = 1       ***
-  *** aaa = 10    ***
-  *** aaaaa = 100 ***
+  *** bbb = 10    ***
+  *** ccccc = 100 ***
 # TEST_ALIGN_BLOCK_DATA_END
 # TEST_ALIGN_BLOCK_EXPECTED_BEGIN
   *** a     = 1   ***
-  *** aaa   = 10  ***
-  *** aaaaa = 100 ***
+  *** bbb   = 10  ***
+  *** ccccc = 100 ***
 # TEST_ALIGN_BLOCK_EXPECTED_END
 
 #---------------------------------------
 # TEST_ALIGN_BLOCK_WITH_RAGGED_RIGHTS_DATA_BEGIN
   *** a = 1       ***
 
-  *** aaa = 10    ***
+  *** bbb = 10    ***
 
-  *** aaaaa = 100 ***
+  *** ccccc = 100 ***
 # TEST_ALIGN_BLOCK_WITH_RAGGED_RIGHTS_DATA_END
 # TEST_ALIGN_BLOCK_WITH_RAGGED_RIGHTS_EXPECTED_BEGIN
   *** a     = 1   ***
 
-  *** aaa   = 10  ***
+  *** bbb   = 10  ***
 
-  *** aaaaa = 100 ***
+  *** ccccc = 100 ***
 # TEST_ALIGN_BLOCK_WITH_RAGGED_RIGHTS_EXPECTED_END
 
 #---------------------------------------
 # TEST_ALIGN_BLOCK_WITH_SHORT_RIGHTS_DATA_BEGIN
   *** a = 1       ***
-  *** aaa = 10
   *** bbb = 10
-  *** aaaaa = 100 ***
+  *** bbb = 10
+  *** ccccc = 100 ***
 # TEST_ALIGN_BLOCK_WITH_SHORT_RIGHTS_DATA_END
 # TEST_ALIGN_BLOCK_WITH_SHORT_RIGHTS_EXPECTED_BEGIN
   *** a     = 1   ***
-  *** aaa   = 10
   *** bbb   = 10
-  *** aaaaa = 100 ***
+  *** bbb   = 10
+  *** ccccc = 100 ***
 # TEST_ALIGN_BLOCK_WITH_SHORT_RIGHTS_EXPECTED_END
 
 #---------------------------------------
 # TEST_ALIGN_BLOCK_HAS_TAB_DATA_BEGIN
   ***	a			=	1		***
-  ***	aaa		=	10	***
-  ***	aaaaa	=	100	***
+  ***	bbb		=	10	***
+  ***	ccccc	=	100	***
 # TEST_ALIGN_BLOCK_HAS_TAB_DATA_END
 
 #-----------------------------------------------------------------------------
