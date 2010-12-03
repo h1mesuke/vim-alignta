@@ -38,12 +38,12 @@ endfunction
 function! alignta#extend_default_options(idx)
   let opts_str = g:unite_source_alignta_preset_options[a:idx]
   call s:Aligner.extend_default_options(opts_str)
-  call s:decho("alignta: current default options: " . string(s:Aligner.default_options))
+  call s:debug_echo("alignta: current default options: " . string(s:Aligner.default_options))
 endfunction
 
 function! alignta#reset_default_options()
   call s:Aligner.init_default_options()
-  call s:decho("alignta: current default options: " . string(s:Aligner.default_options))
+  call s:debug_echo("alignta: current default options: " . string(s:Aligner.default_options))
 endfunction
 
 "-----------------------------------------------------------------------------
@@ -125,9 +125,9 @@ function! s:Aligner.alignment_method()
 endfunction
 
 function! s:Aligner.align()
-  call s:decho("region = " . string(self.region))
-  call s:decho("arguments = " . string(self.arguments))
-  call s:decho(self._lines)
+  call s:debug_echo("region = " . string(self.region))
+  call s:debug_echo("arguments = " . string(self.arguments))
+  call s:debug_echo(self._lines)
 
   if self.region.type ==# 'block' && self.region.has_tab
     throw "alignta: RegionError: block contains tabs"
@@ -203,7 +203,7 @@ function! s:Aligner._parse_options(value)
         let opts.L_padding = str2nr(matched_list[6])
         let opts.R_padding = str2nr(matched_list[7])
       endif
-      call s:decho(" parsed options = " . string(opts))
+      call s:debug_echo(" parsed options = " . string(opts))
       continue
     endif
 
@@ -216,7 +216,7 @@ function! s:Aligner._parse_options(value)
       let opts.R_fld_align = 'none'
       let opts.L_padding = (matched_list[2] != "" ? str2nr(matched_list[2]) : 1)
       let opts.R_padding = 0
-      call s:decho(" parsed options = " . string(opts))
+      call s:debug_echo(" parsed options = " . string(opts))
       continue
     endif
 
@@ -230,7 +230,7 @@ function! s:Aligner._parse_options(value)
         " v/pattern
         let opts.v_pattern = matched_list[2]
       endif
-      call s:decho(" parsed options = " . string(opts))
+      call s:debug_echo(" parsed options = " . string(opts))
     endif
   endfor
 
@@ -260,7 +260,7 @@ function! s:Aligner._parse_pattern(value)
 endfunction
 
 function! s:Aligner._align_with(pattern)
-  call s:decho("current options = " . string(self.options))
+  call s:debug_echo("current options = " . string(self.options))
 
   let L_flds = {}
   let M_flds = {}
@@ -342,9 +342,9 @@ function! s:Aligner._align_with(pattern)
     let idx += 1
   endwhile
 
-  call s:decho("pattern = " . string(a:pattern))
-  call s:decho(self._aligned)
-  call s:decho(self._lines)
+  call s:debug_echo("pattern = " . string(a:pattern))
+  call s:debug_echo(self._aligned)
+  call s:debug_echo(self._lines)
 
   return s:SUCCESS
 endfunction
@@ -355,7 +355,7 @@ function! s:print_error(msg)
   echohl None
 endfunction
 
-function! s:decho(msg)
+function! s:debug_echo(msg)
   if exists('g:alignta_debug') && g:alignta_debug
     if type(a:msg) == type([])
       for line in a:msg
