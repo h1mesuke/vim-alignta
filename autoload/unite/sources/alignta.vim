@@ -2,7 +2,7 @@
 " File    : autoload/unite/sources/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
 " Updated : 2010-12-04
-" Version : 0.0.5
+" Version : 0.0.6
 " License : MIT license {{{
 "
 "   Permission is hereby granted, free of charge, to any person obtaining
