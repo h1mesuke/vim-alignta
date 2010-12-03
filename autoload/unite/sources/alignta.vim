@@ -52,45 +52,50 @@ let s:source = {
 
 function! s:source.gather_candidates(args, context)
   try
+    let mode = (len(a:args) > 0 ? a:args[0] : 'unknown')
     let cands = []
 
-    " preset arguments
-    for arg_list in g:unite_source_alignta_preset_arguments
-      if arg_list =~ '^\s*!\s\+'
-        let command = 'Alignta!'
-        let arg_list = substitute(arg_list, '^\s*!\s\+', '', '')
-      else
-        let command = 'Alignta'
-      endif
-      let command_line = "'<,'>" . command . ' ' . arg_list
+    if mode =~? '^v\%[isual]$' || mode ==# 'unknown'
+      " preset arguments
+      for arg_list in g:unite_source_alignta_preset_arguments
+        if arg_list =~ '^\s*!\s\+'
+          let command = 'Alignta!'
+          let arg_list = substitute(arg_list, '^\s*!\s\+', '', '')
+        else
+          let command = 'Alignta'
+        endif
+        let command_line = "'<,'>" . command . ' ' . arg_list
+        call add(cands, {
+              \ 'word': command_line,
+              \ 'source': 'alignta',
+              \ 'kind': 'command',
+              \ 'action__command': command_line,
+              \ })
+      endfor
+    endif
+
+    if mode =~? '^n\%[ormal]$' || mode ==# 'unknown'
+      " preset options
+      let idx = 0
+      while idx < len(g:unite_source_alignta_preset_options)
+        let opts_str = g:unite_source_alignta_preset_options[idx]
+        call add(cands, {
+              \ 'word': "Options: " . opts_str,
+              \ 'source': 'alignta',
+              \ 'kind': 'command',
+              \ 'action__command': 'call alignta#extend_default_options(' . idx . ')',
+              \ })
+        let idx += 1
+      endwhile
+
+      " reset
       call add(cands, {
-            \ 'word': command_line,
+            \ 'word': "Options: <RESET>",
             \ 'source': 'alignta',
             \ 'kind': 'command',
-            \ 'action__command': command_line,
+            \ 'action__command': 'call alignta#reset_default_options()',
             \ })
-    endfor
-
-    " preset options
-    let idx = 0
-    while idx < len(g:unite_source_alignta_preset_options)
-      let opts_str = g:unite_source_alignta_preset_options[idx]
-      call add(cands, {
-            \ 'word': "Options: " . opts_str,
-            \ 'source': 'alignta',
-            \ 'kind': 'command',
-            \ 'action__command': 'call alignta#extend_default_options(' . idx . ')',
-            \ })
-      let idx += 1
-    endwhile
-
-    " reset
-    call add(cands, {
-          \ 'word': "Options: <RESET>",
-          \ 'source': 'alignta',
-          \ 'kind': 'command',
-          \ 'action__command': 'call alignta#reset_default_options()',
-          \ })
+    endif
 
     return cands
   catch
