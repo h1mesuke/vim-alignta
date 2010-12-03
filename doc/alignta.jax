@@ -1,7 +1,7 @@
 *alignta.txt*	新たなる整列プラグイン
 
 Author  : h1mesuke <himesuke@gmail.com>
-Updated : 2010-12-02
+Updated : 2010-12-03
 License : MIT license {{{
 
   Permission is hereby granted, free of charge, to any person obtaining
@@ -261,6 +261,18 @@ SHIFTING ALIGNMENT				*alignta-shifting-alignment*
 	| a = 1 /* AAAAA */   | a     = 1   /* AAAAA */ |
 	| bbb = 10 /* BBB */  | bbb   = 10  /* BBB   */ |
 	| ccccc = 100 /* C */ | ccccc = 100 /* C     */ |
+	+---------------------+-------------------------+
+
+	+---------------------+-------------------------+
+	| Original            | :Alignta = : /* */      |
+	+---------------------+-------------------------+
+	| a = 1 /* AAAAA */   | a     = 1   /* AAAAA */ |
+	| A : 2 /* aaaaa */   | A     : 2   /* aaaaa */ |
+	| bbb = 10 /* BBB */  | bbb   = 10  /* BBB   */ |
+	| BBB : 20 /* bbb */  | BBB   : 20  /* bbb   */ |
+	| ccccc = 100 /* C */ | ccccc = 100 /* C     */ |
+	| CCCCC : 200 /* c */ | CCCCC : 200 /* c     */ |
+	| func() /* FUNC */   | func()      /* FUNC  */ |
 	+---------------------+-------------------------+
 <
 ------------------------------------------------------------------------------
