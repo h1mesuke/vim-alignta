@@ -3,7 +3,7 @@
 "
 " File		: plugin/alignta.vim
 " Author	: h1mesuke <himesuke@gmail.com>
-" Updated : 2010-12-02
+" Updated : 2010-12-04
 " Version : 0.0.6
 " License : MIT license {{{
 "
@@ -52,11 +52,11 @@ endif
 "-----------------------------------------------------------------------------
 " Command
 
-command! -bang -range -nargs=+ Alignta <line1>,<line2>call <SID>align([<f-args>], '<bang>')
+command! -range -bang -nargs=+ Alignta <line1>,<line2>call <SID>align([<f-args>], '<bang>')
 
 if !exists(':Align')
   " :Align is mine, hehehe
-  command! -bang -range -nargs=+ Align Alignta<bang> <args>
+  command! -range -bang -nargs=+ Align Alignta<bang> <args>
 endif
 
 function! s:align(align_args, bang) range
@@ -69,6 +69,8 @@ function! s:align(align_args, bang) range
   let use_regex = (a:bang == '!')
   call alignta#align(region, a:align_args, use_regex)
 endfunction
+
+"-----------------------------------------------------------------------------
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
