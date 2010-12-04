@@ -116,7 +116,7 @@ function! s:min_leading_width(lines)
   return min(map(leadings, 'strlen(v:val)'))
 endfunction
 
-function! s:Aligner.apply_options(options)
+function! s:Aligner.extend_options(options)
   call extend(self.options, a:options, 'force')
 endfunction
 
@@ -157,7 +157,7 @@ function! s:Aligner.align()
     let opts = self._parse_options(value)
     if !next_as_pattern && !empty(opts)
       " options
-      call self.apply_options(opts)
+      call self.extend_options(opts)
     else
       " pattern
       let [pattern, times] = self._parse_pattern(value)
