@@ -3,7 +3,7 @@
 "
 " File		: autoload/alignta.vim
 " Author	: h1mesuke <himesuke@gmail.com>
-" Updated : 2010-12-04
+" Updated : 2010-12-06
 " Version : 0.0.6
 " License : MIT license {{{
 "
@@ -101,14 +101,13 @@ function! s:Aligner.initialize(region, args, use_regex)
   let leading_width = s:min_leading_width(self._lines)
   let leading = s:padding(leading_width)
   call map(self._lines, 'substitute(v:val, "^" . leading, "", "")')
-  " aligned part of each line
-  let self._aligned = s:init_list(n_lines, leading)
-  " aligned part's width of each line
-  let self._aligned_width = s:init_list(n_lines, leading_width)
-endfunction
 
-function! s:init_list(length, value)
-  return map(range(0, a:length - 1), 'a:value')
+  let self._line_data = map(range(0, n_lines - 1), '{
+        \ "aligned_part": leading,
+        \ "aligned_width": leading_width,
+        \ "last_fld_align": "none",
+        \ "last_fld_width": -1,
+        \ }')
 endfunction
 
 function! s:min_leading_width(lines)
@@ -172,7 +171,12 @@ function! s:Aligner.align()
   endfor
 
   " update!
-  let self.region.lines = map(self._aligned, 'v:val . self._lines[v:key]')
+  let self.region.lines = map(self._line_data, '
+        \ v:val.aligned_part . (
+        \   v:val.last_fld_align !=# "none"
+        \   ? s:string_pad(self._lines[v:key], v:val.last_fld_width, v:val.last_fld_align, 1)
+        \   : self._lines[v:key]
+        \ )')
   call self.region.update()
 
   if exists('g:alignta_profile') && g:alignta_profile && has("reltime")
@@ -313,18 +317,27 @@ function! s:Aligner._align_with(pattern)
   call map(L_flds, 's:string_trim(v:val)')
   let blank_L_flds = (len(filter(values(L_flds), 'v:val == ""')) == len(L_flds))
 
-  let L_fld_width = max(values(map(copy(L_flds), 'self._aligned_width[v:key] + s:string_width(v:val)')))
-  call map(L_flds, 's:string_pad(v:val, L_fld_width - self._aligned_width[v:key], self.options.L_fld_align)')
+  let L_fld_width = max(values(map(copy(L_flds),
+        \ 'self._line_data[v:key].aligned_width + s:string_width(v:val)')))
+
+  call map(L_flds, 's:string_pad(v:val,
+        \ L_fld_width - self._line_data[v:key].aligned_width,
+        \ self.options.L_fld_align
+        \ )')
 
   if self.alignment_method() ==# 'pad'
     call map(R_flds, 's:string_trim(v:val)')
 
     let M_fld_width = max(map(values(M_flds), 's:string_width(v:val)'))
-    call map(M_flds, 's:string_pad(v:val, M_fld_width, self.options.M_fld_align, (R_flds[v:key] == ""))')
 
-    let R_fld_width = max(map(values(R_flds), 's:string_width(v:val)'))
-    call map(R_flds, 's:string_pad(v:val, R_fld_width, self.options.R_fld_align, 1)')
+    call map(M_flds, 's:string_pad(v:val,
+          \ M_fld_width,
+          \ self.options.M_fld_align,
+          \ (R_flds[v:key] == "")
+          \ )')
   endif
+
+  let R_fld_width = max(map(values(R_flds), 's:string_width(v:val)'))
 
   let lpad = (blank_L_flds ? "" : s:padding(self.options.L_padding))
   let rpad = s:padding(self.options.R_padding)
@@ -334,8 +347,11 @@ function! s:Aligner._align_with(pattern)
     if has_key(L_flds, idx)
       let aligned = leading . L_flds[idx] . lpad . M_flds[idx]
       let aligned .= (R_flds[idx] != "" ? rpad : "")
-      let self._aligned_width[idx] += s:string_width(aligned)
-      let self._aligned[idx] .= aligned
+      let line_data = self._line_data[idx]
+      let line_data.aligned_part .= aligned
+      let line_data.aligned_width += s:string_width(aligned)
+      let line_data.last_fld_align = self.options.R_fld_align
+      let line_data.last_fld_width = R_fld_width
       let self._lines[idx] = R_flds[idx]
       " the next pattern matching will start from the beginning of R_fld
     endif
@@ -343,7 +359,7 @@ function! s:Aligner._align_with(pattern)
   endwhile
 
   call s:debug_echo("pattern = " . string(a:pattern))
-  call s:debug_echo(self._aligned)
+  call s:debug_echo(map(copy(self._line_data), 'v:val.aligned_part'))
   call s:debug_echo(self._lines)
 
   return s:SUCCESS
