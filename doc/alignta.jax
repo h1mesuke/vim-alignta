@@ -1,7 +1,7 @@
 *alignta.txt*	新たなる整列プラグイン
 
 Author  : h1mesuke <himesuke@gmail.com>
-Updated : 2010-12-04
+Updated : 2010-12-06
 License : MIT license {{{
 
   Permission is hereby granted, free of charge, to any person obtaining
@@ -40,7 +40,7 @@ License : MIT license {{{
 	unite-alignta			|unite-alignta|
 	  変数				  |unite-source-alignta-variables|
 	ToDo				|alignta-todo|
-	既知のバグ			|alignta-bugs|
+	既知の問題			|alignta-bugs|
 	更新履歴			|alignta-changelog|
 	
 ==============================================================================
@@ -281,6 +281,12 @@ SHIFTING ALIGNMENT				*alignta-shifting-alignment*
 	| func() /* FUNC */   | func()      /* FUNC  */ |
 	+---------------------+-------------------------+
 <
+使用できないパターン ~
+						*alignta-pattern-constraint*
+	\s\+ など、:Aligntaコマンドが整列の過程で付加するパディングにマッチす
+	るパターンは使用できません。空白文字で区切られた要素の整列には \S\+ を
+	パターンとして使用してください。
+
 ------------------------------------------------------------------------------
 整列オプション					*alignta-alignment-options*
 
@@ -616,7 +622,7 @@ g:unite_source_alignta_preset_options
 TODO						*alignta-todo*
 
 ==============================================================================
-既知のバグ					*alignta-bugs*
+既知の問題					*alignta-bugs*
 
 	* 整列の対象範囲がブロックである場合、タブ文字が含まれていると整列できない
 
