@@ -1,9 +1,9 @@
 "=============================================================================
 " Align Them All!
 "
-" File		: plugin/alignta.vim
-" Author	: h1mesuke <himesuke@gmail.com>
-" Updated : 2010-12-04
+" File    : plugin/alignta.vim
+" Author  : h1mesuke <himesuke@gmail.com>
+" Updated : 2010-12-07
 " Version : 0.0.6
 " License : MIT license {{{
 "
