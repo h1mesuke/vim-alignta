@@ -3,7 +3,7 @@
 "
 " File    : autoload/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2010-12-07
+" Updated : 2010-12-10
 " Version : 0.0.6
 " License : MIT license {{{
 "
@@ -128,6 +128,10 @@ function! s:Aligner.align()
   call s:debug_echo("arguments = " . string(self.arguments))
   call s:debug_echo(self._lines)
 
+  let save_cursor = getpos('.')
+  " NOTE: s:string_width() for Vim 7.2 or older has a side effect that changes
+  " the cursor's position.
+
   if self.region.type ==# 'block' && self.region.has_tab
     throw "alignta: RegionError: block contains tabs"
   endif
@@ -178,6 +182,7 @@ function! s:Aligner.align()
         \   : self._lines[v:key]
         \ )')
   call self.region.update()
+  call setpos('.', save_cursor)
 
   if exists('g:alignta_profile') && g:alignta_profile && has("reltime")
     let used_time = split(reltimestr(reltime(start_time)))[0]
@@ -445,6 +450,8 @@ else
     endif
     " borrowed from Charles Campbell's Align.vim
     " http://www.vim.org/scripts/script.php?script_id=294
+    "
+    " NOTE: This code has a side effect that changes the cursor's position.
     let save_mod = &l:modified
     execute "normal! o\<Esc>"
     call setline(line('.'), a:str)
