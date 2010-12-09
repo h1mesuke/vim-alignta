@@ -165,7 +165,7 @@ function! s:Aligner.align()
       " pattern
       let [pattern, times] = self._parse_pattern(value)
       while times > 0
-        if !self._align_with(pattern)
+        if !self._align_at(pattern)
           break
         endif
         let times -= 1
@@ -268,7 +268,7 @@ function! s:Aligner._parse_pattern(value)
   return [pattern, times]
 endfunction
 
-function! s:Aligner._align_with(pattern)
+function! s:Aligner._align_at(pattern)
   call s:debug_echo("current options = " . string(self.options))
 
   let L_flds = {}
