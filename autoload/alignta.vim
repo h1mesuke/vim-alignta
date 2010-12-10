@@ -90,28 +90,41 @@ function! s:Aligner.initialize(region, args, use_regex)
   let self.use_regex = a:use_regex
   let self.options = copy(s:Aligner.default_options)
 
-  " lines to align
+  " initialize the lines to align
   let self._lines = copy(self.region.lines)
   if self.region.type ==# 'block'
     call map(self._lines, 'substitute(v:val, "\\s*$", "", "")')
   endif
-
-  " keep the minimum leadings
+  " initialize the intermediate data
   let n_lines = len(self._lines)
-  let leading_width = s:min_leading_width(self._lines)
-  let leading = s:padding(leading_width)
-  call map(self._lines, 'substitute(v:val, "^" . leading, "", "")')
-
   let self._line_data = map(range(0, n_lines - 1), '{
-        \ "aligned_part": leading,
-        \ "aligned_width": leading_width,
+        \ "aligned_part": "",
+        \ "aligned_width": 0,
         \ "last_fld_align": "none",
         \ "last_fld_width": -1,
         \ }')
+
+  " keep the minimum leadings
+  let leading_width = s:min_leading_width(self._lines, 1)
+  let leading = s:padding(leading_width)
+  let idx = 0
+  " freeze leadings
+  while idx < n_lines
+    let line = self._lines[idx]
+    if line =~ '\S'
+      let line_data = self._line_data[idx]
+      let line_data.aligned_part = leading
+      let line_data.aligned_width = leading_width
+      let self._lines[idx] = substitute(line, leading, '', '')
+    endif
+    let idx += 1
+  endwhile
 endfunction
 
-function! s:min_leading_width(lines)
-  let leadings = map(copy(a:lines), 'matchstr(v:val, "^\\s*")')
+function! s:min_leading_width(lines, ...)
+  let ignore_blank = (a:0 ? a:1 : 0)
+  let lines = (ignore_blank ? filter(copy(a:lines), 'v:val =~ "\\S"') : copy(a:lines))
+  let leadings = map(lines, 'matchstr(v:val, "^\\s*")')
   return min(map(leadings, 'strlen(v:val)'))
 endfunction
 
