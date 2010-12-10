@@ -547,7 +547,7 @@ function! s:Region.initialize(type, line_range, char_range)
     " NOTE: If the selection contains any tabs, expand them all to normalize
     " the selection text for subsequent alignments.
     let save_et = &l:expandtab
-    set expandtab
+    setlocal expandtab
     execute a:line_range[0] . ',' . a:line_range[1] . 'retab'
     call self._get_selection()
     silent undo
