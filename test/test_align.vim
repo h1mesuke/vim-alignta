@@ -144,6 +144,10 @@ endfunction
 "---------------------------------------
 " Padding
 
+function! tc.minimum_leadings_should_ignore_blank_lines()
+  call self._test('minimum_leadings_should_ignore_blank_lines', 'Alignta =')
+endfunction
+
 function! tc.Lpad_should_be_0_if_blank_L_flds()
   call self._test('Lpad_should_be_0_if_blank_L_flds', 'Alignta! \w\+')
 endfunction

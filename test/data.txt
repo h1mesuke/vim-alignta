@@ -522,6 +522,22 @@ word	wo|rd	word	word	wo|rd
 # Padding
 
 #---------------------------------------
+# MINIMUM_LEADINGS_SHOULD_IGNORE_BLANK_LINES_DATA_BEGIN
+  a = 1
+
+  bbb = 10
+
+  ccccc = 100
+# MINIMUM_LEADINGS_SHOULD_IGNORE_BLANK_LINES_DATA_END
+# MINIMUM_LEADINGS_SHOULD_IGNORE_BLANK_LINES_EXPECTED_BEGIN
+  a     = 1
+
+  bbb   = 10
+
+  ccccc = 100
+# MINIMUM_LEADINGS_SHOULD_IGNORE_BLANK_LINES_EXPECTED_END
+
+#---------------------------------------
 # LPAD_SHOULD_BE_0_IF_BLANK_L_FLDS_DATA_BEGIN
   a a
     bbb bbb
