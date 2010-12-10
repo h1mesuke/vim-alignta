@@ -6,327 +6,331 @@ let tc.context_file = expand('<sfile>:p:h') . '/data.txt'
 "=============================================================================
 " Padding Alignment
 
-function! tc.test_align_1_pattern()
-  call self._test_align('1_pattern', 'Alignta =')
+function! tc.should_align_at_1_pattern()
+  call self._test('should_align_at_1_pattern', 'Alignta =')
 endfunction
 
-function! tc.test_align_1_pattern_lll()
-  call self._test_align('1_pattern_lll', 'Alignta <<< =')
+function! tc.should_align_at_1_pattern_lll()
+  call self._test('should_align_at_1_pattern_lll', 'Alignta <<< =')
 endfunction
 
-function! tc.test_align_1_pattern_ccc()
-  call self._test_align('1_pattern_ccc', 'Alignta ||| =')
+function! tc.should_align_at_1_pattern_ccc()
+  call self._test('should_align_at_1_pattern_ccc', 'Alignta ||| =')
 endfunction
 
-function! tc.test_align_1_pattern_rrr()
-  call self._test_align('1_pattern_rrr', 'Alignta >>> =')
+function! tc.should_align_at_1_pattern_rrr()
+  call self._test('should_align_at_1_pattern_rrr', 'Alignta >>> =')
 endfunction
 
-function! tc.test_align_1_pattern_lcr()
-  call self._test_align('1_pattern_lcr', 'Alignta <|> =')
+function! tc.should_align_at_1_pattern_lcr()
+  call self._test('should_align_at_1_pattern_lcr', 'Alignta <|> =')
 endfunction
 
-function! tc.test_align_1_pattern_rcl()
-  call self._test_align('1_pattern_rcl', 'Alignta >|< =')
+function! tc.should_align_at_1_pattern_rcl()
+  call self._test('should_align_at_1_pattern_rcl', 'Alignta >|< =')
 endfunction
 
-function! tc.test_align_1_pattern_2_times()
-  call self._test_align('1_pattern_2_times', 'Alignta ={2}')
+function! tc.should_align_at_1_pattern_2_times()
+  call self._test('should_align_at_1_pattern_2_times', 'Alignta ={2}')
 endfunction
 
-function! tc.test_align_1_pattern_2_times_lll()
-  call self._test_align('1_pattern_2_times_lll', 'Alignta <<< ={2}')
+function! tc.should_align_at_1_pattern_2_times_lll()
+  call self._test('should_align_at_1_pattern_2_times_lll', 'Alignta <<< ={2}')
 endfunction
 
-function! tc.test_align_1_pattern_2_times_ccc()
-  call self._test_align('1_pattern_2_times_ccc', 'Alignta ||| ={2}')
+function! tc.should_align_at_1_pattern_2_times_ccc()
+  call self._test('should_align_at_1_pattern_2_times_ccc', 'Alignta ||| ={2}')
 endfunction
 
-function! tc.test_align_1_pattern_2_times_rrr()
-  call self._test_align('1_pattern_2_times_rrr', 'Alignta >>> ={2}')
+function! tc.should_align_at_1_pattern_2_times_rrr()
+  call self._test('should_align_at_1_pattern_2_times_rrr', 'Alignta >>> ={2}')
 endfunction
 
-function! tc.test_align_1_pattern_2_times_lcr()
-  call self._test_align('1_pattern_2_times_lcr', 'Alignta <|> ={2}')
+function! tc.should_align_at_1_pattern_2_times_lcr()
+  call self._test('should_align_at_1_pattern_2_times_lcr', 'Alignta <|> ={2}')
 endfunction
 
-function! tc.test_align_1_pattern_2_times_rcl()
-  call self._test_align('1_pattern_2_times_rcl', 'Alignta >|< ={2}')
+function! tc.should_align_at_1_pattern_2_times_rcl()
+  call self._test('should_align_at_1_pattern_2_times_rcl', 'Alignta >|< ={2}')
 endfunction
 
-function! tc.test_align_1_pattern_n_times()
-  call self._test_align('1_pattern_n_times', 'Alignta ={+}')
+function! tc.should_align_at_1_pattern_n_times()
+  call self._test('should_align_at_1_pattern_n_times', 'Alignta ={+}')
 endfunction
 
-function! tc.test_align_1_pattern_n_times_lll()
-  call self._test_align('1_pattern_n_times_lll', 'Alignta <<< ={+}')
+function! tc.should_align_at_1_pattern_n_times_lll()
+  call self._test('should_align_at_1_pattern_n_times_lll', 'Alignta <<< ={+}')
 endfunction
 
-function! tc.test_align_1_pattern_n_times_ccc()
-  call self._test_align('1_pattern_n_times_ccc', 'Alignta ||| ={+}')
+function! tc.should_align_at_1_pattern_n_times_ccc()
+  call self._test('should_align_at_1_pattern_n_times_ccc', 'Alignta ||| ={+}')
 endfunction
 
-function! tc.test_align_1_pattern_n_times_rrr()
-  call self._test_align('1_pattern_n_times_rrr', 'Alignta >>> ={+}')
+function! tc.should_align_at_1_pattern_n_times_rrr()
+  call self._test('should_align_at_1_pattern_n_times_rrr', 'Alignta >>> ={+}')
 endfunction
 
-function! tc.test_align_1_pattern_n_times_lcr()
-  call self._test_align('1_pattern_n_times_lcr', 'Alignta <|> ={+}')
+function! tc.should_align_at_1_pattern_n_times_lcr()
+  call self._test('should_align_at_1_pattern_n_times_lcr', 'Alignta <|> ={+}')
 endfunction
 
-function! tc.test_align_1_pattern_n_times_rcl()
-  call self._test_align('1_pattern_n_times_rcl', 'Alignta >|< ={+}')
+function! tc.should_align_at_1_pattern_n_times_rcl()
+  call self._test('should_align_at_1_pattern_n_times_rcl', 'Alignta >|< ={+}')
 endfunction
 
-function! tc.test_align_multi_patterns()
-  call self._test_align('multi_patterns', 'Alignta = /* */')
+function! tc.should_align_at_multi_patterns()
+  call self._test('should_align_at_multi_patterns', 'Alignta = /* */')
 endfunction
 
-function! tc.test_align_multi_patterns_lll()
-  call self._test_align('multi_patterns_lll', 'Alignta <<< = /* */')
+function! tc.should_align_at_multi_patterns_lll()
+  call self._test('should_align_at_multi_patterns_lll', 'Alignta <<< = /* */')
 endfunction
 
-function! tc.test_align_multi_patterns_ccc()
-  call self._test_align('multi_patterns_ccc', 'Alignta ||| = /* */')
+function! tc.should_align_at_multi_patterns_ccc()
+  call self._test('should_align_at_multi_patterns_ccc', 'Alignta ||| = /* */')
 endfunction
 
-function! tc.test_align_multi_patterns_rrr()
-  call self._test_align('multi_patterns_rrr', 'Alignta >>> = /* */')
+function! tc.should_align_at_multi_patterns_rrr()
+  call self._test('should_align_at_multi_patterns_rrr', 'Alignta >>> = /* */')
 endfunction
 
-function! tc.test_align_multi_patterns_lcr()
-  call self._test_align('multi_patterns_lcr', 'Alignta <|> = /* */')
+function! tc.should_align_at_multi_patterns_lcr()
+  call self._test('should_align_at_multi_patterns_lcr', 'Alignta <|> = /* */')
 endfunction
 
-function! tc.test_align_multi_patterns_rcl()
-  call self._test_align('multi_patterns_rcl', 'Alignta >|< = /* */')
+function! tc.should_align_at_multi_patterns_rcl()
+  call self._test('should_align_at_multi_patterns_rcl', 'Alignta >|< = /* */')
 endfunction
 
-function! tc.test_align_complex_multi_patterns()
-  call self._test_align('complex_multi_patterns', 'Alignta = : /* */')
+function! tc.should_align_at_complex_multi_patterns()
+  call self._test('should_align_at_complex_multi_patterns', 'Alignta = : /* */')
 endfunction
 
-function! tc.test_align_complex_multi_patterns_lll()
-  call self._test_align('complex_multi_patterns_lll', 'Alignta <<< = : /* */')
+function! tc.should_align_at_complex_multi_patterns_lll()
+  call self._test('should_align_at_complex_multi_patterns_lll', 'Alignta <<< = : /* */')
 endfunction
 
-function! tc.test_align_complex_multi_patterns_ccc()
-  call self._test_align('complex_multi_patterns_ccc', 'Alignta ||| = : /* */')
+function! tc.should_align_at_complex_multi_patterns_ccc()
+  call self._test('should_align_at_complex_multi_patterns_ccc', 'Alignta ||| = : /* */')
 endfunction
 
-function! tc.test_align_complex_multi_patterns_rrr()
-  call self._test_align('complex_multi_patterns_rrr', 'Alignta >>> = : /* */')
+function! tc.should_align_at_complex_multi_patterns_rrr()
+  call self._test('should_align_at_complex_multi_patterns_rrr', 'Alignta >>> = : /* */')
 endfunction
 
-function! tc.test_align_complex_multi_patterns_lcr()
-  call self._test_align('complex_multi_patterns_lcr', 'Alignta <|> = : /* */')
+function! tc.should_align_at_complex_multi_patterns_lcr()
+  call self._test('should_align_at_complex_multi_patterns_lcr', 'Alignta <|> = : /* */')
 endfunction
 
-function! tc.test_align_complex_multi_patterns_rcl()
-  call self._test_align('complex_multi_patterns_rcl', 'Alignta >|< = : /* */')
-endfunction
-
-function! tc.test_align_blank_L_flds()
-  call self._test_align('blank_L_flds', 'Alignta! \w\+')
-endfunction
-
-function! tc.test_align_aligned_width()
-  call self._test_align('aligned_width', 'Alignta! \S\+{+}')
+function! tc.should_align_at_complex_multi_patterns_rcl()
+  call self._test('should_align_at_complex_multi_patterns_rcl', 'Alignta >|< = : /* */')
 endfunction
 
 "---------------------------------------
 " Block
 
-function! tc.test_align_block()
-  call self._test_align('block', 'Alignta =')
+function! tc.should_align_block()
+  call self._test('should_align_block', 'Alignta =')
 endfunction
 
-function! tc.test_align_block_with_ragged_rights()
-  call self._test_align('block_with_ragged_rights', 'Alignta =')
+function! tc.should_align_block_with_ragged_rights()
+  call self._test('should_align_block_with_ragged_rights', 'Alignta =')
 endfunction
 
-function! tc.test_align_block_with_short_rights()
-  call self._test_align('block_with_short_rights', 'Alignta =')
+function! tc.should_align_block_with_short_rights()
+  call self._test('should_align_block_with_short_rights', 'Alignta =')
 endfunction
 
-function! tc.test_align_block_has_tab()
-  let tag = 'test_align_block_has_tab'
+"---------------------------------------
+" Padding
+
+function! tc.Lpad_should_be_0_if_blank_L_flds()
+  call self._test('Lpad_should_be_0_if_blank_L_flds', 'Alignta! \w\+')
+endfunction
+
+function! tc.aligned_part_should_be_frozen()
+  call self._test('aligned_part_should_be_frozen', 'Alignta! \S\+{+}')
+endfunction
+
+" \d notation
+function! tc.padding_should_be_00_d()
+  call self._test('padding_should_be_00', 'Alignta <<<0 =')
+endfunction
+
+function! tc.padding_should_be_33_d()
+  call self._test('padding_should_be_33', 'Alignta <<<3 =')
+endfunction
+
+" \d\d notation
+function! tc.padding_should_be_00_dd()
+  call self._test('padding_should_be_00', 'Alignta <<<00 =')
+endfunction
+
+function! tc.padding_should_be_31_dd()
+  call self._test('padding_should_be_31', 'Alignta <<<31 =')
+endfunction
+
+function! tc.padding_should_be_13()
+  call self._test('padding_should_be_13', 'Alignta <<<13 =')
+endfunction
+
+" \d\+:\d\+ notation
+function! tc.padding_should_be_00_d_colon_d()
+  call self._test('padding_should_be_00', 'Alignta <<<0:0 =')
+endfunction
+
+function! tc.padding_should_be_31_d_colon_d()
+  call self._test('padding_should_be_31', 'Alignta <<<3:1 =')
+endfunction
+
+function! tc.padding_should_be_13_d_colon_d()
+  call self._test('padding_should_be_13', 'Alignta <<<1:3 =')
+endfunction
+
+"---------------------------------------
+" Regex
+
+function! tc.should_align_at_1_regex_pattern()
+  call self._test('should_align_at_1_regex_pattern', 'Alignta! \d\+')
+endfunction
+
+function! tc.should_align_at_1_regex_pattern_2_times()
+  call self._test('should_align_at_1_regex_pattern_2_times', 'Alignta! \d\+{2}')
+endfunction
+
+function! tc.should_align_at_1_regex_pattern_n_times()
+  call self._test('should_align_at_1_regex_pattern_n_times', 'Alignta! \d\+{+}')
+endfunction
+
+"---------------------------------------
+" Tabs
+
+function! tc.setup_align_region_has_tab()
+  let self.save_confirm = g:alignta_confirm_for_retab
+  let g:alignta_confirm_for_retab = 0
+endfunction
+
+function! tc.teardown_align_region_has_tab()
+  let g:alignta_confirm_for_retab = self.save_confirm
+endfunction
+
+function! tc.should_align_region_has_tab()
+  call self._test('should_align_region_has_tab', 'Alignta =')
+endfunction
+
+function! tc.setup_align_region_has_tab_if_noexpandtab()
+  let self.save_expandtab = &l:expandtab
+  setlocal noexpandtab
+endfunction
+
+function! tc.teardown_align_region_has_tab_if_noexpandtab()
+  let &l:expandtab = self.save_expandtab
+endfunction
+
+function! tc.should_align_region_has_tab_if_noexpandtab()
+  call self._test('should_align_region_has_tab_if_noexpandtab', 'Alignta =')
+endfunction
+
+function! tc.should_raise_if_block_has_tab()
+  let tag = 'should_raise_if_block_has_tab'
   let range = s:data_range(tag)
   execute range[0]
   execute "normal! 06l\<C-v>" . (range[1] - range[0]) . "jf*2h\<Esc>"
   call assert#raise(":'<,'>Alignta =", 'tabs')
 endfunction
 
-"---------------------------------------
-" Padding
-
-" \d notation
-function! tc.test_align_0pad_d()
-  call self._test_align('0pad', 'Alignta <<<0 =')
-endfunction
-
-function! tc.test_align_3pad_d()
-  call self._test_align('3pad', 'Alignta <<<3 =')
-endfunction
-
-" \d\d notation
-function! tc.test_align_0pad_dd()
-  call self._test_align('0pad', 'Alignta <<<00 =')
-endfunction
-
-function! tc.test_align_lpad_dd()
-  call self._test_align('lpad', 'Alignta <<<31 =')
-endfunction
-
-function! tc.test_align_rpad()
-  call self._test_align('rpad', 'Alignta <<<13 =')
-endfunction
-
-" \d\+:\d\+ notation
-function! tc.test_align_0pad_d_colon_d()
-  call self._test_align('0pad', 'Alignta <<<0:0 =')
-endfunction
-
-function! tc.test_align_lpad_d_colon_d()
-  call self._test_align('lpad', 'Alignta <<<3:1 =')
-endfunction
-
-function! tc.test_align_rpad_d_colon_d()
-  call self._test_align('rpad', 'Alignta <<<1:3 =')
-endfunction
-
-"---------------------------------------
-" Regex
-
-function! tc.test_align_regex_1_pattern()
-  call self._test_align('regex_1_pattern', 'Alignta! \d\+')
-endfunction
-
-function! tc.test_align_regex_1_pattern_2_times()
-  call self._test_align('regex_1_pattern_2_times', 'Alignta! \d\+{2}')
-endfunction
-
-function! tc.test_align_regex_1_pattern_n_times()
-  call self._test_align('regex_1_pattern_n_times', 'Alignta! \d\+{+}')
-endfunction
-
-"---------------------------------------
-" Tabs
-
-function! tc.test_align_region_has_tab()
-  let save_confirm = g:alignta_confirm_for_retab
-  let g:alignta_confirm_for_retab = 0
-
-  call self._test_align('region_has_tab', 'Alignta =')
-
-  let g:alignta_confirm_for_retab = save_confirm
-endfunction
-
-function! tc.test_align_region_has_tab_noexpandtab()
-  let save_confirm = g:alignta_confirm_for_retab
-  let g:alignta_confirm_for_retab = 0
-
-  let save_expandtab = &l:expandtab
-  setlocal noexpandtab
-
-  call self._test_align('region_has_tab_noexpandtab', 'Alignta =')
-
-  let &l:expandtab = save_expandtab
-  let g:alignta_confirm_for_retab = save_confirm
-endfunction
-
 "=============================================================================
 " Shifting Alignment
 
-function! tc.test_align_shift_1_pattern()
-  call self._test_align('shift_1_pattern', 'Alignta <= b')
+function! tc.should_shift_align_at_1_pattern()
+  call self._test('should_shift_align_at_1_pattern', 'Alignta <= b')
 endfunction
 
-function! tc.test_align_shift_1_pattern_l()
-  call self._test_align('shift_1_pattern_l', 'Alignta <= b')
+function! tc.should_shift_align_at_1_pattern_l()
+  call self._test('should_shift_align_at_1_pattern_l', 'Alignta <= b')
 endfunction
 
-function! tc.test_align_shift_1_pattern_c()
-  call self._test_align('shift_1_pattern_c', 'Alignta |= b')
+function! tc.should_shift_align_at_1_pattern_c()
+  call self._test('should_shift_align_at_1_pattern_c', 'Alignta |= b')
 endfunction
 
-function! tc.test_align_shift_1_pattern_r()
-  call self._test_align('shift_1_pattern_r', 'Alignta >= b')
+function! tc.should_shift_align_at_1_pattern_r()
+  call self._test('should_shift_align_at_1_pattern_r', 'Alignta >= b')
 endfunction
 
-function! tc.test_align_shift_1_pattern_2_times()
-  call self._test_align('shift_1_pattern_2_times', 'Alignta! <= b\+{2}')
+function! tc.should_shift_align_at_1_pattern_2_times()
+  call self._test('should_shift_align_at_1_pattern_2_times', 'Alignta! <= b\+{2}')
 endfunction
 
-function! tc.test_align_shift_1_pattern_n_times()
-  call self._test_align('shift_1_pattern_n_times', 'Alignta! <= b\+{+}')
+function! tc.should_shift_align_at_1_pattern_n_times()
+  call self._test('should_shift_align_at_1_pattern_n_times', 'Alignta! <= b\+{+}')
 endfunction
 
 "---------------------------------------
 " Padding
 
-function! tc.test_align_shift_0pad()
-  call self._test_align('shift_0pad', 'Alignta <=0 b')
+function! tc.Lpad_should_be_0()
+  call self._test('Lpad_should_be_0', 'Alignta <=0 b')
 endfunction
 
-function! tc.test_align_shift_3pad()
-  call self._test_align('shift_3pad', 'Alignta <=3 b')
+function! tc.Lpad_should_be_3()
+  call self._test('Lpad_should_be_3', 'Alignta <=3 b')
 endfunction
 
 "---------------------------------------
 " Block
 
-function! tc.test_align_shift_block()
-  call self._test_align('shift_block', 'Alignta <= b')
+function! tc.should_shift_align_block()
+  call self._test('should_shift_align_block', 'Alignta <= b')
 endfunction
 
 "=============================================================================
 " Filtering
 
-function! tc.test_align_g_pattern_filtering()
-  call self._test_align('g_pattern_filtering', 'Alignta g/^\s*# =')
+function! tc.should_align_g_pattern_filtering()
+  call self._test('should_align_g_pattern_filtering', 'Alignta g/^\s*# =')
 endfunction
 
-function! tc.test_align_v_pattern_filtering()
-  call self._test_align('v_pattern_filtering', 'Alignta v/^\s*# =')
+function! tc.should_align_v_pattern_filtering()
+  call self._test('should_align_v_pattern_filtering', 'Alignta v/^\s*# =')
 endfunction
 
-function! tc.test_align_block_g_pattern_filtering()
-  call self._test_align('block_g_pattern_filtering', 'Alignta g/^\s*# =')
+function! tc.should_align_block_g_pattern_filtering()
+  call self._test('should_align_block_g_pattern_filtering', 'Alignta g/^\s*# =')
 endfunction
 
-function! tc.test_align_block_v_pattern_filtering()
-  call self._test_align('block_v_pattern_filtering', 'Alignta v/^\s*# =')
+function! tc.should_align_block_v_pattern_filtering()
+  call self._test('should_align_block_v_pattern_filtering', 'Alignta v/^\s*# =')
 endfunction
 
 "=============================================================================
 " Multi-byte
 
-function! tc.test_align_mb_1_pattern()
-  call self._test_align('mb_1_pattern', 'Alignta ＝')
+function! tc.should_align_multibyte_at_1_pattern()
+  call self._test('should_align_multibyte_at_1_pattern', 'Alignta ＝')
 endfunction
 
-function! tc.test_align_mb_1_pattern_lll()
-  call self._test_align('mb_1_pattern_lll', 'Alignta <<< ＝')
+function! tc.should_align_multibyte_at_1_pattern_lll()
+  call self._test('should_align_multibyte_at_1_pattern_lll', 'Alignta <<< ＝')
 endfunction
 
-function! tc.test_align_mb_1_pattern_ccc()
-  call self._test_align('mb_1_pattern_ccc', 'Alignta ||| ＝')
+function! tc.should_align_multibyte_at_1_pattern_ccc()
+  call self._test('should_align_multibyte_at_1_pattern_ccc', 'Alignta ||| ＝')
 endfunction
 
-function! tc.test_align_mb_1_pattern_rrr()
-  call self._test_align('mb_1_pattern_rrr', 'Alignta >>> ＝')
+function! tc.should_align_multibyte_at_1_pattern_rrr()
+  call self._test('should_align_multibyte_at_1_pattern_rrr', 'Alignta >>> ＝')
 endfunction
 
 "---------------------------------------
 " Block
 
-function! tc.test_align_mb_block()
-  call self._test_align('mb_block', 'Alignta ＝')
+function! tc.should_align_multibyte_block()
+  call self._test('should_align_multibyte_block', 'Alignta ＝')
 endfunction
 
-function! tc.test_align_mb_block_is_broken()
-  let tag = 'test_align_mb_block_is_broken'
+function! tc.should_raise_if_multibyte_block_is_broken()
+  let tag = 'should_raise_if_multibyte_block_is_broken'
   let range = s:data_range(tag)
   execute range[0]
   execute "normal! 06l\<C-v>" . (range[1] - range[0]) . "jf*2h\<Esc>"
@@ -339,33 +343,32 @@ endfunction
 "---------------------------------------
 " -p
 
-function! tc.test_align_pattern_escape()
-  call self._test_align('pattern_escape', 'Alignta -p <<<')
+function! tc.should_escape_pattern()
+  call self._test('should_escape_pattern', 'Alignta -p <<<')
 endfunction
 
-function! tc.test_align_pattern_escape_escape()
-  call self._test_align('pattern_escape_escape', 'Alignta -p -p')
+function! tc.should_escape_escape()
+  call self._test('should_escape_escape', 'Alignta -p -p')
 endfunction
 
 "-----------------------------------------------------------------------------
 " Utils
 
-function! tc._test_align(tag, align_command)
-  let tag = 'test_align_' . a:tag
-  if tag =~# '_block'
-    call self._test_align_block(tag, a:align_command)
+function! tc._test(tag, align_command)
+  if a:tag =~# '_block'
+    call self._test_block(a:tag, a:align_command)
     return
   endif
-  execute ':' . join(s:data_range(tag), ',') . a:align_command
-  let value = s:data_lines(tag)
+  execute ':' . join(s:data_range(a:tag), ',') . a:align_command
+  let value = s:data_lines(a:tag)
   silent undo
-  let expected = s:expected_lines(tag)
+  let expected = s:expected_lines(a:tag)
   call assert#equal_C(expected, value)
   call self.print_lines(expected)
   call self.print_lines(value)
 endfunction
 
-function! tc._test_align_block(tag, align_command)
+function! tc._test_block(tag, align_command)
   let range = s:data_range(a:tag)
   execute range[0]
   execute "normal! 06l\<C-v>" . (range[1] - range[0]) . "jf*2h\<Esc>"
