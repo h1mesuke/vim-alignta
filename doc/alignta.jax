@@ -1,26 +1,29 @@
-*alignta.txt*	新たなる整列プラグイン
+*alignta.txt*	Align Them All! - 新たなる整列プラグイン
 
+File    : doc/alignta.jax
 Author  : h1mesuke <himesuke@gmail.com>
-Updated : 2010-12-06
+Updated : 2010-12-10
+Version : 0.0.6
 License : MIT license {{{
 
-  Permission is hereby granted, free of charge, to any person obtaining
-  a copy of this software and associated documentation files (the
-  "Software"), to deal in the Software without restriction, including
-  without limitation the rights to use, copy, modify, merge, publish,
-  distribute, sublicense, and/or sell copies of the Software, and to
-  permit persons to whom the Software is furnished to do so, subject to
-  the following conditions:
-  The above copyright notice and this permission notice shall be included
-  in all copies or substantial portions of the Software.
+	Permission is hereby granted, free of charge, to any person obtaining
+	a copy of this software and associated documentation files (the
+	"Software"), to deal in the Software without restriction, including
+	without limitation the rights to use, copy, modify, merge, publish,
+	distribute, sublicense, and/or sell copies of the Software, and to
+	permit persons to whom the Software is furnished to do so, subject to
+	the following conditions:
 
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-  TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+	The above copyright notice and this permission notice shall be
+	included in all copies or substantial portions of the Software.
+	
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+	EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+	MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+	IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+	CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+	TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 }}}
 
 目次						*alignta-contents*
@@ -72,7 +75,7 @@ Align.vim ~
 		おり、ユーザーはそれらを利用することで、:Alignコマンド１回では
 		実現できないような整列も簡単に行える。
 
-alignta.vim ~
+alignta ~
 
 	*|:Alignta|コマンドですべてをまかなう
 
@@ -198,7 +201,7 @@ SHIFTING ALIGNMENT				*alignta-shifting-alignment*
 ------------------------------------------------------------------------------
 パターン					*alignta-patterns*
 
-	:Alintaコマンドの引数に指定した文字列は、整列オプションの指定文字列の
+	:Aligntaコマンドの引数に指定した文字列は、整列オプションの指定文字列の
 	書式と合致しない限り、パターンとして扱われます。
 
 	用例： >
@@ -285,7 +288,7 @@ SHIFTING ALIGNMENT				*alignta-shifting-alignment*
 						*alignta-pattern-constraint*
 	\s\+ など、:Aligntaコマンドが整列の過程で付加するパディングにマッチす
 	るパターンは使用できません。空白文字で区切られた要素の整列には \S\+ を
-	パターンとして使用してください。
+	パターンとして使用して下さい。
 
 ------------------------------------------------------------------------------
 整列オプション					*alignta-alignment-options*
@@ -536,6 +539,13 @@ g:alignta_confirm_for_retab			*g:alignta_confirm_for_retab*
 	があるため、注意を喚起するためにプロンプトを表示するようになっています。
 	（詳細は|:retab|を参照して下さい）
 
+------------------------------------------------------------------------------
+設定例						*alignta-settings-example*
+>
+	xnoremap <silent> A  :Alignta! =>\=<CR>
+	xnoremap <silent> a: :Alignta  <<<01 :<CR>
+	xmap <silent><expr> as mode() !=# 'v' ? ':Alignta! \S\+{+}'."\<CR>" : 'as'
+<
 ==============================================================================
 unite-alignta					*unite-alignta*
 
@@ -557,17 +567,21 @@ g:unite_source_alignta_preset_arguments
 	パターンに正規表現を使用する場合は、引数リストを '!' で始めることでそ
 	れを指示します。
 
+	初期値は []
+
 g:unite_source_alignta_preset_options
 				*g:unite_source_alignta_preset_options*
 	:Aligntaコマンドのオプション指定文字列のリスト。
 	:Unite alignta:normal を実行したとき、候補として表示されます。
 	（詳細は|unite-alignta-usage|を参照して下さい）
 
+	初期値は ['|||', '>>>']
+
 ------------------------------------------------------------------------------
 使い方						*unite-alignta-usage*
 
-	|unite|の使い方については、unite のヘルプを参照して下さい。ここでは、
-	unite の source である unite-alignta の使い方を説明します。
+	|unite|の使い方については、unite.vim のヘルプを参照して下さい。ここで
+	は、unite.vim の source である unite-alignta の使い方を説明します。
 
 事前に定義した引数リストによる整列の実行 ~
 
@@ -603,17 +617,19 @@ g:unite_source_alignta_preset_options
 	xmap f [unite]
 
 	let g:unite_source_alignta_preset_arguments = [
-	      \ '! =>\=',
-	      \ '<<<01 :',
-	      \ ':',
-	      \ '! \S\+',
+	      \ '}',
+	      \ '<<<0 )',
+	      \ '<<<0 ]',
 	      \ ]
 	
+	let s:comment_leadings = '^\s*\("\|#\|/\*\|//\|<!--\)'
 	let g:unite_source_alignta_preset_options = [
 	      \ '|||',
-	      \ 'v/^\s*"',
-	      \ 'v/^\s*#',
+	      \ '>>>',
+	      \ 'v/'.s:comment_leadings,
+	      \ 'g/'.s:comment_leadings,
 	      \ ]
+	unlet s:comment_leadings
 	
 	nnoremap <silent> [unite]a :<C-u>Unite alignta:normal<CR>
 	xnoremap <silent> [unite]a :<C-u>Unite alignta:visual<CR>
@@ -624,7 +640,8 @@ TODO						*alignta-todo*
 ==============================================================================
 既知の問題					*alignta-bugs*
 
-	* 整列の対象範囲がブロックである場合、タブ文字が含まれていると整列できない
+	* 整列の対象範囲がブロックである場合、タブ文字が含まれていると整列でき
+	  ない
 
 		:retab によってタブ文字を空白文字へと展開すると行の文字数が増
 		えるため、ブロックの選択範囲が左へとずれ込む。結果として意図し
