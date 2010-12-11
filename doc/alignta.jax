@@ -592,7 +592,7 @@ g:alignta_confirm_for_retab			*g:alignta_confirm_for_retab*
 >
 	xnoremap <silent> A  :Alignta! =>\=<CR>
 	xnoremap <silent> a: :Alignta  @01 :<CR>
-	xmap <silent><expr> as mode() !=# 'v' ? ':Alignta! \S\+{+}'."\<CR>" : 'as'
+	xmap <silent><expr> as mode() !=# 'v' ? ':Alignta! \S\+'."\<CR>" : 'as'
 <
 ==============================================================================
 unite-alignta					*unite-alignta*
@@ -623,7 +623,7 @@ g:unite_source_alignta_preset_options
 	:Unite alignta:normal を実行したとき、候補として表示されます。
 	（詳細は|unite-alignta-usage|を参照して下さい）
 
-	初期値は ['|||', '>>>']
+	初期値は ['|||', '>>>', '@0', '@01', '@10']
 
 ------------------------------------------------------------------------------
 使い方						*unite-alignta-usage*
