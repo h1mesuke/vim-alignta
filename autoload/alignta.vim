@@ -133,7 +133,7 @@ function! s:Aligner.extend_options(options)
 endfunction
 
 function! s:Aligner.alignment_method()
-  return (self.options.M_fld_align ==# 'none' ?  'shift' : 'pad')
+  return (self.options.M_fld_align ==# 'none' ?  'shifting' : 'padding')
 endfunction
 
 function! s:Aligner.align()
@@ -289,7 +289,7 @@ function! s:Aligner._parse_pattern(value)
     let pattern = s:string_escape_regex(pattern)
   endif
   if times_str == ""
-    if self.alignment_method() ==# 'pad'
+    if self.alignment_method() ==# 'padding'
       let times = s:HUGE_VALUE
     else
       let times = 1
@@ -347,7 +347,7 @@ function! s:Aligner._align_at(pattern)
   "---------------------------------------
   " Phase 2: Pad and Join
 
-  if self.alignment_method() ==# 'pad'
+  if self.alignment_method() ==# 'padding'
     let leading = ""
   else
     " keep the minimum leadings
@@ -366,7 +366,7 @@ function! s:Aligner._align_at(pattern)
         \ self.options.L_fld_align
         \ )')
 
-  if self.alignment_method() ==# 'pad'
+  if self.alignment_method() ==# 'padding'
     call map(R_flds, 's:string_trim(v:val)')
 
     let M_fld_width = max(map(values(M_flds), 's:string_width(v:val)'))
