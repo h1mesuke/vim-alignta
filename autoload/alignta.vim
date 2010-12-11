@@ -347,7 +347,11 @@ function! s:Aligner._align_at(pattern)
   "---------------------------------------
   " Phase 2: Pad and Join
 
-  if self.alignment_method() ==# 'padding'
+  let method = self.alignment_method()
+  " NOTE: 'padding' or 'shifting'
+
+  " Leading
+  if method ==# 'padding'
     let leading = ""
   else
     " keep the minimum leadings
@@ -355,8 +359,11 @@ function! s:Aligner._align_at(pattern)
     let leading = s:padding(leading_width)
   endif
 
+  " Left field
   call map(L_flds, 's:string_trim(v:val)')
   let blank_L_flds = (len(filter(values(L_flds), 'v:val == ""')) == len(L_flds))
+  " NOTE: If all Left fields are blank, they should be ignored and Left
+  " padding should be set to 0.
 
   let L_fld_width = max(values(map(copy(L_flds),
         \ 'self._line_data[v:key].aligned_width + s:string_width(v:val)')))
@@ -366,31 +373,38 @@ function! s:Aligner._align_at(pattern)
         \ self.options.L_fld_align
         \ )')
 
-  if self.alignment_method() ==# 'padding'
-    call map(R_flds, 's:string_trim(v:val)')
+  " Left padding
+  let lpad = (blank_L_flds ? "" : s:padding(self.options.L_padding))
 
+  " Matched field
+  if method ==# 'padding'
     let M_fld_width = max(map(values(M_flds), 's:string_width(v:val)'))
 
     call map(M_flds, 's:string_pad(v:val,
           \ M_fld_width,
           \ self.options.M_fld_align,
-          \ (R_flds[v:key] == "")
+          \ (R_flds[v:key] !~ "\\S")
           \ )')
+  endif
 
+  " Right padding
+  if method ==# 'padding'
     let rpad = s:padding(self.options.R_padding)
   else
     let rpad = ""
   endif
 
+  " Right field
+  if method ==# 'padding'
+    call map(R_flds, 's:string_trim(v:val)')
+  endif
   let R_fld_width = max(map(values(R_flds), 's:string_width(v:val)'))
-
-  let lpad = (blank_L_flds ? "" : s:padding(self.options.L_padding))
 
   let idx = 0
   while idx < n_lines
     if has_key(L_flds, idx)
       let aligned = leading . L_flds[idx] . lpad . M_flds[idx]
-      let aligned .= (R_flds[idx] != "" ? rpad : "")
+      let aligned .= (R_flds[idx] =~ '\S' ? rpad : "")
       let line_data = self._line_data[idx]
       let line_data.aligned_part .= aligned
       let line_data.aligned_width += s:string_width(aligned)
