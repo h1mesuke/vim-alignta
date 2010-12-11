@@ -3,7 +3,7 @@
 "
 " File    : autoload/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2010-12-10
+" Updated : 2010-12-12
 " Version : 0.0.7
 " License : MIT license {{{
 "
@@ -209,7 +209,7 @@ function! s:Aligner._parse_options(value)
 
   for opts_str in split(a:value, '\(\(^\|[^\\]\)\(\\\{2}\)*\)\@<=\s\s*')
 
-    " options for padding alignment
+    " padding alignment options
     " <<< or <<<1 or <<<11 or <<<1:1
     let matched_list = matchlist(opts_str,
           \ '^\([<|>]\)\([<|>]\)\([<|>]\)\%(\(\d\)\(\d\)\=\|\(\d\+\):\(\d\+\)\)\=$')
@@ -218,10 +218,12 @@ function! s:Aligner._parse_options(value)
       let opts.M_fld_align = align[matched_list[2]]
       let opts.R_fld_align = align[matched_list[3]]
       if matched_list[4] != ""
+        " 1 or 11
         let opts.L_padding = str2nr(matched_list[4])
         let opts.R_padding = (matched_list[5] != "" ? str2nr(matched_list[5]) : opts.L_padding)
       endif
       if matched_list[6] != ""
+        " 1:1
         let opts.L_padding = str2nr(matched_list[6])
         let opts.R_padding = str2nr(matched_list[7])
       endif
@@ -229,15 +231,35 @@ function! s:Aligner._parse_options(value)
       continue
     endif
 
-    " options for shifting alignment
+    " shifting alignment options
     " <= or <=1
     let matched_list = matchlist(opts_str, '^\([<|>]\)=\(\d\+\)\=$')
     if len(matched_list) > 0
       let opts.L_fld_align = align[matched_list[1]]
       let opts.M_fld_align = 'none'
       let opts.R_fld_align = 'none'
-      let opts.L_padding = (matched_list[2] != "" ? str2nr(matched_list[2]) : 1)
-      let opts.R_padding = 0
+      if matched_list[2] != ""
+        let opts.L_padding = str2nr(matched_list[2])
+      endif
+      call s:debug_echo(" parsed options = " . string(opts))
+      continue
+    endif
+
+    " padding options
+    " @1 or @11 or @1:1
+    let matched_list = matchlist(opts_str,
+          \ '^@\%(\(\d\)\(\d\)\=\|\(\d\+\):\(\d\+\)\)\=$')
+    if len(matched_list) > 0
+      if matched_list[1] != ""
+        " 1 or 11
+        let opts.L_padding = str2nr(matched_list[1])
+        let opts.R_padding = (matched_list[2] != "" ? str2nr(matched_list[2]) : opts.L_padding)
+      endif
+      if matched_list[3] != ""
+        " 1:1
+        let opts.L_padding = str2nr(matched_list[3])
+        let opts.R_padding = str2nr(matched_list[4])
+      endif
       call s:debug_echo(" parsed options = " . string(opts))
       continue
     endif
@@ -253,6 +275,7 @@ function! s:Aligner._parse_options(value)
         let opts.v_pattern = matched_list[2]
       endif
       call s:debug_echo(" parsed options = " . string(opts))
+      continue
     endif
   endfor
 
@@ -324,12 +347,12 @@ function! s:Aligner._align_at(pattern)
   "---------------------------------------
   " Phase 2: Pad and Join
 
-  if self.alignment_method() ==# 'shift'
+  if self.alignment_method() ==# 'pad'
+    let leading = ""
+  else
     " keep the minimum leadings
     let leading_width = s:min_leading_width(values(L_flds))
     let leading = s:padding(leading_width)
-  else
-    let leading = ""
   endif
 
   call map(L_flds, 's:string_trim(v:val)')
@@ -353,12 +376,15 @@ function! s:Aligner._align_at(pattern)
           \ self.options.M_fld_align,
           \ (R_flds[v:key] == "")
           \ )')
+
+    let rpad = s:padding(self.options.R_padding)
+  else
+    let rpad = ""
   endif
 
   let R_fld_width = max(map(values(R_flds), 's:string_width(v:val)'))
 
   let lpad = (blank_L_flds ? "" : s:padding(self.options.L_padding))
-  let rpad = s:padding(self.options.R_padding)
 
   let idx = 0
   while idx < n_lines
