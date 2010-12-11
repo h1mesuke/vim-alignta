@@ -156,38 +156,69 @@ function! tc.aligned_part_should_be_frozen()
   call self._test('aligned_part_should_be_frozen', 'Alignta! \S\+{+}')
 endfunction
 
-" \d notation
+" @\d notation
 function! tc.padding_should_be_00_d()
-  call self._test('padding_should_be_00', 'Alignta <<<0 =')
+  call self._test('padding_should_be_00', 'Alignta @0 =')
 endfunction
 
 function! tc.padding_should_be_33_d()
-  call self._test('padding_should_be_33', 'Alignta <<<3 =')
+  call self._test('padding_should_be_33', 'Alignta @3 =')
 endfunction
 
-" \d\d notation
+" @\d\d notation
 function! tc.padding_should_be_00_dd()
-  call self._test('padding_should_be_00', 'Alignta <<<00 =')
+  call self._test('padding_should_be_00', 'Alignta @00 =')
 endfunction
 
 function! tc.padding_should_be_31_dd()
-  call self._test('padding_should_be_31', 'Alignta <<<31 =')
+  call self._test('padding_should_be_31', 'Alignta @31 =')
 endfunction
 
-function! tc.padding_should_be_13()
-  call self._test('padding_should_be_13', 'Alignta <<<13 =')
+function! tc.padding_should_be_13_dd()
+  call self._test('padding_should_be_13', 'Alignta @13 =')
 endfunction
 
-" \d\+:\d\+ notation
+" @\d\+:\d\+ notation
 function! tc.padding_should_be_00_d_colon_d()
-  call self._test('padding_should_be_00', 'Alignta <<<0:0 =')
+  call self._test('padding_should_be_00', 'Alignta @0:0 =')
 endfunction
 
 function! tc.padding_should_be_31_d_colon_d()
+  call self._test('padding_should_be_31', 'Alignta @3:1 =')
+endfunction
+
+" <<<\d notation
+function! tc.padding_should_be_00_aaa_d()
+  call self._test('padding_should_be_00', 'Alignta <<<0 =')
+endfunction
+
+function! tc.padding_should_be_33_aaa_d()
+  call self._test('padding_should_be_33', 'Alignta <<<3 =')
+endfunction
+
+" <<<\d\d notation
+function! tc.padding_should_be_00_aaa_dd()
+  call self._test('padding_should_be_00', 'Alignta <<<00 =')
+endfunction
+
+function! tc.padding_should_be_31_aaa_dd()
+  call self._test('padding_should_be_31', 'Alignta <<<31 =')
+endfunction
+
+function! tc.padding_should_be_13_aaa_dd()
+  call self._test('padding_should_be_13', 'Alignta <<<13 =')
+endfunction
+
+" <<<\d\+:\d\+ notation
+function! tc.padding_should_be_00_aaa_d_colon_d()
+  call self._test('padding_should_be_00', 'Alignta <<<0:0 =')
+endfunction
+
+function! tc.padding_should_be_31_aaa_d_colon_d()
   call self._test('padding_should_be_31', 'Alignta <<<3:1 =')
 endfunction
 
-function! tc.padding_should_be_13_d_colon_d()
+function! tc.padding_should_be_13_aaa_d_colon_d()
   call self._test('padding_should_be_13', 'Alignta <<<1:3 =')
 endfunction
 
