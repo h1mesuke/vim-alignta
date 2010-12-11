@@ -3,7 +3,7 @@
 "
 " File    : autoload/unite/sources/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2010-12-10
+" Updated : 2010-12-12
 " Version : 0.0.8
 " License : MIT license {{{
 "
@@ -43,6 +43,9 @@ if !exists('g:unite_source_alignta_preset_options')
   let g:unite_source_alignta_preset_options = [
         \ '|||',
         \ '>>>',
+        \ '@0',
+        \ '@01',
+        \ '@10',
         \ ]
 endif
 
