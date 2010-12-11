@@ -2,7 +2,7 @@
 
 File    : doc/alignta.jax
 Author  : h1mesuke <himesuke@gmail.com>
-Updated : 2010-12-10
+Updated : 2010-12-12
 Version : 0.0.7
 License : MIT license {{{
 
@@ -37,6 +37,7 @@ License : MIT license {{{
 	  整列オプション		  |alignta-alignment-options|
 	    PADDING ALIGNMENT OPTIONS	    |alignta-padding-alignment-options|
 	    SHIFTING ALIGNMENT OPTIONS	    |alignta-shifting-alignment-options|
+	    PADDING OPTIONS		    |alignta-padding-options|
 	    LINE FILTERING		    |alignta-line-filtering|
 	設定				|alignta-settings|
 	  変数				  |alignta-variables|
@@ -238,7 +239,7 @@ SHIFTING ALIGNMENT				*alignta-shifting-alignment*
 	存在する限り整列を繰り返す、という意味になります。
 	整列回数の指定を省略した場合、padding alignment においては {+} を、
 	shifting alignment においては {1} を指定したものとみなします。
-	個々の整列は、前回の整列でパターンにマッチした部分より後ろの部分に対し
+	個々の整列は、前回の整列でパターンにマッチした部分より右側の部分に対し
 	て行われます。
 
 	用例： >
@@ -261,7 +262,7 @@ SHIFTING ALIGNMENT				*alignta-shifting-alignment*
 複数のパターン ~
 						*alignta-multiple-patterns*
 	:Aligntaコマンドには、複数のパターンを指定できます。個々の整列は前回の
-	整列でパターンにマッチした部分より後ろの部分に対して行われます。
+	整列でパターンにマッチした部分より右側の部分に対して行われます。
 
 	用例： >
 	+---------------------+-------------------------+
@@ -295,17 +296,16 @@ SHIFTING ALIGNMENT				*alignta-shifting-alignment*
 
 PADDING ALIGNMENT OPTIONS		*alignta-padding-alignment-options*
 
-	padding alignment における整列オプションの指定文字列の書式は以下の３通
-	りです。
+	padding alignment における整列オプションの指定書式は以下の３通りです。
 
-	(1) {L-fld-align}{M-fld-align}{R-fld-align}[{padding}]
+	(1) {L-fld-align}{M-fld-align}{R-fld-align}[{LR-padding}]
 	(2) {L-fld-align}{M-fld-align}{R-fld-align}[{L-padding}{R-padding}]
 	(3) {L-fld-align}{M-fld-align}{R-fld-align}[{L-padding}:{R-padding}]
 
-	(1)、(2) はパディング幅の指定を簡略化したものです。
+	(1),(2) はパディング幅の指定を簡略化したものです。
 
-	{L-fld-align}、{M-fld-align}、{R-fld-align} は以下のいずれかで、それぞ
-	れフィールドのパディング方法を指定します。
+	{L-fld-align},{M-fld-align},{R-fld-align} は以下のいずれかで、それぞれ
+	フィールドのパディング方法を指定します。
 
 	文字	意味
 	----------------
@@ -354,10 +354,10 @@ PADDING ALIGNMENT OPTIONS		*alignta-padding-alignment-options*
 	| ccccc = 100 | ccccc = 100     |
 	+-------------+-----------------+
 <
-	{padding}、{L-padding}、{R-padding} には、フィールド間のパディング幅を
-	指定します。
-	(1)、(2) の書式において指定可能な幅は 0～9 の範囲です。
-	パディング幅の指定を省略した場合、'1:1' を指定したものとみなします。
+	{LR-padding},{L-padding},{R-padding} には、フィールド間のパディング幅
+	を指定します。
+	(1),(2) の書式において指定可能な幅は 0～9 の範囲です。
+	パディング幅の指定を省略した場合、現在の設定値が継続して使用されます。
 
 	用例： >
 	+-------------+-------------------+
@@ -371,12 +371,12 @@ PADDING ALIGNMENT OPTIONS		*alignta-padding-alignment-options*
 	+-------------+-------------------+
 
 	+-------------+-------------------+
-	| Original    | :Alignta <<<3 =   |
-	|             | :Alignta <<<33 =  |
-	|             | :Alignta <<<3:3 = |
+	| Original    | :Alignta |||3 =   |
+	|             | :Alignta |||33 =  |
+	|             | :Alignta |||3:3 = |
 	+-------------+-------------------+
-	| a = 1       | a       =   1     |
-	| bbb = 10    | bbb     =   10    |
+	|   a = 1     |   a     =    1    |
+	|  bbb = 10   |  bbb    =   10    |
 	| ccccc = 100 | ccccc   =   100   |
 	+-------------+-------------------+
 
@@ -390,18 +390,17 @@ PADDING ALIGNMENT OPTIONS		*alignta-padding-alignment-options*
 	+-------------+-------------------+
 
 	+-------------+-------------------+
-	| Original    | :Alignta <<<13 =  |
-	|             | :Alignta <<<1:3 = |
+	| Original    | :Alignta >>>13 =  |
+	|             | :Alignta >>>1:3 = |
 	+-------------+-------------------+
-	| a = 1       |  a     =   1      |
-	| bbb = 10    |  bbb   =   10     |
+	| a = 1       |      a =     1    |
+	| bbb = 10    |    bbb =    10    |
 	| ccccc = 100 |  ccccc =   100    |
 	+-------------+-------------------+
 
 SHIFTING ALIGNMENT OPTIONS		*alignta-shifting-alignment-options*
 
-	shifting alignment における整列オプションの指定文字列の書式は以下の通
-	りです。
+	shifting alignment における整列オプションの指定書式は以下の通りです。
 
 	{L-fld-align}=[{padding}]
 
@@ -445,18 +444,67 @@ SHIFTING ALIGNMENT OPTIONS		*alignta-shifting-alignment-options*
 	+-------------------+------------------+
 
 	+-------------------+---------------------+
-	| Original          | :Alignta <=3 b      |
+	| Original          | :Alignta |=3 b      |
 	+-------------------+---------------------+
-	| a b c             | a       b c         |
-	| aaa bbb ccc       | aaa     bbb ccc     |
+	| a b c             |   a     b c         |
+	| aaa bbb ccc       |  aaa    bbb ccc     |
 	| aaaaa bbbbb ccccc | aaaaa   bbbbb ccccc |
 	+-------------------+---------------------+
 <
+PADDING OPTIONS				*alignta-padding-options*
+
+	フィールド間のパディング幅だけを指定することもできます。
+	パディング幅の指定書式は以下の３通りです。
+
+	(1) @{LR-padding}
+	(2) @{L-padding}{R-padding}
+	(3) @{L-padding}:{R-padding}
+
+	(1),(2) は簡略記法であり、指定可能な幅は 0～9 の範囲です。
+
+	用例： >
+	+-------------+-----------------+
+	| Original    | :Alignta @0 =   |
+	|             | :Alignta @00 =  |
+	|             | :Alignta @0:0 = |
+	+-------------+-----------------+
+	| a = 1       | a    =1         |
+	| bbb = 10    | bbb  =10        |
+	| ccccc = 100 | ccccc=100       |
+	+-------------+-----------------+
+
+	+-------------+-----------------+
+	| Original    | :Alignta @3 =   |
+	|             | :Alignta @33 =  |
+	|             | :Alignta @3:3 = |
+	+-------------+-----------------+
+	| a = 1       | a       =   1   |
+	| bbb = 10    | bbb     =   10  |
+	| ccccc = 100 | ccccc   =   100 |
+	+-------------+-----------------+
+
+	+-------------+-----------------+
+	| Original    | :Alignta @31 =  |
+	|             | :Alignta @3:1 = |
+	+-------------+-----------------+
+	| a = 1       | a       = 1     |
+	| bbb = 10    | bbb     = 10    |
+	| ccccc = 100 | ccccc   = 100   |
+	+-------------+-----------------+
+
+	+-------------+-----------------+
+	| Original    | :Alignta @13 =  |
+	|             | :Alignta @1:3 = |
+	+-------------+-----------------+
+	| a = 1       |  a     =   1    |
+	| bbb = 10    |  bbb   =   10   |
+	| ccccc = 100 |  ccccc =   100  |
+	+-------------+-----------------+
 
 LINE FILTERING				*alignta-line-filtering*
 
 	整列の対象範囲のうち、特定のパターンにマッチする行、またはマッチしない
-	行だけを整列することができます。
+	行だけを整列できます。
 	フィルタリングに使用するパターンの指定書式は以下の２通りです。
 
 	(1) g/{pattern}
@@ -543,7 +591,7 @@ g:alignta_confirm_for_retab			*g:alignta_confirm_for_retab*
 設定例						*alignta-settings-example*
 >
 	xnoremap <silent> A  :Alignta! =>\=<CR>
-	xnoremap <silent> a: :Alignta  <<<01 :<CR>
+	xnoremap <silent> a: :Alignta  @01 :<CR>
 	xmap <silent><expr> as mode() !=# 'v' ? ':Alignta! \S\+{+}'."\<CR>" : 'as'
 <
 ==============================================================================
@@ -617,15 +665,22 @@ g:unite_source_alignta_preset_options
 	xmap f [unite]
 
 	let g:unite_source_alignta_preset_arguments = [
+	      \ ':',
+	      \ '|',
+	      \ '||| |',
 	      \ '}',
-	      \ '<<<0 )',
-	      \ '<<<0 ]',
+	      \ '@0 )',
+	      \ '@0 ]',
+	      \ '@0 \ .\ ',
 	      \ ]
 	
 	let s:comment_leadings = '^\s*\("\|#\|/\*\|//\|<!--\)'
 	let g:unite_source_alignta_preset_options = [
 	      \ '|||',
 	      \ '>>>',
+	      \ '@0',
+	      \ '@01',
+	      \ '@10',
 	      \ 'v/'.s:comment_leadings,
 	      \ 'g/'.s:comment_leadings,
 	      \ ]
