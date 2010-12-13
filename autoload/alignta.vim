@@ -3,7 +3,7 @@
 "
 " File    : autoload/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2010-12-12
+" Updated : 2010-12-13
 " Version : 0.0.8
 " License : MIT license {{{
 "
@@ -479,12 +479,8 @@ function! s:string_pad(str, width, align, ...)
 endfunction
 
 function! s:padding(width, ...)
-  if a:0
-    let char = a:1
-    return substitute(printf('%*s', a:width, ""), ' ', char, 'g')
-  else
-    return printf('%*s', a:width, "")
-  endif
+  let char = (a:0 ? a:1 : ' ')
+  return repeat(char, a:width)
 endfunction
 
 function! s:string_trim(str)
