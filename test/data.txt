@@ -213,7 +213,7 @@ word	wo|rd	word	word	wo|rd
 # SHOULD_ALIGN_AT_1_PATTERN_N_TIMES_DATA_BEGIN
   a = bbbbb = c = ddddd = 1
   aaa = bbb = ccc = ddd = 10
-  aaaaa = b = ccccc = d =100
+  aaaaa = b = ccccc = d = 100
 # SHOULD_ALIGN_AT_1_PATTERN_N_TIMES_DATA_END
 # SHOULD_ALIGN_AT_1_PATTERN_N_TIMES_EXPECTED_BEGIN
   a     = bbbbb = c     = ddddd = 1
@@ -225,7 +225,7 @@ word	wo|rd	word	word	wo|rd
 # SHOULD_ALIGN_AT_1_PATTERN_N_TIMES_LLL_DATA_BEGIN
   a = bbbbb = c = ddddd = 1
   aaa = bbb = ccc = ddd = 10
-  aaaaa = b = ccccc = d =100
+  aaaaa = b = ccccc = d = 100
 # SHOULD_ALIGN_AT_1_PATTERN_N_TIMES_LLL_DATA_END
 # SHOULD_ALIGN_AT_1_PATTERN_N_TIMES_LLL_EXPECTED_BEGIN
   a     = bbbbb = c     = ddddd = 1
@@ -237,7 +237,7 @@ word	wo|rd	word	word	wo|rd
 # SHOULD_ALIGN_AT_1_PATTERN_N_TIMES_CCC_DATA_BEGIN
   a = bbbbb = c = ddddd = 1
   aaa = bbb = ccc = ddd = 10
-  aaaaa = b = ccccc = d =100
+  aaaaa = b = ccccc = d = 100
 # SHOULD_ALIGN_AT_1_PATTERN_N_TIMES_CCC_DATA_END
 # SHOULD_ALIGN_AT_1_PATTERN_N_TIMES_CCC_EXPECTED_BEGIN
     a   = bbbbb =   c   = ddddd =  1
@@ -249,7 +249,7 @@ word	wo|rd	word	word	wo|rd
 # SHOULD_ALIGN_AT_1_PATTERN_N_TIMES_RRR_DATA_BEGIN
   a = bbbbb = c = ddddd = 1
   aaa = bbb = ccc = ddd = 10
-  aaaaa = b = ccccc = d =100
+  aaaaa = b = ccccc = d = 100
 # SHOULD_ALIGN_AT_1_PATTERN_N_TIMES_RRR_DATA_END
 # SHOULD_ALIGN_AT_1_PATTERN_N_TIMES_RRR_EXPECTED_BEGIN
       a = bbbbb =     c = ddddd =   1
@@ -261,7 +261,7 @@ word	wo|rd	word	word	wo|rd
 # SHOULD_ALIGN_AT_1_PATTERN_N_TIMES_LCR_DATA_BEGIN
   a = bbbbb = c = ddddd = 1
   aaa = bbb = ccc = ddd = 10
-  aaaaa = b = ccccc = d =100
+  aaaaa = b = ccccc = d = 100
 # SHOULD_ALIGN_AT_1_PATTERN_N_TIMES_LCR_DATA_END
 # SHOULD_ALIGN_AT_1_PATTERN_N_TIMES_LCR_EXPECTED_BEGIN
   a     = bbbbb = c     = ddddd =   1
@@ -273,7 +273,7 @@ word	wo|rd	word	word	wo|rd
 # SHOULD_ALIGN_AT_1_PATTERN_N_TIMES_RCL_DATA_BEGIN
   a = bbbbb = c = ddddd = 1
   aaa = bbb = ccc = ddd = 10
-  aaaaa = b = ccccc = d =100
+  aaaaa = b = ccccc = d = 100
 # SHOULD_ALIGN_AT_1_PATTERN_N_TIMES_RCL_DATA_END
 # SHOULD_ALIGN_AT_1_PATTERN_N_TIMES_RCL_EXPECTED_BEGIN
       a = bbbbb =     c = ddddd = 1
