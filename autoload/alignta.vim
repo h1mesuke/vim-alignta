@@ -3,7 +3,7 @@
 "
 " File    : autoload/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2010-12-13
+" Updated : 2010-12-16
 " Version : 0.0.8
 " License : MIT license {{{
 "
@@ -35,9 +35,9 @@ function! alignta#align(region, align_args, ...)
 endfunction
 
 " API for unite-alignta
-function! alignta#extend_default_options(idx)
+function! alignta#apply_default_options(idx)
   let opts_str = g:unite_source_alignta_preset_options[a:idx]
-  call s:Aligner.extend_default_options(opts_str)
+  call s:Aligner.apply_default_options(opts_str)
   call s:debug_echo("alignta: current default options: " . string(s:Aligner.default_options))
 endfunction
 
@@ -72,7 +72,7 @@ function! s:Aligner.init_default_options()
   call extend(s:Aligner.default_options, opts, 'force')
 endfunction
 
-function! s:Aligner.extend_default_options(opts_str)
+function! s:Aligner.apply_default_options(opts_str)
   let opts = s:Aligner._parse_options(a:opts_str)
   call extend(s:Aligner.default_options, opts, 'force')
 endfunction
@@ -128,7 +128,7 @@ function! s:min_leading_width(lines, ...)
   return min(map(leadings, 'strlen(v:val)'))
 endfunction
 
-function! s:Aligner.extend_options(options)
+function! s:Aligner.apply_options(options)
   call extend(self.options, a:options, 'force')
 endfunction
 
@@ -173,7 +173,7 @@ function! s:Aligner.align()
     let opts = self._parse_options(value)
     if !next_as_pattern && !empty(opts)
       " options
-      call self.extend_options(opts)
+      call self.apply_options(opts)
     else
       " pattern
       let [pattern, times] = self._parse_pattern(value)
