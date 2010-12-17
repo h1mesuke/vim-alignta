@@ -2,8 +2,8 @@
 
 File    : doc/alignta.jax
 Author  : h1mesuke <himesuke@gmail.com>
-Updated : 2010-12-12
-Version : 0.0.8
+Updated : 2010-12-18
+Version : 0.1.0
 License : MIT license {{{
 
 	Permission is hereby granted, free of charge, to any person obtaining
@@ -593,6 +593,7 @@ g:alignta_confirm_for_retab			*g:alignta_confirm_for_retab*
 	xnoremap <silent> A  :Alignta! =>\=<CR>
 	xnoremap <silent> a: :Alignta  @01 :<CR>
 	xmap <silent><expr> as mode() !=# 'v' ? ':Alignta! \S\+'."\<CR>" : 'as'
+	xnoremap <silent> al :Alignta<Space>
 <
 ==============================================================================
 unite-alignta					*unite-alignta*
