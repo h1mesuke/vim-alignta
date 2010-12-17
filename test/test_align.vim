@@ -381,6 +381,20 @@ function! tc.should_align_multibyte_at_1_pattern_rrr()
   call self._test('should_align_multibyte_at_1_pattern_rrr', 'Alignta >>> ＝')
 endfunction
 
+function! tc.should_align_multibyte_at_ambiwidth_pattern_when_ambw_double()
+  let save_ambiwidth = &ambiwidth
+  set ambiwidth=double
+  call self._test('should_align_multibyte_at_ambiwidth_pattern_when_ambw_double', 'Alignta ＝')
+  let &ambiwidth = save_ambiwidth
+endfunction
+
+function! tc.should_align_multibyte_at_ambiwidth_pattern_when_ambw_single()
+  let save_ambiwidth = &ambiwidth
+  set ambiwidth=single
+  call self._test('should_align_multibyte_at_ambiwidth_pattern_when_ambw_single', 'Alignta ＝')
+  let &ambiwidth = save_ambiwidth
+endfunction
+
 "---------------------------------------
 " Block
 
