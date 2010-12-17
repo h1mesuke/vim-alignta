@@ -214,13 +214,13 @@ SHIFTING ALIGNMENT				*alignta-shifting-alignment*
 	| ccccc = 100 | ccccc = 100 |
 	+-------------+-------------+
 <
-	'!' なしの :Aligntaコマンドは、パターンを正規表現として解釈しません。
+	"!" なしの :Aligntaコマンドは、パターンを正規表現として解釈しません。
 	正規表現のメタ文字はすべてエスケープされ、パターンは字面通りの文字列と
 	して解釈されます。
 
 正規表現 ~
 						*alignta-regex-patterns*
-	'!' を付けて :Alignta! としてコマンドを実行すると、パターンは正規表現
+	"!" を付けて :Alignta! としてコマンドを実行すると、パターンは正規表現
 	として解釈されるようになります。
 
 	用例： >
@@ -432,7 +432,7 @@ SHIFTING ALIGNMENT OPTIONS		*alignta-shifting-alignment-options*
 	+-------------------+-------------------+
 <
 	{padding} には、フィールド間のパディング幅を指定します。
-	パディング幅の指定を省略した場合、'1' を指定したものとみなします。
+	パディング幅の指定を省略した場合、"1" を指定したものとみなします。
 
 	用例： >
 	+-------------------+------------------+
@@ -540,7 +540,7 @@ LINE FILTERING				*alignta-line-filtering*
 パターンとして解釈させたい場合 ~
 					*alignta-escape-alignment-options*
 	整列オプションの指定文字列の書式と合致するパターンを使用したい場合は、
-	引数リストにおいて '-pattern' または '-p' の後にパターンを指定します。
+	引数リストにおいて "-pattern" または "-p" の後にパターンを指定します。
 
 	用例： >
 	+---------------+-----------------+
@@ -571,7 +571,7 @@ g:alignta_default_options			*g:alignta_default_options*
 	引数リストに整列オプションの指定文字列が現れない限り、この変数に設定し
 	た整列オプションで整列が行われます。
 
-	初期値は '<<<1:1'
+	初期値は "<<<1:1"
 
 g:alignta_confirm_for_retab			*g:alignta_confirm_for_retab*
 
@@ -590,6 +590,8 @@ g:alignta_confirm_for_retab			*g:alignta_confirm_for_retab*
 ------------------------------------------------------------------------------
 設定例						*alignta-settings-example*
 >
+	set ambiwidth=double
+
 	xnoremap <silent> A  :Alignta! =>\=<CR>
 	xnoremap <silent> a: :Alignta  @01 :<CR>
 	xmap <silent><expr> as mode() !=# 'v' ? ':Alignta! \S\+'."\<CR>" : 'as'
@@ -608,23 +610,23 @@ unite-alignta					*unite-alignta*
 変数					*unite-source-alignta-variables*
 
 g:unite_source_alignta_preset_arguments
-				*g:unite_source_alignta_preset_arguments*
+					*g:unite_source_alignta_preset_arguments*
 	:Aligntaコマンドの引数リスト文字列のリスト。
 	:Unite alignta:visual を実行したとき、候補として表示されます。
 	（詳細は|unite-alignta-usage|を参照して下さい）
 
-	パターンに正規表現を使用する場合は、引数リストを '!' で始めることでそ
+	パターンに正規表現を使用する場合は、引数リストを "!" で始めることでそ
 	れを指示します。
 
 	初期値は []
 
 g:unite_source_alignta_preset_options
-				*g:unite_source_alignta_preset_options*
+					*g:unite_source_alignta_preset_options*
 	:Aligntaコマンドのオプション指定文字列のリスト。
 	:Unite alignta:normal を実行したとき、候補として表示されます。
 	（詳細は|unite-alignta-usage|を参照して下さい）
 
-	初期値は ['|||', '>>>', '@0', '@01', '@10']
+	初期値は ["|||", ">>>", "@0", "@01", "@10"]
 
 ------------------------------------------------------------------------------
 使い方						*unite-alignta-usage*
