@@ -78,6 +78,30 @@ function! tc.should_align_at_1_pattern_n_times_rcl()
   call self._test('should_align_at_1_pattern_n_times_rcl', 'Alignta >|< ={+}')
 endfunction
 
+function! tc.should_align_at_1_pattern_x_times()
+  call self._test('should_align_at_1_pattern_x_times', 'Alignta ={+}')
+endfunction
+
+function! tc.should_align_at_1_pattern_x_times_lll()
+  call self._test('should_align_at_1_pattern_x_times_lll', 'Alignta <<< ={+}')
+endfunction
+
+function! tc.should_align_at_1_pattern_x_times_ccc()
+  call self._test('should_align_at_1_pattern_x_times_ccc', 'Alignta ||| ={+}')
+endfunction
+
+function! tc.should_align_at_1_pattern_x_times_rrr()
+  call self._test('should_align_at_1_pattern_x_times_rrr', 'Alignta >>> ={+}')
+endfunction
+
+function! tc.should_align_at_1_pattern_x_times_lcr()
+  call self._test('should_align_at_1_pattern_x_times_lcr', 'Alignta <|> ={+}')
+endfunction
+
+function! tc.should_align_at_1_pattern_x_times_rcl()
+  call self._test('should_align_at_1_pattern_x_times_rcl', 'Alignta >|< ={+}')
+endfunction
+
 function! tc.should_align_at_multi_patterns()
   call self._test('should_align_at_multi_patterns', 'Alignta = /* */')
 endfunction
