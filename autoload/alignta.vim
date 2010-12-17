@@ -3,7 +3,7 @@
 "
 " File    : autoload/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2010-12-16
+" Updated : 2010-12-18
 " Version : 0.0.8
 " License : MIT license {{{
 "
@@ -38,19 +38,17 @@ endfunction
 function! alignta#apply_default_options(idx)
   let opts_str = g:unite_source_alignta_preset_options[a:idx]
   call s:Aligner.apply_default_options(opts_str)
-  call s:debug_echo("alignta: current default options: " . string(s:Aligner.default_options))
+  call s:debug_echo("default options = " . string(s:Aligner.default_options))
 endfunction
 
 function! alignta#reset_default_options()
   call s:Aligner.init_default_options()
-  call s:debug_echo("alignta: current default options: " . string(s:Aligner.default_options))
+  call s:debug_echo("default options = " . string(s:Aligner.default_options))
 endfunction
 
 "-----------------------------------------------------------------------------
-" Constants
+" Constant
 
-let s:SUCCESS = 1
-let s:FAILURE = 0
 let s:HUGE_VALUE = 9999
 
 "-----------------------------------------------------------------------------
@@ -100,8 +98,6 @@ function! s:Aligner.initialize(region, args, use_regex)
   let self._line_data = map(range(0, n_lines - 1), '{
         \ "aligned_part": "",
         \ "aligned_width": 0,
-        \ "last_fld_align": "none",
-        \ "last_fld_width": -1,
         \ }')
 
   " keep the minimum leadings
@@ -139,7 +135,7 @@ endfunction
 function! s:Aligner.align()
   call s:debug_echo("region = " . string(self.region))
   call s:debug_echo("arguments = " . string(self.arguments))
-  call s:debug_echo(self._lines)
+  call s:debug_echo("_lines:", self._lines)
 
   let save_cursor = getpos('.')
   " NOTE: s:string_width() for Vim 7.2 or older has a side effect that changes
@@ -177,24 +173,16 @@ function! s:Aligner.align()
     else
       " pattern
       let [pattern, times] = self._parse_pattern(value)
-      while times > 0
-        if !self._align_at(pattern)
-          break
-        endif
-        let times -= 1
-      endwhile
+      call self._align_at(pattern, times)
     endif
     let next_as_pattern = 0
   endfor
 
   " update!
-  let self.region.lines = map(self._line_data, '
-        \ v:val.aligned_part . (
-        \   v:val.last_fld_align !=# "none"
-        \   ? s:string_pad(self._lines[v:key], v:val.last_fld_width, v:val.last_fld_align, 1)
-        \   : self._lines[v:key]
-        \ )')
+  let self.region.lines = map(copy(self._line_data),
+        \ 's:string_rstrip(v:val.aligned_part . self._lines[v:key])')
   call self.region.update()
+
   call setpos('.', save_cursor)
 
   if exists('g:alignta_profile') && g:alignta_profile && has("reltime")
@@ -227,7 +215,7 @@ function! s:Aligner._parse_options(value)
         let opts.L_padding = str2nr(matched_list[6])
         let opts.R_padding = str2nr(matched_list[7])
       endif
-      call s:debug_echo(" parsed options = " . string(opts))
+      call s:debug_echo("parsed options = " . string(opts))
       continue
     endif
 
@@ -241,7 +229,7 @@ function! s:Aligner._parse_options(value)
       if matched_list[2] != ""
         let opts.L_padding = str2nr(matched_list[2])
       endif
-      call s:debug_echo(" parsed options = " . string(opts))
+      call s:debug_echo("parsed options = " . string(opts))
       continue
     endif
 
@@ -260,7 +248,7 @@ function! s:Aligner._parse_options(value)
         let opts.L_padding = str2nr(matched_list[3])
         let opts.R_padding = str2nr(matched_list[4])
       endif
-      call s:debug_echo(" parsed options = " . string(opts))
+      call s:debug_echo("parsed options = " . string(opts))
       continue
     endif
 
@@ -274,7 +262,7 @@ function! s:Aligner._parse_options(value)
         " v/pattern
         let opts.v_pattern = matched_list[2]
       endif
-      call s:debug_echo(" parsed options = " . string(opts))
+      call s:debug_echo("parsed options = " . string(opts))
       continue
     endif
   endfor
@@ -304,30 +292,46 @@ function! s:Aligner._parse_pattern(value)
   return [pattern, times]
 endfunction
 
-function! s:Aligner._align_at(pattern)
-  call s:debug_echo("current options = " . string(self.options))
+function! s:Aligner._align_at(pattern, times)
+  call s:debug_echo("options = " . string(self.options))
+  call s:debug_echo("pattern = " . string(a:pattern))
 
-  let L_flds = {}
-  let M_flds = {}
-  let R_flds = {}
-  let n_lines = len(self._lines)
+  let flds_list = self._split_to_fields(a:pattern, a:times)
+  call self._join_fields(flds_list)
 
-  "---------------------------------------
-  " Phase 1: Match and Split
+  call s:debug_echo("aligned_parts:", map(copy(self._line_data), 'v:val.aligned_part'))
+  call s:debug_echo("_lines:", self._lines)
+endfunction
 
-  " eval once
-  let has_g_pattern = (self.options.g_pattern != "")
-  let has_v_pattern = (self.options.v_pattern != "")
-
-  let matched_count = 0
+function! s:Aligner._filter_lines()
+  let lines = {}
   let idx = 0
-  while idx < n_lines
-    let line = self._lines[idx]
+  while idx < len(self._lines)
     let orig_line = self.region.original_lines[idx]
-    if ((has_g_pattern && orig_line !~# self.options.g_pattern) ||
-          \ (has_v_pattern && orig_line =~# self.options.v_pattern))
-      " filtered, go to the next line
-    elseif line != ""
+    if ((self.options.g_pattern != "" && orig_line !~# self.options.g_pattern) ||
+          \ (self.options.v_pattern != "" && orig_line =~# self.options.v_pattern))
+      " filtered
+    else
+      let lines[idx] = self._lines[idx]
+    endif
+    let idx += 1
+  endwhile
+  return lines
+endfunction
+
+function! s:Aligner._split_to_fields(pattern, times)
+  let flds_list = []
+  let lines = self._filter_lines()
+  " NOTE: _filter_lines() returns a Dictionary
+
+  let n = 0
+  while n < a:times
+    let matched_count = 0
+    let L_flds = {}
+    let M_flds = {}
+    let R_flds = {}
+    " match and split
+    for [idx, line] in items(lines)
       let match_beg = match(line, a:pattern)
       if match_beg >= 0
         let match_end = matchend(line, a:pattern)
@@ -335,92 +339,120 @@ function! s:Aligner._align_at(pattern)
         let M_flds[idx] = strpart(line, match_beg, match_end - match_beg)
         let R_flds[idx] = strpart(line, match_end)
         let matched_count += 1
+      elseif n > 0
+        let L_flds[idx] = line
       endif
+    endfor
+    if matched_count > 0
+      call add(flds_list, L_flds)
+      call add(flds_list, M_flds)
+      let lines = R_flds
+    else
+      break
     endif
-    let idx += 1
+    let n += 1
   endwhile
+  call add(flds_list, lines)
+  return flds_list
+endfunction
 
-  if matched_count == 0
-    return s:FAILURE
-  endif
-
-  "---------------------------------------
-  " Phase 2: Pad and Join
+function! s:Aligner._join_fields(flds_list)
+  let flds_list = a:flds_list + [{}, {}]
+  call s:debug_echo("flds_list = " . string(flds_list))
 
   let method = self.alignment_method()
-  " NOTE: 'padding' or 'shifting'
 
-  " Leading
-  if method ==# 'padding'
-    let leading = ""
-  else
-    " keep the minimum leadings
-    let leading_width = s:min_leading_width(values(L_flds))
-    let leading = s:padding(leading_width)
-  endif
+  let flds_idx = 0
+  while flds_idx < len(flds_list) - 2
+    let [L_flds, M_flds, R_flds]= flds_list[flds_idx : flds_idx + 2]
+    let Last_flds = filter(copy(L_flds), '!has_key(M_flds, v:key)')
 
-  " Left field
-  call map(L_flds, 's:string_trim(v:val)')
-  let blank_L_flds = (len(filter(values(L_flds), 'v:val == ""')) == len(L_flds))
-  " NOTE: If all Left fields are blank, they should be ignored and Left
-  " padding should be set to 0.
+    "---------------------------------------
+    " Leading
 
-  let L_fld_width = max(values(map(copy(L_flds),
-        \ 'self._line_data[v:key].aligned_width + s:string_width(v:val)')))
-
-  call map(L_flds, 's:string_pad(v:val,
-        \ L_fld_width - self._line_data[v:key].aligned_width,
-        \ self.options.L_fld_align
-        \ )')
-
-  " Left padding
-  let lpad = (blank_L_flds ? "" : s:padding(self.options.L_padding))
-
-  " Matched field
-  if method ==# 'padding'
-    let M_fld_width = max(map(values(M_flds), 's:string_width(v:val)'))
-
-    call map(M_flds, 's:string_pad(v:val,
-          \ M_fld_width,
-          \ self.options.M_fld_align,
-          \ (R_flds[v:key] !~ "\\S")
-          \ )')
-  endif
-
-  " Right padding
-  if method ==# 'padding'
-    let rpad = s:padding(self.options.R_padding)
-  else
-    let rpad = ""
-  endif
-
-  " Right field
-  if method ==# 'padding'
-    call map(R_flds, 's:string_trim(v:val)')
-  endif
-  let R_fld_width = max(map(values(R_flds), 's:string_width(v:val)'))
-
-  let idx = 0
-  while idx < n_lines
-    if has_key(L_flds, idx)
-      let aligned = leading . L_flds[idx] . lpad . M_flds[idx]
-      let aligned .= (R_flds[idx] =~ '\S' ? rpad : "")
-      let line_data = self._line_data[idx]
-      let line_data.aligned_part .= aligned
-      let line_data.aligned_width += s:string_width(aligned)
-      let line_data.last_fld_align = self.options.R_fld_align
-      let line_data.last_fld_width = R_fld_width
-      let self._lines[idx] = R_flds[idx]
-      " the next pattern matching will start from the beginning of R_fld
+    if method ==# 'padding'
+      let leading = ""
+    else
+      " keep the minimum leadings
+      let leading_width = s:min_leading_width(values(L_flds))
+      let leading = s:padding(leading_width)
     endif
-    let idx += 1
+
+    "---------------------------------------
+    " Left field
+
+    if method ==# 'padding'
+      call map(L_flds, 's:string_strip(v:val)')
+    else
+      call map(L_flds, 'has_key(Last_flds, v:key)
+            \ ? v:val
+            \ : s:string_strip(v:val)
+            \')
+    endif
+
+    let L_fld_width = max(values(map(copy(L_flds),
+          \ 'self._line_data[v:key].aligned_width + s:string_width(v:val)')))
+
+    call map(L_flds, 'has_key(Last_flds, v:key)
+          \ ? s:string_pad(v:val,
+          \     L_fld_width - self._line_data[v:key].aligned_width,
+          \     self.options.R_fld_align
+          \   )
+          \ : s:string_pad(v:val,
+          \     L_fld_width - self._line_data[v:key].aligned_width,
+          \     self.options.L_fld_align
+          \   )
+          \')
+
+    "---------------------------------------
+    " Left padding
+
+    let blank_L_flds = (len(filter(values(L_flds), 'v:val !~ "\\S"')) == len(L_flds))
+    " NOTE: If all Left fields are blank, they should be ignored and the Left
+    " padding should be set to 0.
+
+    let lpad = (blank_L_flds ? "" : s:padding(self.options.L_padding))
+
+    "---------------------------------------
+    " Matched field
+
+    if method ==# 'padding'
+      let M_fld_width = max(map(values(M_flds), 's:string_width(v:val)'))
+
+      call map(M_flds, 's:string_pad(v:val,
+            \ M_fld_width,
+            \ self.options.M_fld_align
+            \ )')
+    endif
+
+    "---------------------------------------
+    " Right padding
+
+    if method ==# 'padding'
+      let rpad = s:padding(self.options.R_padding)
+    else
+      let rpad = ""
+    endif
+
+    call s:debug_echo("L_flds:", L_flds)
+    call s:debug_echo("M_flds:", M_flds)
+    call s:debug_echo("R_flds:", R_flds)
+
+    " join fields with paddings
+    for idx in keys(L_flds)
+      if !has_key(Last_flds, idx)
+        let aligned = leading . L_flds[idx] . lpad . M_flds[idx] . rpad
+        let line_data = self._line_data[idx]
+        let line_data.aligned_part .= aligned
+        let line_data.aligned_width += s:string_width(aligned)
+      else
+        " last field
+        " the next pattern matching will start from the beginning of it
+        let self._lines[idx] = L_flds[idx]
+      endif
+    endfor
+    let flds_idx += 2
   endwhile
-
-  call s:debug_echo("pattern = " . string(a:pattern))
-  call s:debug_echo(map(copy(self._line_data), 'v:val.aligned_part'))
-  call s:debug_echo(self._lines)
-
-  return s:SUCCESS
 endfunction
 
 function! s:print_error(msg)
@@ -429,14 +461,20 @@ function! s:print_error(msg)
   echohl None
 endfunction
 
-function! s:debug_echo(msg)
+function! s:debug_echo(msg, ...)
   if exists('g:alignta_debug') && g:alignta_debug
-    if type(a:msg) == type([])
-      for line in a:msg
-        echomsg string(line)
-      endfor
-    else
-      echomsg "alignta: " . a:msg
+    echomsg "alignta: " . a:msg
+    if a:0
+      let lines = a:1
+      if type(lines) == type([])
+        for line in lines
+          echomsg string(line)
+        endfor
+      elseif type(lines) == type({})
+        for idx in s:sort_numbers(keys(lines))
+          echomsg string(lines[idx])
+        endfor
+      endif
     endif
   endif
 endfunction
@@ -473,9 +511,11 @@ function! s:string_pad(str, width, align, ...)
   elseif a:align ==# 'right'
     let lpad = s:padding(a:width - str_w)
     let rpad = ""
+  else
+    let lpad = ""
+    let rpad = ""
   endif
-  let rpad = (no_trailing ? "" : rpad)
-  return lpad . a:str . rpad
+  return lpad . a:str . (no_trailing ? "" : rpad)
 endfunction
 
 function! s:padding(width, ...)
@@ -483,8 +523,12 @@ function! s:padding(width, ...)
   return repeat(char, a:width)
 endfunction
 
-function! s:string_trim(str)
+function! s:string_strip(str)
   return substitute(substitute(a:str, '^\s*', '', ''), '\s*$', '', '')
+endfunction
+
+function! s:string_rstrip(str)
+  return substitute(a:str, '\s*$', '', '')
 endfunction
 
 if v:version >= 703
