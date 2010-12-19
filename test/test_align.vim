@@ -413,6 +413,22 @@ endfunction
 "=============================================================================
 " Misc
 
+function! tc.should_not_ignore_case()
+  let save_ignorecase = &ignorecase
+  set ignorecase
+  call self._test('should_not_ignore_case', 'Alignta! b\+')
+  call assert#true(&ignorecase)
+  let &ignorecase = save_ignorecase
+endfunction
+
+function! tc.should_ignore_case_when_c()
+  let save_ignorecase = &ignorecase
+  set noignorecase
+  call self._test('should_ignore_case_when_c', 'Alignta! \cb\+')
+  call assert#false(&ignorecase)
+  let &ignorecase = save_ignorecase
+endfunction
+
 "---------------------------------------
 " -p
 

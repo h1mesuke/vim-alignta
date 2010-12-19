@@ -1050,6 +1050,42 @@ word	wo|rd	word	word	wo|rd
 #=============================================================================
 # Misc
 
+#---------------------------------------
+# SHOULD_NOT_IGNORE_CASE_DATA_BEGIN
+  a b
+  A B
+  aa bb
+  AA BB
+  aaa bbb
+  AAA BBB
+# SHOULD_NOT_IGNORE_CASE_DATA_END
+# SHOULD_NOT_IGNORE_CASE_EXPECTED_BEGIN
+  a   b
+  A B
+  aa  bb
+  AA BB
+  aaa bbb
+  AAA BBB
+# SHOULD_NOT_IGNORE_CASE_EXPECTED_END
+
+#---------------------------------------
+# SHOULD_IGNORE_CASE_WHEN_C_DATA_BEGIN
+  a b
+  A B
+  aa bb
+  AA BB
+  aaa bbb
+  AAA BBB
+# SHOULD_IGNORE_CASE_WHEN_C_DATA_END
+# SHOULD_IGNORE_CASE_WHEN_C_EXPECTED_BEGIN
+  a   b
+  A   B
+  aa  bb
+  AA  BB
+  aaa bbb
+  AAA BBB
+# SHOULD_IGNORE_CASE_WHEN_C_EXPECTED_END
+
 #-----------------------------------------------------------------------------
 # -p
 
