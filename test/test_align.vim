@@ -268,26 +268,22 @@ function! tc.setup_align_region_has_tab()
   let self.save_confirm = g:alignta_confirm_for_retab
   let g:alignta_confirm_for_retab = 0
 endfunction
-
-function! tc.teardown_align_region_has_tab()
-  let g:alignta_confirm_for_retab = self.save_confirm
-endfunction
-
 function! tc.should_align_region_has_tab()
   call self._test('should_align_region_has_tab', 'Alignta =')
+endfunction
+function! tc.teardown_align_region_has_tab()
+  let g:alignta_confirm_for_retab = self.save_confirm
 endfunction
 
 function! tc.setup_align_region_has_tab_if_noexpandtab()
   let self.save_expandtab = &l:expandtab
   setlocal noexpandtab
 endfunction
-
-function! tc.teardown_align_region_has_tab_if_noexpandtab()
-  let &l:expandtab = self.save_expandtab
-endfunction
-
 function! tc.should_align_region_has_tab_if_noexpandtab()
   call self._test('should_align_region_has_tab_if_noexpandtab', 'Alignta =')
+endfunction
+function! tc.teardown_align_region_has_tab_if_noexpandtab()
+  let &l:expandtab = self.save_expandtab
 endfunction
 
 function! tc.should_raise_if_block_has_tab()
@@ -413,20 +409,28 @@ endfunction
 "=============================================================================
 " Misc
 
-function! tc.should_not_ignore_case()
-  let save_ignorecase = &ignorecase
+function! tc.setup_should_not_ignore_case()
+  let self.save_ignorecase = &ignorecase
   set ignorecase
+endfunction
+function! tc.should_not_ignore_case()
   call self._test('should_not_ignore_case', 'Alignta! b\+')
   call assert#true(&ignorecase)
-  let &ignorecase = save_ignorecase
+endfunction
+function! tc.teardown_should_not_ignore_case()
+  let &ignorecase = self.save_ignorecase
 endfunction
 
-function! tc.should_ignore_case_when_c()
-  let save_ignorecase = &ignorecase
+function! tc.setup_should_ignore_case_when_c()
+  let self.save_ignorecase = &ignorecase
   set noignorecase
+endfunction
+function! tc.should_ignore_case_when_c()
   call self._test('should_ignore_case_when_c', 'Alignta! \cb\+')
   call assert#false(&ignorecase)
-  let &ignorecase = save_ignorecase
+endfunction
+function! tc.teardown_should_ignore_case_when_c()
+  let &ignorecase = self.save_ignorecase
 endfunction
 
 "---------------------------------------
