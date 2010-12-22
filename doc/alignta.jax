@@ -2,7 +2,7 @@
 
 File    : doc/alignta.jax
 Author  : h1mesuke <himesuke@gmail.com>
-Updated : 2010-12-18
+Updated : 2010-12-23
 Version : 0.1.1
 License : MIT license {{{
 
@@ -98,8 +98,8 @@ alignta ~
 
 	配布アーカイブに含まれるファイル群を、そのフォルダごと Vim
 	の 'runtimepath' にコピーします。 $HOME/.vim（Windows の場合は
-	$HOME/vimfiles）へのインストールがもっとも一般的でしょう。その場合イン
-	ストール後の配置は
+	$HOME/vimfiles）へのインストールがもっとも一般的でしょう。
+	インストール後の配置は
 
 	$HOME/.vim/plugin/alignta.vim
 	$HOME/.vim/autoload/alignta.vim
@@ -595,7 +595,7 @@ g:alignta_confirm_for_retab			*g:alignta_confirm_for_retab*
 	xnoremap <silent> A  :Alignta! =>\=<CR>
 	xnoremap <silent> a: :Alignta  @01 :<CR>
 	xmap <silent><expr> as mode() !=# 'v' ? ':Alignta! \S\+'."\<CR>" : 'as'
-	xnoremap <silent> al :Alignta<Space>
+	xnoremap al :Alignta<Space>
 <
 ==============================================================================
 unite-alignta					*unite-alignta*
