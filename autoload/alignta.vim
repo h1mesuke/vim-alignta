@@ -29,8 +29,8 @@
 "=============================================================================
 
 function! alignta#align(region_args, align_args, ...)
-  let use_regex = (a:0 ? a:1 : 0)
-  let aligner = s:Aligner.new(a:region_args, a:align_args, use_regex)
+  let use_regexp = (a:0 ? a:1 : 0)
+  let aligner = s:Aligner.new(a:region_args, a:align_args, use_regexp)
   call aligner.align()
 endfunction
 
@@ -99,10 +99,10 @@ function! s:Aligner.apply_default_options(opts_str)
   call extend(s:Aligner.default_options, opts, 'force')
 endfunction
 
-function! s:Aligner.initialize(region_args, align_args, use_regex)
+function! s:Aligner.initialize(region_args, align_args, use_regexp)
   let self.region = call(s:Region.new, a:region_args, s:Region)
   let self.arguments = a:align_args
-  let self.use_regex = a:use_regex
+  let self.use_regexp = a:use_regexp
   let self.options = copy(s:Aligner.default_options)
 
   " initialize the lines to align
@@ -291,7 +291,7 @@ endfunction
 function! s:Aligner._parse_pattern(value)
   let times_str = matchstr(a:value, '{\zs\(\d\+\|+\)\ze}$')
   let pattern = substitute(a:value, '{\(\d\+\|+\)}$', '', '')
-  if !self.use_regex
+  if !self.use_regexp
     let pattern = s:string_escape_regex(pattern)
   endif
   if times_str == ""

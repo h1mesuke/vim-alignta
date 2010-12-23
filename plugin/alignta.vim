@@ -66,8 +66,8 @@ function! s:align(align_args, bang) range
   else
     let region_args = [a:firstline, a:lastline]
   endif
-  let use_regex = (a:bang == '!')
-  call alignta#align(region_args, a:align_args, use_regex)
+  let use_regexp = (a:bang == '!')
+  call alignta#align(region_args, a:align_args, use_regexp)
 endfunction
 
 "-----------------------------------------------------------------------------
