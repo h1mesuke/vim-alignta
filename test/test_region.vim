@@ -111,9 +111,8 @@ function! tc._test_region_update(...)
   else
     let has_tab = 0
   endif
-  let argc = len(args)
 
-  let region = alignta#_region(args)
+  let region = call('alignta#_region', args)
   let range = region.line_range
   call self.puts()
   call self.puts(string(region))

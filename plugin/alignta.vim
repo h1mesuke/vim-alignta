@@ -3,7 +3,7 @@
 "
 " File    : plugin/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2010-12-07
+" Updated : 2010-12-23
 " Version : 0.1.1
 " License : MIT license {{{
 "
@@ -62,12 +62,12 @@ endif
 function! s:align(align_args, bang) range
   let vismode = visualmode()
   if vismode == "\<C-v>" && a:firstline == line("'<") && a:lastline == line("'>")
-    let region = vismode
+    let region_args = [vismode]
   else
-    let region = [a:firstline, a:lastline]
+    let region_args = [a:firstline, a:lastline]
   endif
   let use_regex = (a:bang == '!')
-  call alignta#align(region, a:align_args, use_regex)
+  call alignta#align(region_args, a:align_args, use_regex)
 endfunction
 
 "-----------------------------------------------------------------------------

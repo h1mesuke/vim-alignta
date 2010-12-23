@@ -3,7 +3,7 @@
 "
 " File    : autoload/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2010-12-20
+" Updated : 2010-12-23
 " Version : 0.1.1
 " License : MIT license {{{
 "
@@ -28,9 +28,9 @@
 " }}}
 "=============================================================================
 
-function! alignta#align(region, align_args, ...)
+function! alignta#align(region_args, align_args, ...)
   let use_regex = (a:0 ? a:1 : 0)
-  let aligner = s:Aligner.new(a:region, a:align_args, use_regex)
+  let aligner = s:Aligner.new(a:region_args, a:align_args, use_regex)
   call aligner.align()
 endfunction
 
@@ -52,9 +52,33 @@ endfunction
 let s:HUGE_VALUE = 9999
 
 "-----------------------------------------------------------------------------
+" Object
+
+let s:Object = {}
+
+function! s:Object.new(...)
+  let obj = copy(self)
+  let obj.class = self
+  let k = obj.class
+  while has_key(k, 'super')
+    call extend(obj, k.super, 'keep')
+    let k = k.super
+  endwhile
+  call call(obj.initialize, a:000, obj)
+  return obj
+endfunction
+
+function! s:Object.initialize(...)
+endfunction
+
+function! s:Object.extend()
+  return extend({'super': self}, self, 'keep')
+endfunction
+
+"-----------------------------------------------------------------------------
 " Aligner
 
-let s:Aligner = {}
+let s:Aligner = s:Object.extend()
 
 function! s:Aligner.init_default_options()
   let s:Aligner.default_options = {
@@ -75,16 +99,9 @@ function! s:Aligner.apply_default_options(opts_str)
   call extend(s:Aligner.default_options, opts, 'force')
 endfunction
 
-function! s:Aligner.new(region, args, use_regex)
-  let obj = copy(self)
-  let obj.class = s:Aligner
-  call obj.initialize(a:region, a:args, a:use_regex)
-  return obj
-endfunction
-
-function! s:Aligner.initialize(region, args, use_regex)
-  let self.region = s:Region.new(a:region)
-  let self.arguments = a:args
+function! s:Aligner.initialize(region_args, align_args, use_regex)
+  let self.region = call(s:Region.new, a:region_args, s:Region)
+  let self.arguments = a:align_args
   let self.use_regex = a:use_regex
   let self.options = copy(s:Aligner.default_options)
 
@@ -560,65 +577,28 @@ endif
 " Region
 
 " for test-use only
-function! alignta#_region(args)
-  return s:Region.new(a:args)
+function! alignta#_region(...)
+  return call(s:Region.new, a:000, s:Region)
 endfunction
 
-let s:Region = {
-      \ 'normalize_tabs': 1,
-      \ }
+let s:Region = s:Object.extend()
+let s:Region.normalize_tabs = 1
 
-function! s:Region.new(...)
-  let obj = copy(self)
-  let obj.class = s:Region
-
-  if a:0 == 1 && type(a:1) == type([])
-    let args = a:1
-  else
-    let args = a:000
-  endif
-  let argc = len(args)
-
-  if argc == 1
-    if args[0] ==? 'v' || args[0] ==# "\<C-v>"
-      " from the visual mode; s:Region.new(visualmode())
-      let type = { 'v': 'char', 'V': 'line', "\<C-v>": 'block' }[args[0]]
-      let line_range = [line("'<"), line("'>")]
-      let char_range = [getpos("'<"), getpos("'>")]
-    elseif args[0] ==# 'char' || args[0] ==# 'line' || args[0] ==# 'block'
-      " from the operator-pending mode
-      " NOTE: see :help g@
-      let type = args[0]
-      let line_range = [line("'["), line("']")]
-      let char_range = [getpos("'["), getpos("']")]
-    endif
-  elseif argc == 2
-    " from the normal mode
-    let type = 'line'
-    let line_range = args
-    let char_range = []
-  else
-    throw "Region: ArgumentError: wrong number of arguments (" . argc . " for 1..2)"
-  endif
-
-  call obj.initialize(type, line_range, char_range)
-  return obj
-endfunction
-
-function! s:Region.initialize(type, line_range, char_range)
-  let self.type = a:type
+function! s:Region.initialize(...)
+  let [type, line_range, char_range] = self._parse_arguments(a:000)
+  let self.type = type
   let self.has_tab = 0 | let self.is_broken = 0
-  let self.line_range = a:line_range
-  let self.char_range = a:char_range
-  let self.original_lines = getline(a:line_range[0], a:line_range[1])
+  let self.line_range = line_range
+  let self.char_range = char_range
+  let self.original_lines = getline(line_range[0], line_range[1])
 
   " initialize self.lines
   call self._get_selection()
 
-  if a:type ==# 'block'
+  if type ==# 'block'
     " check the block for any broken multi-byte chars
     call self.update()
-    let lines = getline(a:line_range[0], a:line_range[1])
+    let lines = getline(line_range[0], line_range[1])
     let self.is_broken = (lines !=# self.original_lines)
     silent undo
   endif
@@ -629,11 +609,37 @@ function! s:Region.initialize(type, line_range, char_range)
     " the selection text for subsequent alignments.
     let save_et = &l:expandtab
     setlocal expandtab
-    execute a:line_range[0] . ',' . a:line_range[1] . 'retab'
+    execute line_range[0] . ',' . line_range[1] . 'retab'
     call self._get_selection()
     silent undo
     let &l:expandtab = save_et
   endif
+endfunction
+
+function! s:Region._parse_arguments(args)
+  let argc = len(a:args)
+  if argc == 1
+    if a:args[0] ==? 'v' || a:args[0] ==# "\<C-v>"
+      " from the visual mode; s:Region.new(visualmode())
+      let type = { 'v': 'char', 'V': 'line', "\<C-v>": 'block' }[a:args[0]]
+      let line_range = [line("'<"), line("'>")]
+      let char_range = [getpos("'<"), getpos("'>")]
+    elseif a:args[0] ==# 'char' || a:args[0] ==# 'line' || a:args[0] ==# 'block'
+      " from the operator-pending mode
+      " NOTE: see :help g@
+      let type = a:args[0]
+      let line_range = [line("'["), line("']")]
+      let char_range = [getpos("'["), getpos("']")]
+    endif
+  elseif argc == 2
+    " from the normal mode
+    let type = 'line'
+    let line_range = a:args
+    let char_range = []
+  else
+    throw "Region: ArgumentError: wrong number of arguments (" . argc . " for 1..2)"
+  endif
+  return [type, line_range, char_range]
 endfunction
 
 function! s:Region._get_selection()
@@ -753,24 +759,10 @@ endfunction
 "-----------------------------------------------------------------------------
 " Vimenv
 
-let s:Vimenv = {}
+let s:Vimenv = s:Object.extend()
 
-function! s:Vimenv.new(...)
-  let obj = copy(self)
-  let obj.class = s:Vimenv
-
-  if a:0 == 1 && type(a:1) == type([])
-    let args = a:1
-  else
-    let args = a:000
-  endif
-  let argc = len(args)
-  call obj.initialize(args)
-
-  return obj
-endfunction
-
-function! s:Vimenv.initialize(args)
+function! s:Vimenv.initialize(...)
+  let args = a:000
   let save_cursor = 0
   let save_marks  = []
   let save_opts   = []
@@ -778,7 +770,7 @@ function! s:Vimenv.initialize(args)
   let save_vsel   = 0
 
   " parse args
-  for value in a:args
+  for value in args
     if value == '.'
       let save_cursor = 1
     elseif value =~# "^'[a-zA-Z[\\]']$"
