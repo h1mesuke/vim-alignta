@@ -4,7 +4,7 @@
 " File    : autoload/alignta/vimenv.vim
 " Author  : h1mesuke <himesuke@gmail.com>
 " Updated : 2010-12-29
-" Version : 0.1.2
+" Version : 0.1.3
 " License : MIT license {{{
 "
 "   Permission is hereby granted, free of charge, to any person obtaining
