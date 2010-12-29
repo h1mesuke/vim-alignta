@@ -268,7 +268,7 @@ function! s:Aligner._parse_pattern(value)
   let times_str = matchstr(a:value, '{\zs\(\d\+\|+\)\ze}$')
   let pattern = substitute(a:value, '{\(\d\+\|+\)}$', '', '')
   if !self.use_regexp
-    let pattern = alignta#string#escape_regex(pattern)
+    let pattern = alignta#string#escape_regexp(pattern)
   endif
   if times_str == ""
     if self.alignment_method() ==# 'padding'

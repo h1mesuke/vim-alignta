@@ -28,7 +28,7 @@
 " }}}
 "=============================================================================
 
-function! alignta#string#escape_regex(str)
+function! alignta#string#escape_regexp(str)
   return escape(a:str, '^$[].*\~')
 endfunction
 
