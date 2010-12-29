@@ -32,15 +32,19 @@ function! alignta#object#extend()
   return s:Object.extend()
 endfunction
 
-let s:Object = {}
+let s:NIL = {}
+let s:Object = { 'super': s:NIL }
 
 function! s:Object.new(...)
+  " instantiate
   let obj = copy(self)
   let obj.class = self
-  let k = obj.class
-  while has_key(k, 'super')
-    call extend(obj, k.super, 'keep')
-    let k = k.super
+  unlet obj.super
+  " inherit methods from superclasses
+  let klass = obj.class
+  while klass isnot s:NIL
+    call extend(obj, klass.super, 'keep')
+    let klass = klass.super
   endwhile
   call call(obj.initialize, a:000, obj)
   return obj
@@ -50,7 +54,7 @@ function! s:Object.initialize(...)
 endfunction
 
 function! s:Object.extend()
-  return extend({'super': self}, self, 'keep')
+  return extend({ 'super': self }, self, 'keep')
 endfunction
 
 " vim: filetype=vim
