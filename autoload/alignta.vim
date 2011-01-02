@@ -3,7 +3,7 @@
 "
 " File    : autoload/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-01-02
+" Updated : 2011-01-03
 " Version : 0.1.3
 " License : MIT license {{{
 "
@@ -38,12 +38,12 @@ endfunction
 function! alignta#apply_default_options(idx)
   let opts_str = g:unite_source_alignta_preset_options[a:idx]
   call s:Aligner.apply_default_options(opts_str)
-  call s:debug_echo("default options = " . string(s:Aligner.default_options))
+  call s:print_debug("default options = " . string(s:Aligner.default_options))
 endfunction
 
 function! alignta#reset_default_options()
   call s:Aligner.init_default_options()
-  call s:debug_echo("default options = " . string(s:Aligner.default_options))
+  call s:print_debug("default options = " . string(s:Aligner.default_options))
 endfunction
 
 "-----------------------------------------------------------------------------
@@ -126,9 +126,9 @@ function! s:Aligner.alignment_method()
 endfunction
 
 function! s:Aligner.align()
-  call s:debug_echo("region = " . string(self.region))
-  call s:debug_echo("arguments = " . string(self.arguments))
-  call s:debug_echo("_lines:", self._lines)
+  call s:print_debug("region = " . string(self.region))
+  call s:print_debug("arguments = " . string(self.arguments))
+  call s:print_debug("_lines:", self._lines)
 
   if self.region.type ==# 'block' && self.region.has_tab
     call s:print_error("alignta: RegionError: block contains tabs")
@@ -210,7 +210,7 @@ function! s:Aligner._parse_options(value)
         let opts.L_padding = str2nr(matched_list[6])
         let opts.R_padding = str2nr(matched_list[7])
       endif
-      call s:debug_echo("parsed options = " . string(opts))
+      call s:print_debug("parsed options = " . string(opts))
       continue
     endif
 
@@ -224,7 +224,7 @@ function! s:Aligner._parse_options(value)
       if matched_list[2] != ""
         let opts.L_padding = str2nr(matched_list[2])
       endif
-      call s:debug_echo("parsed options = " . string(opts))
+      call s:print_debug("parsed options = " . string(opts))
       continue
     endif
 
@@ -243,7 +243,7 @@ function! s:Aligner._parse_options(value)
         let opts.L_padding = str2nr(matched_list[3])
         let opts.R_padding = str2nr(matched_list[4])
       endif
-      call s:debug_echo("parsed options = " . string(opts))
+      call s:print_debug("parsed options = " . string(opts))
       continue
     endif
 
@@ -257,7 +257,7 @@ function! s:Aligner._parse_options(value)
         " v/pattern
         let opts.v_pattern = matched_list[2]
       endif
-      call s:debug_echo("parsed options = " . string(opts))
+      call s:print_debug("parsed options = " . string(opts))
       continue
     endif
   endfor
@@ -288,14 +288,14 @@ function! s:Aligner._parse_pattern(value)
 endfunction
 
 function! s:Aligner._align_at(pattern, times)
-  call s:debug_echo("options = " . string(self.options))
-  call s:debug_echo("pattern = " . string(a:pattern))
+  call s:print_debug("options = " . string(self.options))
+  call s:print_debug("pattern = " . string(a:pattern))
 
   let flds_list = self._split_to_fields(a:pattern, a:times)
   call self._join_fields(flds_list)
 
-  call s:debug_echo("aligned_parts:", map(copy(self._line_data), 'v:val.aligned_part'))
-  call s:debug_echo("_lines:", self._lines)
+  call s:print_debug("aligned_parts:", map(copy(self._line_data), 'v:val.aligned_part'))
+  call s:print_debug("_lines:", self._lines)
 endfunction
 
 function! s:Aligner._filter_lines()
@@ -353,7 +353,7 @@ endfunction
 
 function! s:Aligner._join_fields(flds_list)
   let flds_list = a:flds_list + [{}, {}]
-  call s:debug_echo("flds_list = " . string(flds_list))
+  call s:print_debug("flds_list = " . string(flds_list))
 
   let method = self.alignment_method()
 
@@ -429,9 +429,9 @@ function! s:Aligner._join_fields(flds_list)
       let rpad = ""
     endif
 
-    call s:debug_echo("L_flds:", L_flds)
-    call s:debug_echo("M_flds:", M_flds)
-    call s:debug_echo("R_flds:", R_flds)
+    call s:print_debug("L_flds:", L_flds)
+    call s:print_debug("M_flds:", M_flds)
+    call s:print_debug("R_flds:", R_flds)
 
     " join fields with paddings
     for idx in keys(L_flds)
@@ -456,7 +456,7 @@ function! s:print_error(msg)
   echohl None
 endfunction
 
-function! s:debug_echo(msg, ...)
+function! s:print_debug(msg, ...)
   if exists('g:alignta_debug') && g:alignta_debug
     echomsg "alignta: " . a:msg
     if a:0
@@ -472,6 +472,14 @@ function! s:debug_echo(msg, ...)
       endif
     endif
   endif
+endfunction
+
+function! s:sort_numbers(list)
+  return sort(a:list, 's:compare_numbers')
+endfunction
+
+function! s:compare_numbers(n1, n2)
+  return a:n1 == a:n2 ? 0 : a:n1 > a:n2 ? 1 : -1
 endfunction
 
 " initialize s:Aligner itself
