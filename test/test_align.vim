@@ -286,12 +286,8 @@ function! tc.teardown_align_region_has_tab_if_noexpandtab()
   let &l:expandtab = self.save_expandtab
 endfunction
 
-function! tc.should_raise_if_block_has_tab()
-  let tag = 'should_raise_if_block_has_tab'
-  let range = s:data_range(tag)
-  execute range[0]
-  execute "normal! 06l\<C-v>" . (range[1] - range[0]) . "jf*2h\<Esc>"
-  call assert#raise(":'<,'>Alignta =", 'tabs')
+function! tc.should_error_if_block_has_tab()
+  call self._test('should_error_if_block_has_tab', 'Alignta =')
 endfunction
 
 "=============================================================================
@@ -398,12 +394,8 @@ function! tc.should_align_multibyte_block()
   call self._test('should_align_multibyte_block', 'Alignta ＝')
 endfunction
 
-function! tc.should_raise_if_multibyte_block_is_broken()
-  let tag = 'should_raise_if_multibyte_block_is_broken'
-  let range = s:data_range(tag)
-  execute range[0]
-  execute "normal! 06l\<C-v>" . (range[1] - range[0]) . "jf*2h\<Esc>"
-  call assert#raise(":'<,'>Alignta ＝", 'broken')
+function! tc.should_error_if_multibyte_block_is_broken()
+  call self._test('should_error_if_multibyte_block_is_broken', 'Alignta ＝')
 endfunction
 
 "=============================================================================

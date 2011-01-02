@@ -752,11 +752,16 @@ word	wo|rd	word	word	wo|rd
 # SHOULD_ALIGN_REGION_HAS_TAB_IF_NOEXPANDTAB_EXPECTED_END
 
 #---------------------------------------
-# SHOULD_RAISE_IF_BLOCK_HAS_TAB_DATA_BEGIN
+# SHOULD_ERROR_IF_BLOCK_HAS_TAB_DATA_BEGIN
   ***	a			=	1		***
   ***	bbb		=	10	***
   ***	ccccc	=	100	***
-# SHOULD_RAISE_IF_BLOCK_HAS_TAB_DATA_END
+# SHOULD_ERROR_IF_BLOCK_HAS_TAB_DATA_END
+# SHOULD_ERROR_IF_BLOCK_HAS_TAB_EXPECTED_BEGIN
+  ***	a			=	1		***
+  ***	bbb		=	10	***
+  ***	ccccc	=	100	***
+# SHOULD_ERROR_IF_BLOCK_HAS_TAB_EXPECTED_END
 
 #=============================================================================
 # Shifting Alignment
@@ -1041,11 +1046,16 @@ word	wo|rd	word	word	wo|rd
 # SHOULD_ALIGN_MULTIBYTE_BLOCK_EXPECTED_END
 
 #---------------------------------------
-# SHOULD_RAISE_IF_MULTIBYTE_BLOCK_IS_BROKEN_DATA_BEGIN
-  word word word word word word word word
-   単語 単語 単語 単語 単語 単語 単語 単語
-  word word word word word word word word
-# SHOULD_RAISE_IF_MULTIBYTE_BLOCK_IS_BROKEN_DATA_END
+# SHOULD_ERROR_IF_MULTIBYTE_BLOCK_IS_BROKEN_DATA_BEGIN
+  外外外 あ ＝ 壱             *外外外
+  外外外あいう ＝ 壱十        *外外外
+  外外外 あいうえお ＝ 壱十百 *外外外
+# SHOULD_ERROR_IF_MULTIBYTE_BLOCK_IS_BROKEN_DATA_END
+# SHOULD_ERROR_IF_MULTIBYTE_BLOCK_IS_BROKEN_EXPECTED_BEGIN
+  外外外 あ ＝ 壱             *外外外
+  外外外あいう ＝ 壱十        *外外外
+  外外外 あいうえお ＝ 壱十百 *外外外
+# SHOULD_ERROR_IF_MULTIBYTE_BLOCK_IS_BROKEN_EXPECTED_END
 
 #=============================================================================
 # Misc
