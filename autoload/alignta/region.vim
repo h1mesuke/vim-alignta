@@ -3,7 +3,7 @@
 "
 " File    : autoload/alignta/region.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2010-12-29
+" Updated : 2011-01-03
 " Version : 0.1.3
 " License : MIT license {{{
 "
@@ -46,12 +46,18 @@ function! s:Region.initialize(...)
   " initialize self.lines
   call self._get_selection()
 
-  if type ==# 'block'
-    " check the block for any broken multi-byte chars
-    call self.update()
-    let lines = getline(line_range[0], line_range[1])
-    let self.is_broken = (lines !=# self.original_lines)
-    silent undo
+  if type !=# 'line'
+    let self.is_broken = 1
+    for put_command in ['P', 'p']
+      let self.put_command = put_command
+      call self.update()
+      let lines = getline(line_range[0], line_range[1])
+      silent undo
+      if lines ==# self.original_lines
+        let self.is_broken = 0
+        break
+      endif
+    endfor
   endif
 
   let self.has_tab = !empty(filter(copy(self.lines), 'v:val =~ "\\t"'))
@@ -173,7 +179,7 @@ function! s:Region.update()
     call setpos('.', self.char_range[0])
     execute 'normal!' vismode
     call setpos('.', self.char_range[1])
-    silent normal! "_d"vP`<
+    silent execute 'normal!' '"_d"v' . self.put_command . '`<'
 
     call save_vimenv.restore()
 
