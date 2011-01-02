@@ -4,7 +4,7 @@
 " File    : autoload/alignta/region.vim
 " Author  : h1mesuke <himesuke@gmail.com>
 " Updated : 2011-01-03
-" Version : 0.1.3
+" Version : 0.1.4
 " License : MIT license {{{
 "
 "   Permission is hereby granted, free of charge, to any person obtaining
@@ -64,12 +64,12 @@ function! s:Region.initialize(...)
   if self.has_tab && self.normalize_tabs
     " NOTE: If the selection contains any tabs, expand them all to normalize
     " the selection text for subsequent alignments.
-    let save_et = &l:expandtab
+    let save_expandtab = &l:expandtab
     setlocal expandtab
     execute line_range[0] . ',' . line_range[1] . 'retab'
     call self._get_selection()
     silent undo
-    let &l:expandtab = save_et
+    let &l:expandtab = save_expandtab
   endif
 endfunction
 
