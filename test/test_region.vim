@@ -65,22 +65,25 @@ endfunction
 "---------------------------------------
 " has_tab
 
+function! tc.setup_region_visual_line_has_tab()
+  let self.save_expandtab = &l:expandtab
+  set noexpandtab
+endfunction
 function! tc.test_region_visual_line_has_tab()
   let range = s:data_range('region_has_tab')
   execute range[0]
   execute 'normal! V' . (range[1] - range[0]) . "j\<Esc>"
-
-  let save_et = &l:expandtab
-  set noexpandtab
   call self._test_region_update('!', visualmode())
-  let &l:expandtab = save_et
+endfunction
+function! tc.teardown_region_visual_line_has_tab()
+  let &l:expandtab = self.save_expandtab
 endfunction
 
 function! tc.test_region_visual_block_has_tab()
   let range = s:data_range('region_block_has_tab')
   execute range[0]
   execute "normal! 04l\<C-v>" . (range[1] - range[0]) . "jf*2h\<Esc>"
-  let region = alignta#_region(visualmode())
+  let region = alignta#region#new(visualmode())
   call self.puts()
   call self.puts(string(region))
   call assert#true(region.has_tab)
@@ -94,7 +97,7 @@ function! tc.test_region_visual_block_is_broken()
   let range = s:data_range('region_block')
   execute range[1]
   execute "normal! 04l\<C-v>" . (range[1] - range[0]) . "kf|\<Esc>"
-  let region = alignta#_region(visualmode())
+  let region = alignta#region#new(visualmode())
   call self.puts()
   call self.puts(string(region))
   call assert#true(region.is_broken)
@@ -112,7 +115,7 @@ function! tc._test_region_update(...)
     let has_tab = 0
   endif
 
-  let region = call('alignta#_region', args)
+  let region = call('alignta#region#new', args)
   let range = region.line_range
   call self.puts()
   call self.puts(string(region))
