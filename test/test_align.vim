@@ -247,18 +247,18 @@ function! tc.padding_should_be_13_aaa_d_colon_d()
 endfunction
 
 "---------------------------------------
-" Regex
+" Regexp
 
-function! tc.should_align_at_1_regex_pattern()
-  call self._test('should_align_at_1_regex_pattern', 'Alignta! \d\+')
+function! tc.should_align_at_1_regexp_pattern()
+  call self._test('should_align_at_1_regexp_pattern', 'Alignta! \d\+')
 endfunction
 
-function! tc.should_align_at_1_regex_pattern_2_times()
-  call self._test('should_align_at_1_regex_pattern_2_times', 'Alignta! \d\+{2}')
+function! tc.should_align_at_1_regexp_pattern_2_times()
+  call self._test('should_align_at_1_regexp_pattern_2_times', 'Alignta! \d\+{2}')
 endfunction
 
-function! tc.should_align_at_1_regex_pattern_n_times()
-  call self._test('should_align_at_1_regex_pattern_n_times', 'Alignta! \d\+{+}')
+function! tc.should_align_at_1_regexp_pattern_n_times()
+  call self._test('should_align_at_1_regexp_pattern_n_times', 'Alignta! \d\+{+}')
 endfunction
 
 "---------------------------------------
