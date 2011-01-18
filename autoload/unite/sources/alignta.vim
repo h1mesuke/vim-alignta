@@ -3,7 +3,7 @@
 "
 " File    : autoload/unite/sources/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2010-12-12
+" Updated : 2011-01-18
 " Version : 0.1.4
 " License : MIT license {{{
 "
@@ -65,7 +65,8 @@ function! s:source.gather_candidates(args, context)
 
     if mode =~? '^v\%[isual]$' || mode ==# 'unknown'
       " preset arguments
-      for arg_list in g:unite_source_alignta_preset_arguments
+      let preset_args = alignta#get_config_variable('unite_source_alignta_preset_arguments')
+      for arg_list in preset_args
         if arg_list =~ '^\s*!\s\+'
           let command = 'Alignta!'
           let arg_list = substitute(arg_list, '^\s*!\s\+', '', '')
@@ -74,9 +75,9 @@ function! s:source.gather_candidates(args, context)
         endif
         let command_line = "'<,'>" . command . ' ' . arg_list
         call add(cands, {
-              \ 'word': command_line,
+              \ 'word'  : command_line,
               \ 'source': 'alignta',
-              \ 'kind': 'command',
+              \ 'kind'  : 'command',
               \ 'action__command': command_line,
               \ })
       endfor
@@ -84,13 +85,14 @@ function! s:source.gather_candidates(args, context)
 
     if mode =~? '^n\%[ormal]$' || mode ==# 'unknown'
       " preset options
+      let preset_opts = alignta#get_config_variable('unite_source_alignta_preset_options')
       let idx = 0
-      while idx < len(g:unite_source_alignta_preset_options)
-        let opts_str = g:unite_source_alignta_preset_options[idx]
+      while idx < len(preset_opts)
+        let opts_str = preset_opts[idx]
         call add(cands, {
-              \ 'word': "Options: " . opts_str,
+              \ 'word'  : "Options: " . opts_str,
               \ 'source': 'alignta',
-              \ 'kind': 'command',
+              \ 'kind'  : 'command',
               \ 'action__command': 'call alignta#extend_default_options(' . idx . ')',
               \ })
         let idx += 1
@@ -98,9 +100,9 @@ function! s:source.gather_candidates(args, context)
 
       " reset
       call add(cands, {
-            \ 'word': "Options: <RESET>",
+            \ 'word'  : "Options: <RESET>",
             \ 'source': 'alignta',
-            \ 'kind': 'command',
+            \ 'kind'  : 'command',
             \ 'action__command': 'call alignta#reset_default_options()',
             \ })
     endif

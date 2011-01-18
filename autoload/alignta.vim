@@ -3,7 +3,7 @@
 "
 " File    : autoload/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-01-03
+" Updated : 2011-01-18
 " Version : 0.1.4
 " License : MIT license {{{
 "
@@ -34,9 +34,20 @@ function! alignta#align(region_args, align_args, ...)
   call aligner.align()
 endfunction
 
+function! alignta#get_config_variable(name)
+  if exists('b:' . a:name)
+    execute 'let value = b:' . a:name
+  elseif exists('g:' . a:name)
+    execute 'let value = g:' . a:name
+  else
+    throw "alignta: undefined variable `" . a:name . "'"
+  endif
+  return value
+endfunction
+
 " API for unite-alignta
 function! alignta#apply_default_options(idx)
-  let opts_str = g:unite_source_alignta_preset_options[a:idx]
+  let opts_str = alignta#get_config_variable('unite_source_alignta_preset_options')[a:idx]
   call s:Aligner.apply_default_options(opts_str)
   call s:print_debug("default options = " . string(s:Aligner.default_options))
 endfunction
@@ -66,7 +77,7 @@ function! s:Aligner.init_default_options()
         \ 'g_pattern': "",
         \ 'v_pattern': "",
         \ }
-  let opts = s:Aligner._parse_options(g:alignta_default_options)
+  let opts = s:Aligner._parse_options(alignta#get_config_variable('alignta_default_options'))
   call extend(s:Aligner.default_options, opts, 'force')
 endfunction
 
@@ -138,7 +149,7 @@ function! s:Aligner.align()
     return
   endif
 
-  if self.region.has_tab && g:alignta_confirm_for_retab
+  if self.region.has_tab && alignta#get_config_variable('alignta_confirm_for_retab')
     let resp = input("Region contains tabs, alignta will use :retab, OK? [y/n] ")
     if resp !~? '\s*y\%[es]\s*$'
       return
