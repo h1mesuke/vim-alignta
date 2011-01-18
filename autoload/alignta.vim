@@ -4,7 +4,7 @@
 " File    : autoload/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
 " Updated : 2011-01-18
-" Version : 0.1.4
+" Version : 0.1.5
 " License : MIT license {{{
 "
 "   Permission is hereby granted, free of charge, to any person obtaining
