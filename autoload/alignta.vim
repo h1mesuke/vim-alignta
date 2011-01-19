@@ -3,7 +3,7 @@
 "
 " File    : autoload/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-01-18
+" Updated : 2011-01-19
 " Version : 0.1.5
 " License : MIT license {{{
 "
@@ -142,10 +142,10 @@ function! s:Aligner.align()
   call s:print_debug("_lines:", self._lines)
 
   if self.region.type ==# 'block' && self.region.has_tab
-    call s:print_error("alignta: RegionError: block contains tabs")
+    call alignta#print_error("alignta: RegionError: block contains tabs")
     return
   elseif self.region.is_broken
-    call s:print_error("alignta: RegionError: broken multi-byte character detected")
+    call alignta#print_error("alignta: RegionError: broken multi-byte character detected")
     return
   endif
 
@@ -461,10 +461,8 @@ function! s:Aligner._join_fields(flds_list)
   endwhile
 endfunction
 
-function! s:print_error(msg)
-  echohl ErrorMsg
-  echomsg a:msg
-  echohl None
+function! alignta#print_error(msg)
+  echohl ErrorMsg | echomsg a:msg | echohl None
 endfunction
 
 function! s:print_debug(msg, ...)

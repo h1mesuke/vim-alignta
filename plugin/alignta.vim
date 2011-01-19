@@ -3,7 +3,7 @@
 "
 " File    : plugin/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2010-12-23
+" Updated : 2011-01-19
 " Version : 0.1.5
 " License : MIT license {{{
 "
@@ -50,24 +50,35 @@ if !exists('g:alignta_confirm_for_retab')
 endif
 
 "-----------------------------------------------------------------------------
-" Command
+" Commands
 
-command! -range -bang -nargs=+ Alignta <line1>,<line2>call <SID>align([<f-args>], '<bang>')
+command! -range -bang -nargs=* Alignta <line1>,<line2>call <SID>align([<f-args>], '<bang>')
 
 if !exists(':Align')
-  " :Align is mine, hehehe
-  command! -range -bang -nargs=+ Align Alignta<bang> <args>
+  " :Align is ours, hehehe
+  command! -range -bang -nargs=* Align Alignta<bang> <args>
 endif
 
 function! s:align(align_args, bang) range
-  let vismode = visualmode()
-  if vismode == "\<C-v>" && a:firstline == line("'<") && a:lastline == line("'>")
-    let region_args = [vismode]
+  if empty(a:align_args)
+    try
+      let arg_list = alignta#get_config_variable('alignta_default_arguments')
+      let arg_list = substitute(substitute(arg_list, '^\s*', '', ''), '^!\@!', ' ', '')
+      let range = a:firstline . ',' . a:lastline
+      execute range . 'Alignta' . arg_list
+    catch
+      call alignta#print_error("alignta: default arguments not defined")
+    endtry
   else
-    let region_args = [a:firstline, a:lastline]
+    let vismode = visualmode()
+    if vismode == "\<C-v>" && a:firstline == line("'<") && a:lastline == line("'>")
+      let region_args = [vismode]
+    else
+      let region_args = [a:firstline, a:lastline]
+    endif
+    let use_regexp = (a:bang == '!')
+    call alignta#align(region_args, a:align_args, use_regexp)
   endif
-  let use_regexp = (a:bang == '!')
-  call alignta#align(region_args, a:align_args, use_regexp)
 endfunction
 
 "-----------------------------------------------------------------------------

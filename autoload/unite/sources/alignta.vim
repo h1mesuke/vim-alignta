@@ -3,7 +3,7 @@
 "
 " File    : autoload/unite/sources/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-01-18
+" Updated : 2011-01-19
 " Version : 0.1.5
 " License : MIT license {{{
 "
@@ -67,13 +67,8 @@ function! s:source.gather_candidates(args, context)
       " preset arguments
       let preset_args = alignta#get_config_variable('unite_source_alignta_preset_arguments')
       for arg_list in preset_args
-        if arg_list =~ '^\s*!\s\+'
-          let command = 'Alignta!'
-          let arg_list = substitute(arg_list, '^\s*!\s\+', '', '')
-        else
-          let command = 'Alignta'
-        endif
-        let command_line = "'<,'>" . command . ' ' . arg_list
+        let arg_list = substitute(substitute(arg_list, '^\s*', '', ''), '^!\@!', ' ', '')
+        let command_line = "'<,'>Alignta" . arg_list
         call add(cands, {
               \ 'word'  : command_line,
               \ 'source': 'alignta',
