@@ -2,7 +2,7 @@
 
 File    : doc/alignta.jax
 Author  : h1mesuke <himesuke@gmail.com>
-Updated : 2011-01-18
+Updated : 2011-01-19
 Version : 0.1.5
 License : MIT license {{{
 
@@ -554,20 +554,28 @@ LINE FILTERING				*alignta-line-filtering*
 変数						*alignta-variables*
 
 g:alignta_default_options			*g:alignta_default_options*
-
+						*b:alignta_default_options*
 	:Aligntaコマンドの初期整列オプションの指定文字列。
 	引数リストに整列オプションの指定文字列が現れない限り、この変数に設定し
 	た整列オプションで整列が行われます。
 
 	初期値は "<<<1:1"
 
-b:alignta_default_options			*b:alignta_default_options*
+g:alignta_default_arguments			*g:alignta_default_arguments*
+						*b:alignta_default_arguments*
+	:Aligntaコマンドの引数リスト文字列。
+	:Aligntaコマンドを引数なしで実行した場合に、この変数に設定した引数リス
+	トにもとづく整列が行われます。
 
-	|g:alignta_default_options|のバッファローカル版。
-	設定されていると、こちらの値が優先して使用されます。
+	パターンに正規表現を使用する場合は、引数リストを "!" で始めることでそ
+	れを指示します。
+>
+	let g:alignta_default_arguments = '! =>\='
+<
+	初期値なし（未定義）
 
 g:alignta_confirm_for_retab			*g:alignta_confirm_for_retab*
-
+						*b:alignta_confirm_for_retab*
 	|:retab|の実行前に確認用プロンプトを表示するかどうか。
 
 	初期値は 1
@@ -580,11 +588,13 @@ g:alignta_confirm_for_retab			*g:alignta_confirm_for_retab*
 	があるため、注意を喚起するためにプロンプトを表示するようになっています。
 	（詳細は|:retab|を参照して下さい）
 
-b:alignta_confirm_for_retab			*b:alignta_confirm_for_retab*
+バッファローカルな設定 ~
 
-	|g:alignta_confirm_for_retab|のバッファローカル版。
-	設定されているとこちらの値が優先して使用されます。
-
+	これらの変数はいずれも同名のバッファローカル変数によって設定を上書き
+	できます。
+>
+	let b:alignta_default_arguments = '@01 ,'
+<
 ------------------------------------------------------------------------------
 設定例						*alignta-setting-example*
 >
@@ -607,8 +617,8 @@ unite-alignta					*unite-alignta*
 ------------------------------------------------------------------------------
 変数					*unite-source-alignta-variables*
 
-g:unite_source_alignta_preset_arguments
-					*g:unite_source_alignta_preset_arguments*
+g:unite_source_alignta_preset_arguments	*g:unite_source_alignta_preset_arguments*
+					*b:unite_source_alignta_preset_arguments*
 	:Aligntaコマンドの引数リスト文字列のリスト。
 	:Unite alignta:visual を実行したとき、候補として表示されます。
 	（詳細は|unite-alignta-usage|を参照して下さい）
@@ -618,23 +628,18 @@ g:unite_source_alignta_preset_arguments
 
 	初期値は []
 
-b:unite_source_alignta_preset_arguments
-					*b:unite_source_alignta_preset_arguments*
-	|g:unite_source_alignta_preset_arguments|のバッファローカル版。
-	設定されていると、こちらの値が優先して使用されます。
-
-g:unite_source_alignta_preset_options
-					*g:unite_source_alignta_preset_options*
+g:unite_source_alignta_preset_options	*g:unite_source_alignta_preset_options*
+					*b:unite_source_alignta_preset_options*
 	:Aligntaコマンドのオプション指定文字列のリスト。
 	:Unite alignta:normal を実行したとき、候補として表示されます。
 	（詳細は|unite-alignta-usage|を参照して下さい）
 
 	初期値は ["|||", ">>>", "@0", "@01", "@10"]
 
-b:unite_source_alignta_preset_options
-					*b:unite_source_alignta_preset_options*
-	|g:unite_source_alignta_preset_options|のバッファローカル版。
-	設定されていると、こちらの値が優先して使用されます。
+バッファローカルな設定 ~
+
+	これらの変数はいずれも同名のバッファローカル変数によって設定を上書き
+	できます。
 
 ------------------------------------------------------------------------------
 使い方						*unite-alignta-usage*
@@ -720,8 +725,12 @@ TODO						*alignta-todo*
 
 https://github.com/h1mesuke/vim-alignta/commits/master
 
+0.1.6	2011-01-19
+	- 引数なしで :Aligntaコマンドを実行した場合、alignta_default_arguments
+	  変数に設定された引数リストを用いて整列を行うようにした。
+
 0.1.5	2011-01-18
 	- 各設定変数について、バッファローカル版が定義されていれば、そちらの値
-	  を優先して使用するようにした
+	  を優先して使用するようにした。
 
 vim:tw=78:ts=8:ft=help:norl:noet:ai
