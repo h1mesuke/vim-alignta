@@ -3,7 +3,7 @@
 "
 " File    : autoload/alignta/vimenv.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2010-12-29
+" Updated : 2011-01-21
 " Version : 0.1.6
 " License : MIT license {{{
 "
@@ -32,9 +32,14 @@ function! alignta#vimenv#new(...)
   return call(s:Vimenv.new, a:000, s:Vimenv)
 endfunction
 
-let s:Vimenv = alignta#object#extend()
+function! s:get_SID()
+  return matchstr(expand('<sfile>'), '<SNR>\d\+_')
+endfunction
+let s:SID = s:get_SID()
 
-function! s:Vimenv.initialize(...)
+let s:Vimenv = alignta#oop#class#new('Vimenv')
+
+function! s:Vimenv_initialize(...) dict
   let args = a:000
   let save_cursor = 0
   let save_marks  = []
@@ -104,8 +109,9 @@ function! s:Vimenv.initialize(...)
     let self.selection = saved_vsel
   endif
 endfunction
+call s:Vimenv.bind(s:SID, 'initialize')
 
-function! s:Vimenv.restore()
+function! s:Vimenv_restore() dict
   " restore marks
   if has_key(self, 'marks')
     for [mark_name, mark_pos] in items(self.marks)
@@ -145,5 +151,6 @@ function! s:Vimenv.restore()
     call setpos('.', self.cursor)
   endif
 endfunction
+call s:Vimenv.bind(s:SID, 'restore')
 
 " vim: filetype=vim

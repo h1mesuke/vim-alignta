@@ -1,10 +1,11 @@
 "=============================================================================
-" Align Them All!
+" Simple OOP Layer for Vimscript
+" Minimum Edition
 "
-" File    : autoload/alignta/object.vim
+" File    : oop/object.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2010-12-29
-" Version : 0.1.6
+" Updated : 2011-01-21
+" Version : 0.0.6
 " License : MIT license {{{
 "
 "   Permission is hereby granted, free of charge, to any person obtaining
@@ -28,33 +29,27 @@
 " }}}
 "=============================================================================
 
-function! alignta#object#extend()
-  return s:Object.extend()
+function! s:get_SID()
+  return matchstr(expand('<sfile>'), '<SNR>\d\+_')
 endfunction
+let s:SID = s:get_SID()
 
-let s:NIL = {}
-let s:Object = { 'super': s:NIL }
+let s:Object = alignta#oop#class#new('Object', {})
 
-function! s:Object.new(...)
-  " instantiate
-  let obj = copy(self)
-  let obj.class = self
-  unlet obj.super
-  " inherit methods from superclasses
-  let klass = obj.class
-  while klass isnot s:NIL
-    call extend(obj, klass.super, 'keep')
-    let klass = klass.super
+function! s:Object_initialize(...) dict
+endfunction
+call s:Object.bind(s:SID, 'initialize')
+
+function! s:Object_is_a(class) dict
+  let class = self.class
+  while !empty(class)
+    if class is a:class
+      return 1
+    endif
+    let class = class.superclass
   endwhile
-  call call(obj.initialize, a:000, obj)
-  return obj
+  return 0
 endfunction
-
-function! s:Object.initialize(...)
-endfunction
-
-function! s:Object.extend()
-  return extend({ 'super': self }, self, 'keep')
-endfunction
+call s:Object.bind(s:SID, 'is_a')
 
 " vim: filetype=vim

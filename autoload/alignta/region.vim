@@ -3,7 +3,7 @@
 "
 " File    : autoload/alignta/region.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-01-03
+" Updated : 2011-01-21
 " Version : 0.1.6
 " License : MIT license {{{
 "
@@ -32,10 +32,15 @@ function! alignta#region#new(...)
   return call(s:Region.new, a:000, s:Region)
 endfunction
 
-let s:Region = alignta#object#extend()
+function! s:get_SID()
+  return matchstr(expand('<sfile>'), '<SNR>\d\+_')
+endfunction
+let s:SID = s:get_SID()
+
+let s:Region = alignta#oop#class#new('Region')
 let s:Region.normalize_tabs = 1
 
-function! s:Region.initialize(...)
+function! s:Region_initialize(...) dict
   let [type, line_range, char_range] = self._parse_arguments(a:000)
   let self.type = type
   let self.has_tab = 0 | let self.is_broken = 0
@@ -61,7 +66,7 @@ function! s:Region.initialize(...)
   endif
 
   let self.has_tab = !empty(filter(copy(self.lines), 'v:val =~ "\\t"'))
-  if self.has_tab && self.normalize_tabs
+  if self.has_tab && s:Region.normalize_tabs
     " NOTE: If the selection contains any tabs, expand them all to normalize
     " the selection text for subsequent alignments.
     let save_expandtab = &l:expandtab
@@ -72,8 +77,9 @@ function! s:Region.initialize(...)
     let &l:expandtab = save_expandtab
   endif
 endfunction
+call s:Region.bind(s:SID, 'initialize')
 
-function! s:Region._parse_arguments(args)
+function! s:Region__parse_arguments(args) dict
   let argc = len(a:args)
   if argc == 1
     if a:args[0] ==? 'v' || a:args[0] ==# "\<C-v>"
@@ -98,8 +104,9 @@ function! s:Region._parse_arguments(args)
   endif
   return [type, line_range, char_range]
 endfunction
+call s:Region.bind(s:SID, '_parse_arguments')
 
-function! s:Region._get_selection()
+function! s:Region__get_selection() dict
   let self._ragged = {}
   let self._short  = {}
 
@@ -152,8 +159,9 @@ function! s:Region._get_selection()
     call save_vimenv.restore()
   endif
 endfunction
+call s:Region.bind(s:SID, '_get_selection')
 
-function! s:Region.update()
+function! s:Region_update() dict
   if self.has_tab && s:Region.normalize_tabs && !&l:expandtab
     call map(self.lines, 's:retab(v:val)')
   endif
@@ -197,6 +205,7 @@ function! s:Region.update()
     endif
   endif
 endfunction
+call s:Region.bind(s:SID, 'update')
 
 function! s:sort_numbers(list)
   return sort(a:list, 's:compare_numbers')

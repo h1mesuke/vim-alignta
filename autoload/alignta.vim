@@ -3,7 +3,7 @@
 "
 " File    : autoload/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-01-19
+" Updated : 2011-01-21
 " Version : 0.1.6
 " License : MIT license {{{
 "
@@ -58,16 +58,21 @@ function! alignta#reset_default_options()
 endfunction
 
 "-----------------------------------------------------------------------------
-" Constant
+" Constants
 
 let s:HUGE_VALUE = 9999
+
+function! s:get_SID()
+  return matchstr(expand('<sfile>'), '<SNR>\d\+_')
+endfunction
+let s:SID = s:get_SID()
 
 "-----------------------------------------------------------------------------
 " Aligner
 
-let s:Aligner = alignta#object#extend()
+let s:Aligner = alignta#oop#class#new('Aligner')
 
-function! s:Aligner.init_default_options()
+function! s:Aligner_class_init_default_options() dict
   let s:Aligner.default_options = {
         \ 'L_fld_align': 'left',
         \ 'M_fld_align': 'left',
@@ -80,13 +85,15 @@ function! s:Aligner.init_default_options()
   let opts = s:Aligner._parse_options(alignta#get_config_variable('alignta_default_options'))
   call extend(s:Aligner.default_options, opts, 'force')
 endfunction
+call s:Aligner.class_bind(s:SID, 'init_default_options')
 
-function! s:Aligner.apply_default_options(opts_str)
+function! s:Aligner_class_apply_default_options(opts_str) dict
   let opts = s:Aligner._parse_options(a:opts_str)
   call extend(s:Aligner.default_options, opts, 'force')
 endfunction
+call s:Aligner.class_bind(s:SID, 'apply_default_options')
 
-function! s:Aligner.initialize(region_args, align_args, use_regexp)
+function! s:Aligner_initialize(region_args, align_args, use_regexp) dict
   let self.region = call('alignta#region#new', a:region_args)
   let self.arguments = a:align_args
   let self.use_regexp = a:use_regexp
@@ -120,6 +127,7 @@ function! s:Aligner.initialize(region_args, align_args, use_regexp)
     let idx += 1
   endwhile
 endfunction
+call s:Aligner.bind(s:SID, 'initialize')
 
 function! s:min_leading_width(lines, ...)
   let ignore_blank = (a:0 ? a:1 : 0)
@@ -128,15 +136,17 @@ function! s:min_leading_width(lines, ...)
   return min(map(leadings, 'strlen(v:val)'))
 endfunction
 
-function! s:Aligner.apply_options(options)
+function! s:Aligner_apply_options(options) dict
   call extend(self.options, a:options, 'force')
 endfunction
+call s:Aligner.bind(s:SID, 'apply_options')
 
-function! s:Aligner.alignment_method()
+function! s:Aligner_alignment_method() dict
   return (self.options.M_fld_align ==# 'none' ?  'shifting' : 'padding')
 endfunction
+call s:Aligner.bind(s:SID, 'alignment_method')
 
-function! s:Aligner.align()
+function! s:Aligner_align() dict
   call s:print_debug("region = " . string(self.region))
   call s:print_debug("arguments = " . string(self.arguments))
   call s:print_debug("_lines:", self._lines)
@@ -196,8 +206,9 @@ function! s:Aligner.align()
     echomsg "alignta: used=" . used_time . "s"
   endif
 endfunction
+call s:Aligner.bind(s:SID, 'align')
 
-function! s:Aligner._parse_options(value)
+function! s:Aligner_class__parse_options(value) dict
   let align = { '<': 'left', '|': 'center', '>': 'right' }
   let opts = {}
 
@@ -275,8 +286,14 @@ function! s:Aligner._parse_options(value)
 
   return opts
 endfunction
+call s:Aligner.class_bind(s:SID, '_parse_options')
 
-function! s:Aligner._parse_pattern(value)
+function! s:Aligner__parse_options(value) dict
+  return self.class._parse_options(a:value)
+endfunction
+call s:Aligner.bind(s:SID, '_parse_options')
+
+function! s:Aligner__parse_pattern(value) dict
   let times_str = matchstr(a:value, '{\zs\(\d\+\|+\)\ze}$')
   let pattern = substitute(a:value, '{\(\d\+\|+\)}$', '', '')
   if !self.use_regexp
@@ -297,8 +314,9 @@ function! s:Aligner._parse_pattern(value)
   endif
   return [pattern, times]
 endfunction
+call s:Aligner.bind(s:SID, '_parse_pattern')
 
-function! s:Aligner._align_at(pattern, times)
+function! s:Aligner__align_at(pattern, times) dict
   call s:print_debug("options = " . string(self.options))
   call s:print_debug("pattern = " . string(a:pattern))
 
@@ -308,8 +326,9 @@ function! s:Aligner._align_at(pattern, times)
   call s:print_debug("aligned_parts:", map(copy(self._line_data), 'v:val.aligned_part'))
   call s:print_debug("_lines:", self._lines)
 endfunction
+call s:Aligner.bind(s:SID, '_align_at')
 
-function! s:Aligner._filter_lines()
+function! s:Aligner__filter_lines() dict
   let lines = {}
   let idx = 0
   while idx < len(self._lines)
@@ -324,8 +343,9 @@ function! s:Aligner._filter_lines()
   endwhile
   return lines
 endfunction
+call s:Aligner.bind(s:SID, '_filter_lines')
 
-function! s:Aligner._split_to_fields(pattern, times)
+function! s:Aligner__split_to_fields(pattern, times) dict
   let flds_list = []
   let lines = self._filter_lines()
   " NOTE: _filter_lines() returns a Dictionary
@@ -361,8 +381,9 @@ function! s:Aligner._split_to_fields(pattern, times)
   call add(flds_list, lines)
   return flds_list
 endfunction
+call s:Aligner.bind(s:SID, '_split_to_fields')
 
-function! s:Aligner._join_fields(flds_list)
+function! s:Aligner__join_fields(flds_list) dict
   let flds_list = a:flds_list + [{}, {}]
   call s:print_debug("flds_list = " . string(flds_list))
 
@@ -460,6 +481,7 @@ function! s:Aligner._join_fields(flds_list)
     let flds_idx += 2
   endwhile
 endfunction
+call s:Aligner.bind(s:SID, '_join_fields')
 
 function! alignta#print_error(msg)
   echohl ErrorMsg | echomsg a:msg | echohl None

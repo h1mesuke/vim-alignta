@@ -1,6 +1,6 @@
 " alignta.vim test suite
 
-let tc = unittest#testcase(expand('<sfile>:p'))
+let tc = unittest#testcase#new('test_region')
 let tc.context_file = expand('<sfile>:p:h') . '/data.txt'
 
 "-----------------------------------------------------------------------------
