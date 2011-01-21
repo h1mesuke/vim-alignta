@@ -2,7 +2,7 @@
 " Simple OOP Layer for Vimscript
 " Minimum Edition
 "
-" File    : oop/object.vim
+" File    : oop.vim
 " Author  : h1mesuke <himesuke@gmail.com>
 " Updated : 2011-01-22
 " Version : 0.0.8
@@ -29,36 +29,10 @@
 " }}}
 "=============================================================================
 
-function! s:get_SID()
-  return matchstr(expand('<sfile>'), '<SNR>\d\+_')
+function! alignta#oop#is_class(obj)
+  let Class_class = alignta#oop#class#get('Class')
+  return (type(a:obj) == type({}) && has_key(a:obj, 'class') &&
+        \ (a:obj.class is Class_class || a:obj is Class_class))
 endfunction
-let s:SID = s:get_SID()
-
-let s:Object = alignta#oop#class#new('Object', '__nil__')
-
-function! s:Object_initialize(...) dict
-endfunction
-call s:Object.bind(s:SID, 'initialize')
-
-function! s:Object_is_kind_of(class) dict
-  let kind_class = alignta#oop#class#get(a:class)
-  let class = self.class
-  while !empty(class)
-    if class is kind_class
-      return 1
-    endif
-    let class = class.superclass
-  endwhile
-  return 0
-endfunction
-call s:Object.bind(s:SID, 'is_kind_of')
-call s:Object.alias('is_a', 'is_kind_of')
-
-" classes as objects
-let s:Object_instance_methods = copy(s:Object.prototype)
-unlet s:Object_instance_methods.initialize
-call extend(s:Object, s:Object_instance_methods, 'keep')
-call extend(alignta#oop#class#get('Class'), s:Object_instance_methods, 'keep')
-unlet s:Object_instance_methods
 
 " vim: filetype=vim

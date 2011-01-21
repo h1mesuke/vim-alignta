@@ -3,7 +3,7 @@
 "
 " File    : autoload/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-01-21
+" Updated : 2011-01-22
 " Version : 0.1.6
 " License : MIT license {{{
 "
@@ -208,7 +208,7 @@ function! s:Aligner_align() dict
 endfunction
 call s:Aligner.bind(s:SID, 'align')
 
-function! s:Aligner_class__parse_options(value) dict
+function! s:Aligner__parse_options(value) dict
   let align = { '<': 'left', '|': 'center', '>': 'right' }
   let opts = {}
 
@@ -286,12 +286,8 @@ function! s:Aligner_class__parse_options(value) dict
 
   return opts
 endfunction
-call s:Aligner.class_bind(s:SID, '_parse_options')
-
-function! s:Aligner__parse_options(value) dict
-  return self.class._parse_options(a:value)
-endfunction
 call s:Aligner.bind(s:SID, '_parse_options')
+call s:Aligner.export('_parse_options')
 
 function! s:Aligner__parse_pattern(value) dict
   let times_str = matchstr(a:value, '{\zs\(\d\+\|+\)\ze}$')

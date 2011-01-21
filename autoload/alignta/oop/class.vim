@@ -4,8 +4,8 @@
 "
 " File    : oop/class.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-01-21
-" Version : 0.0.6
+" Updated : 2011-01-22
+" Version : 0.0.8
 " License : MIT license {{{
 "
 "   Permission is hereby granted, free of charge, to any person obtaining
@@ -29,26 +29,28 @@
 " }}}
 "=============================================================================
 
-function! alignta#oop#class#is_defined(name)
-  return has_key(s:class_table, a:name)
+function! alignta#oop#class#get(name)
+  if type(a:name) == type("")
+    if alignta#oop#class#is_defined(a:name)
+      return s:class_table[a:name]
+    else
+      throw "oop: class " . a:name . " is not defined"
+    endif
+  elseif alignta#oop#is_class(a:name)
+    return a:name
+  else
+    throw "oop: class required, but got " . string(a:name)
+  endif
 endfunction
 
-function! alignta#oop#class#get(name)
-  if alignta#oop#class#is_defined(a:name)
-    return s:class_table[a:name]
-  else
-    throw "oop: class " . a:name . " is not defined"
-  endif
+function! alignta#oop#class#is_defined(name)
+  return has_key(s:class_table, a:name)
 endfunction
 
 function! alignta#oop#class#new(name, ...)
   let _self = deepcopy(s:Class, 1)
   let _self.class = s:Class
-  if a:0
-    let _self.superclass = (type(a:1) == type("") ? alignta#oop#class#get(a:1) : a:1)
-  else
-    let _self.superclass = alignta#oop#class#get('Object')
-  endif
+  let _self.superclass = alignta#oop#class#get(a:0 ? a:1 : 'Object')
   let _self.name  = a:name
   let s:class_table[a:name] = _self
   " inherit methods from superclasses
@@ -66,18 +68,64 @@ function! s:get_SID()
 endfunction
 let s:SID = s:get_SID()
 
-let s:Class = { 'prototype': {} }
-let s:class_table = { 'Class': s:Class }
+let s:Class = { 'class': {}, 'prototype': {} }
+let s:class_table = { 'Class': s:Class, '__nil__': {} }
+
+function! s:Class_class_alias(alias, method_name) dict
+  if has_key(self, a:method_name) && type(self[a:method_name]) == type(function('tr'))
+    let self[a:alias] = self[a:method_name]
+  else
+    throw "oop: " . self.name . "." . a:method_name . "() is not defined"
+  endif
+endfunction
+let s:Class.class_alias = function(s:SID . 'Class_class_alias')
 
 function! s:Class_class_bind(sid, method_name) dict
   let self[a:method_name] = function(a:sid . self.name . '_class_' . a:method_name)
 endfunction
 let s:Class.class_bind = function(s:SID . 'Class_class_bind')
 
+function! s:Class_alias(alias, method_name) dict
+  if has_key(self.prototype, a:method_name) &&
+        \ type(self.prototype[a:method_name]) == type(function('tr'))
+    let self.prototype[a:alias] = self.prototype[a:method_name]
+  else
+    throw "oop: " . self.name . "#" . a:method_name . "() is not defined"
+  endif
+endfunction
+let s:Class.alias = function(s:SID . 'Class_alias')
+
 function! s:Class_bind(sid, method_name) dict
   let self.prototype[a:method_name] = function(a:sid . self.name . '_' . a:method_name)
 endfunction
 let s:Class.bind = function(s:SID . 'Class_bind')
+
+function! s:Class_export(method_name) dict
+  if has_key(self.prototype, a:method_name) &&
+        \ type(self.prototype[a:method_name]) == type(function('tr'))
+    let self[a:method_name] = self.prototype[a:method_name]
+  else
+    throw "oop: " . self.name . "#" . a:method_name . "() is not defined"
+  endif
+endfunction
+let s:Class.export = function(s:SID . 'Class_export')
+
+function! s:Class_is_kind_of(class) dict
+  let kind_class = alignta#oop#class#get(a:class)
+  if kind_class is s:Class
+    return 1
+  endif
+  let class = self
+  while !empty(class)
+    if class is kind_class
+      return 1
+    endif
+    let class = class.superclass
+  endwhile
+  return 0
+endfunction
+let s:Class.is_kind_of = function(s:SID . 'Class_is_kind_of')
+let s:Class.is_a = s:Class.is_kind_of
 
 function! s:Class_new(...) dict
   " instantiate
