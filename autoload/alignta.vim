@@ -114,7 +114,7 @@ function! s:Aligner_initialize(region_args, align_args, use_regexp) dict
         \ }')
 
   " keep the minimum leadings
-  let leading_width = s:min_leading_width(self._lines, 1)
+  let leading_width = s:get_min_leading_width(self._lines, 1)
   let leading = alignta#string#padding(leading_width)
   let idx = 0
   " freeze leadings
@@ -144,7 +144,7 @@ function! s:Aligner_apply_options(options) dict
 endfunction
 call s:Aligner.bind(s:SID, 'apply_options')
 
-function! s:min_leading_width(lines, ...)
+function! s:get_min_leading_width(lines, ...)
   let ignore_blank = (a:0 ? a:1 : 0)
   let lines = (ignore_blank ? filter(copy(a:lines), 'v:val =~ "\\S"') : copy(a:lines))
   let leadings = map(lines, 'matchstr(v:val, "^\\s*")')
@@ -407,7 +407,7 @@ function! s:Aligner__join_fields(flds_list) dict
       let leading = ""
     else
       " keep the minimum leadings
-      let leading_width = s:min_leading_width(values(L_flds))
+      let leading_width = s:get_min_leading_width(values(L_flds))
       let leading = alignta#string#padding(leading_width)
     endif
 
