@@ -18,6 +18,17 @@ function! s:AlignerTestCase_initialize(tc_name) dict
 endfunction
 call s:AlignerTestCase.bind(s:SID, 'initialize')
 
+function! s:AlignerTestCase_setup() dict
+  let self.save_default_options = g:alignta_default_options
+  let g:alignta_default_options = '<<<1:1'
+endfunction
+call s:AlignerTestCase.bind(s:SID, 'setup')
+
+function! s:AlignerTestCase_teardown() dict
+  let g:alignta_default_options = self.save_default_options
+endfunction
+call s:AlignerTestCase.bind(s:SID, 'teardown')
+
 function! s:AlignerTestCase__test(tag, align_command) dict
   if a:tag =~# '_block'
     call self._test_block(a:tag, a:align_command)
