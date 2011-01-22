@@ -1,10 +1,8 @@
 "=============================================================================
-" Align Them All!
-"
-" File    : autoload/alignta/region.vim
+" File    : region.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-01-21
-" Version : 0.1.6
+" Updated : 2011-01-23
+" Version : 0.1.0
 " License : MIT license {{{
 "
 "   Permission is hereby granted, free of charge, to any person obtaining
@@ -68,7 +66,7 @@ function! s:Region_initialize(...) dict
   let self.has_tab = !empty(filter(copy(self.lines), 'v:val =~ "\\t"'))
   if self.has_tab && s:Region.normalize_tabs
     " NOTE: If the selection contains any tabs, expand them all to normalize
-    " the selection text for subsequent alignments.
+    " the selection text for subsequent processes.
     let save_expandtab = &l:expandtab
     setlocal expandtab
     execute line_range[0] . ',' . line_range[1] . 'retab'

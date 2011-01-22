@@ -1,10 +1,8 @@
 "=============================================================================
-" Align Them All!
-"
-" File    : autoload/alignta/vimenv.vim
+" File    : vimenv.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-01-21
-" Version : 0.1.6
+" Updated : 2011-01-23
+" Version : 0.1.0
 " License : MIT license {{{
 "
 "   Permission is hereby granted, free of charge, to any person obtaining
