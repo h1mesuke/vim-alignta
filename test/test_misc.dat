@@ -67,6 +67,21 @@
 # should_escape_escape_expected_end
 
 #-----------------------------------------------------------------------------
+# Alias
+
+#---------------------------------------
+# Align_should_be_alias_of_Alignta_data_begin
+  a = 1
+  bbb = 10
+  ccccc = 100
+# Align_should_be_alias_of_Alignta_data_end
+# Align_should_be_alias_of_Alignta_expected_begin
+  a     = 1
+  bbb   = 10
+  ccccc = 100
+# Align_should_be_alias_of_Alignta_expected_end
+
+#-----------------------------------------------------------------------------
 # Filtering
 
 #---------------------------------------

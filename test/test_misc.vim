@@ -42,6 +42,19 @@ function! tc.should_escape_escape()
 endfunction
 
 "---------------------------------------
+" Alias
+
+if exists(':AlignCtrl') != 2
+  function! tc.Align_should_be_defined()
+    call assert#exists(':Align')
+  endfunction
+
+  function! tc.Align_should_be_alias_of_Alignta()
+    call self._test('Align_should_be_alias_of_Alignta', 'Align =')
+  endfunction
+endif
+
+"---------------------------------------
 " Filtering
 
 function! tc.should_align_only_matching_g_pattern()
