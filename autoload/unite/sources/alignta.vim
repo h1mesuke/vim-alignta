@@ -43,6 +43,7 @@ if !exists('g:unite_source_alignta_preset_options')
   let g:unite_source_alignta_preset_options = [
         \ '|||',
         \ '>>>',
+        \ '<=',
         \ '@0',
         \ '@01',
         \ '@10',
