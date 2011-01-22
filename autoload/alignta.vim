@@ -3,7 +3,7 @@
 "
 " File    : autoload/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-01-22
+" Updated : 2011-01-23
 " Version : 0.1.6
 " License : MIT license {{{
 "
@@ -46,15 +46,15 @@ function! alignta#get_config_variable(name)
 endfunction
 
 " API for unite-alignta
-function! alignta#apply_default_options(idx)
-  let opts_str = alignta#get_config_variable('unite_source_alignta_preset_options')[a:idx]
-  call s:Aligner.apply_default_options(opts_str)
-  call s:print_debug("default options = " . string(s:Aligner.default_options))
+function! alignta#apply_extending_options(idx)
+  let preset_opts = alignta#get_config_variable('unite_source_alignta_preset_options')
+  call s:Aligner.apply_extending_options(preset_opts[a:idx])
+  call s:print_debug("extending options = " . string(s:Aligner.extending_options))
 endfunction
 
-function! alignta#reset_default_options()
-  call s:Aligner.init_default_options()
-  call s:print_debug("default options = " . string(s:Aligner.default_options))
+function! alignta#reset_extending_options()
+  call s:Aligner.reset_extending_options()
+  call s:print_debug("extending options = " . string(s:Aligner.extending_options))
 endfunction
 
 "-----------------------------------------------------------------------------
@@ -72,32 +72,34 @@ let s:SID = s:get_SID()
 
 let s:Aligner = alignta#oop#class#new('Aligner')
 
-function! s:Aligner_class_init_default_options() dict
-  let s:Aligner.default_options = {
-        \ 'L_fld_align': 'left',
-        \ 'M_fld_align': 'left',
-        \ 'R_fld_align': 'left',
-        \ 'L_padding': 1,
-        \ 'R_padding': 1,
-        \ 'g_pattern': "",
-        \ 'v_pattern': "",
-        \ }
-  let opts = s:Aligner._parse_options(alignta#get_config_variable('alignta_default_options'))
-  call extend(s:Aligner.default_options, opts, 'force')
-endfunction
-call s:Aligner.class_bind(s:SID, 'init_default_options')
+let s:Aligner.DEFAULT_OPTIONS = {
+      \ 'L_fld_align': 'left',
+      \ 'M_fld_align': 'left',
+      \ 'R_fld_align': 'left',
+      \ 'L_padding'  : 1,
+      \ 'R_padding'  : 1,
+      \ 'g_pattern'  : '',
+      \ 'v_pattern'  : '',
+      \ }
 
-function! s:Aligner_class_apply_default_options(opts_str) dict
-  let opts = s:Aligner._parse_options(a:opts_str)
-  call extend(s:Aligner.default_options, opts, 'force')
+let s:Aligner.extending_options = {}
+
+function! s:Aligner_class_apply_extending_options(options) dict
+  let opts = (type(a:options) == type("") ? s:Aligner._parse_options(a:options) : a:options)
+  call extend(s:Aligner.extending_options, opts, 'force')
 endfunction
-call s:Aligner.class_bind(s:SID, 'apply_default_options')
+call s:Aligner.class_bind(s:SID, 'apply_extending_options')
+
+function! s:Aligner_class_reset_extending_options() dict
+  let s:Aligner.extending_options = {}
+endfunction
+call s:Aligner.class_bind(s:SID, 'reset_extending_options')
 
 function! s:Aligner_initialize(region_args, align_args, use_regexp) dict
   let self.region = call('alignta#region#new', a:region_args)
   let self.arguments = a:align_args
   let self.use_regexp = a:use_regexp
-  let self.options = copy(s:Aligner.default_options)
+  call self.init_options()
 
   " initialize the lines to align
   let self._lines = copy(self.region.lines)
@@ -129,17 +131,25 @@ function! s:Aligner_initialize(region_args, align_args, use_regexp) dict
 endfunction
 call s:Aligner.bind(s:SID, 'initialize')
 
+function! s:Aligner_init_options() dict
+  let self.options = copy(s:Aligner.DEFAULT_OPTIONS)
+  call self.apply_options(alignta#get_config_variable('alignta_default_options'))
+  call self.apply_options(s:Aligner.extending_options)
+endfunction
+call s:Aligner.bind(s:SID, 'init_options')
+
+function! s:Aligner_apply_options(options) dict
+  let opts = (type(a:options) == type("") ? self._parse_options(a:options) : a:options)
+  call extend(self.options, opts, 'force')
+endfunction
+call s:Aligner.bind(s:SID, 'apply_options')
+
 function! s:min_leading_width(lines, ...)
   let ignore_blank = (a:0 ? a:1 : 0)
   let lines = (ignore_blank ? filter(copy(a:lines), 'v:val =~ "\\S"') : copy(a:lines))
   let leadings = map(lines, 'matchstr(v:val, "^\\s*")')
   return min(map(leadings, 'strlen(v:val)'))
 endfunction
-
-function! s:Aligner_apply_options(options) dict
-  call extend(self.options, a:options, 'force')
-endfunction
-call s:Aligner.bind(s:SID, 'apply_options')
 
 function! s:Aligner_alignment_method() dict
   return (self.options.M_fld_align ==# 'none' ?  'shifting' : 'padding')
@@ -508,10 +518,5 @@ endfunction
 function! s:compare_numbers(n1, n2)
   return a:n1 == a:n2 ? 0 : a:n1 > a:n2 ? 1 : -1
 endfunction
-
-" initialize s:Aligner itself
-call s:Aligner.init_default_options()
-" NOTE: This line must be evaluated AFTER the definition of
-" s:Aligner._parse_options()
 
 " vim: filetype=vim

@@ -3,7 +3,7 @@
 "
 " File    : autoload/unite/sources/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-01-19
+" Updated : 2011-01-23
 " Version : 0.1.6
 " License : MIT license {{{
 "
@@ -88,7 +88,7 @@ function! s:source.gather_candidates(args, context)
               \ 'word'  : "Options: " . opts_str,
               \ 'source': 'alignta',
               \ 'kind'  : 'command',
-              \ 'action__command': 'call alignta#extend_default_options(' . idx . ')',
+              \ 'action__command': 'call alignta#apply_extending_options(' . idx . ')',
               \ })
         let idx += 1
       endwhile
@@ -98,7 +98,7 @@ function! s:source.gather_candidates(args, context)
             \ 'word'  : "Options: <RESET>",
             \ 'source': 'alignta',
             \ 'kind'  : 'command',
-            \ 'action__command': 'call alignta#reset_default_options()',
+            \ 'action__command': 'call alignta#reset_extending_options()',
             \ })
     endif
 
