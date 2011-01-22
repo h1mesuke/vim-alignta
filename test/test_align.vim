@@ -1,7 +1,7 @@
 " alignta.vim test suite
 
-let tc = unittest#testcase#new('test_align')
-let tc.context_file = expand('<sfile>:p:h') . '/data.txt'
+execute 'source' expand('<sfile>:p:h') . '/aligner_testcase.vim'
+let tc = unittest#testcase#new('test_align', 'AlignerTestCase')
 
 "=============================================================================
 " Padding Alignment
@@ -434,65 +434,6 @@ endfunction
 
 function! tc.should_escape_escape()
   call self._test('should_escape_escape', 'Alignta -p -p')
-endfunction
-
-"-----------------------------------------------------------------------------
-" Utils
-
-function! tc._test(tag, align_command)
-  if a:tag =~# '_block'
-    call self._test_block(a:tag, a:align_command)
-    return
-  endif
-  execute ':' . join(s:data_range(a:tag), ',') . a:align_command
-  let value = s:data_lines(a:tag)
-  silent undo
-  let expected = s:expected_lines(a:tag)
-  call assert#equal_C(expected, value)
-  call self.print_lines(expected)
-  call self.print_lines(value)
-endfunction
-
-function! tc._test_block(tag, align_command)
-  let range = s:data_range(a:tag)
-  execute range[0]
-  execute "normal! 06l\<C-v>" . (range[1] - range[0]) . "jf*2h\<Esc>"
-  execute ":'<,'>" . a:align_command
-  let value = s:data_lines(a:tag)
-  silent undo
-  let expected = s:expected_lines(a:tag)
-  call assert#equal_C(expected, value)
-  call self.print_lines(expected)
-  call self.print_lines(value)
-endfunction
-
-function! s:tag_range(tag)
-  call search('^# ' . toupper(a:tag) . '_BEGIN', 'w')
-  let from = line('.') + 1
-  call search('^# ' . toupper(a:tag) . '_END', 'w')
-  let to = line('.') - 1
-  return [from, to]
-endfunction
-
-function! s:data_range(tag)
-  return s:tag_range(a:tag . '_data')
-endfunction
-
-function! s:data_lines(tag)
-  let range = s:tag_range(a:tag . '_data')
-  return getline(range[0], range[1])
-endfunction
-
-function! s:expected_lines(tag)
-  let range = s:tag_range(a:tag . '_expected')
-  return getline(range[0], range[1])
-endfunction
-
-function! tc.print_lines(lines)
-  call self.puts()
-  for line in a:lines
-    call self.puts(string(line))
-  endfor
 endfunction
 
 unlet tc
