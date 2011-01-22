@@ -156,4 +156,31 @@
   *** ccccc = 100 ***
 # should_align_block_except_matching_g_pattern_expected_end
 
+#-----------------------------------------------------------------------------
+# Options
+
+#---------------------------------------
+# buffer_local_options_should_take_precedence_data_begin
+  a = 1
+  bbb = 10
+  ccccc = 100
+# buffer_local_options_should_take_precedence_data_end
+# buffer_local_options_should_take_precedence_expected_begin
+      a =   1
+    bbb =  10
+  ccccc = 100
+# buffer_local_options_should_take_precedence_expected_end
+
+#---------------------------------------
+# should_align_with_default_arguments_if_no_args_given_data_begin
+  a = 1
+  bbb = 10
+  ccccc = 100
+# should_align_with_default_arguments_if_no_args_given_data_end
+# should_align_with_default_arguments_if_no_args_given_expected_begin
+      a =   1
+    bbb =  10
+  ccccc = 100
+# should_align_with_default_arguments_if_no_args_given_expected_end
+
 # vim:sw=2:ts=2:ft=conf:et:ai

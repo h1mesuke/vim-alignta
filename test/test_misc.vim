@@ -73,6 +73,29 @@ function! tc.should_align_block_except_matching_g_pattern()
   call self._test('should_align_block_except_matching_g_pattern', 'Alignta v/^\s*# =')
 endfunction
 
+"---------------------------------------
+" Options
+
+function! tc.setup_buffer_local_options_should_take_precedence()
+  let b:alignta_default_options = '>>>'
+endfunction
+function! tc.buffer_local_options_should_take_precedence()
+  call self._test('buffer_local_options_should_take_precedence', 'Alignta =')
+endfunction
+function! tc.teardown_buffer_local_options_should_take_precedence()
+  unlet b:alignta_default_options
+endfunction
+
+function! tc.setup_should_align_with_default_arguments_if_no_args_given()
+  let b:alignta_default_arguments = '>>> ='
+endfunction
+function! tc.should_align_with_default_arguments_if_no_args_given()
+  call self._test('should_align_with_default_arguments_if_no_args_given', 'Alignta')
+endfunction
+function! tc.teatdown_should_align_with_default_arguments_if_no_args_given()
+  unlet b:alignta_default_arguments
+endfunction
+
 unlet tc
 
 " vim: filetype=vim
