@@ -2,7 +2,7 @@
 " File    : region.vim
 " Author  : h1mesuke <himesuke@gmail.com>
 " Updated : 2011-01-23
-" Version : 0.1.0
+" Version : 0.1.1
 " License : MIT license {{{
 "
 "   Permission is hereby granted, free of charge, to any person obtaining
@@ -219,5 +219,12 @@ function! s:retab(line)
   let indent = alignta#string#padding(ntab, '\t') . alignta#string#padding(nsp)
   return substitute(a:line, '^ \+', indent, '')
 endfunction
+
+function! s:Region_to_s() dict
+  let _self = filter(copy(self), 'type(v:val) != type(function("tr"))')
+  unlet _self.class
+  return string(_self)
+endfunction
+call s:Region.bind(s:SID, 'to_s')
 
 " vim: filetype=vim

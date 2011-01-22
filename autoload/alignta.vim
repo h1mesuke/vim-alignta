@@ -157,7 +157,7 @@ endfunction
 call s:Aligner.bind(s:SID, 'alignment_method')
 
 function! s:Aligner_align() dict
-  call s:print_debug("region = " . string(self.region))
+  call s:print_debug("region = " . self.region.to_s())
   call s:print_debug("arguments = " . string(self.arguments))
   call s:print_debug("_lines:", self._lines)
 
