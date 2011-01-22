@@ -84,12 +84,13 @@ function! s:source.gather_candidates(args, context)
       let preset_opts = alignta#get_config_variable('unite_source_alignta_preset_options')
       let idx = 0
       while idx < len(preset_opts)
-        let opts_str = preset_opts[idx]
+        let opts_str = 'alignta#get_config_variable(' .
+              \ '"unite_source_alignta_preset_options")[' . idx . ']'
         call add(cands, {
-              \ 'word'  : "Options: " . opts_str,
+              \ 'word'  : "Options: " . preset_opts[idx],
               \ 'source': 'alignta',
               \ 'kind'  : 'command',
-              \ 'action__command': 'call alignta#apply_extending_options(' . idx . ')',
+              \ 'action__command': 'call alignta#apply_extending_options(' . opts_str . ')',
               \ })
         let idx += 1
       endwhile

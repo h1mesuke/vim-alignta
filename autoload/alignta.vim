@@ -46,9 +46,8 @@ function! alignta#get_config_variable(name)
 endfunction
 
 " API for unite-alignta
-function! alignta#apply_extending_options(idx)
-  let preset_opts = alignta#get_config_variable('unite_source_alignta_preset_options')
-  call s:Aligner.apply_extending_options(preset_opts[a:idx])
+function! alignta#apply_extending_options(options)
+  call s:Aligner.apply_extending_options(a:options)
   call s:print_debug("extending options = " . string(s:Aligner.extending_options))
 endfunction
 
