@@ -1,7 +1,7 @@
 " alignta.vim test suite
 
 execute 'source' expand('<sfile>:p:h') . '/aligner_testcase.vim'
-let tc = unittest#testcase#new('test_options', 'AlignerTestCase')
+let tc = unittest#testcase#new('test_misc', 'AlignerTestCase')
 
 "---------------------------------------
 " &ignorecase
@@ -33,8 +33,8 @@ endfunction
 "---------------------------------------
 " -p
 
-function! tc.should_escape_pattern()
-  call self._test('should_escape_pattern', 'Alignta -p <<<')
+function! tc.should_escape_option_string()
+  call self._test('should_escape_option_string', 'Alignta -p <<<')
 endfunction
 
 function! tc.should_escape_escape()
@@ -44,20 +44,20 @@ endfunction
 "---------------------------------------
 " Filtering
 
-function! tc.should_align_g_pattern_filtering()
-  call self._test('should_align_g_pattern_filtering', 'Alignta g/^\s*# =')
+function! tc.should_align_only_matching_g_pattern()
+  call self._test('should_align_only_matching_g_pattern', 'Alignta g/^\s*# =')
 endfunction
 
-function! tc.should_align_v_pattern_filtering()
-  call self._test('should_align_v_pattern_filtering', 'Alignta v/^\s*# =')
+function! tc.should_align_except_matching_g_pattern()
+  call self._test('should_align_except_matching_g_pattern', 'Alignta v/^\s*# =')
 endfunction
 
-function! tc.should_align_block_g_pattern_filtering()
-  call self._test('should_align_block_g_pattern_filtering', 'Alignta g/^\s*# =')
+function! tc.should_align_block_only_matching_g_pattern()
+  call self._test('should_align_block_only_matching_g_pattern', 'Alignta g/^\s*# =')
 endfunction
 
-function! tc.should_align_block_v_pattern_filtering()
-  call self._test('should_align_block_v_pattern_filtering', 'Alignta v/^\s*# =')
+function! tc.should_align_block_except_matching_g_pattern()
+  call self._test('should_align_block_except_matching_g_pattern', 'Alignta v/^\s*# =')
 endfunction
 
 unlet tc

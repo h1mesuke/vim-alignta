@@ -1,0 +1,50 @@
+# alignta.vim test suite
+
+#---------------------------------------
+# test_region_data_begin
+word wo|rd word word wo|rd
+
+ word word word word wo|rd
+
+単語 単語 単語 単語 単語
+
+ 単語 単語 単語 単語 単語
+# test_region_data_end
+
+#---------------------------------------
+# test_region_block_data_begin
+*** word wo|rd word word wo|rd ***
+
+***  word word word word wo|rd ***
+
+*** 単語 単語 単語 単語 単語   ***
+
+***  単語 単語 単語 単語 単語  ***
+# test_region_block_data_end
+
+#-----------------------------------------------------------------------------
+# has_tab
+
+#---------------------------------------
+# test_region_has_tab_data_begin
+word	wo|rd	word	word	wo|rd
+
+	word	word	word	word	wo|rd
+
+単語	単語	単語	単語	単語
+
+	単語	単語	単語	単語	単語
+# test_region_has_tab_data_end
+
+#---------------------------------------
+# test_region_block_has_tab_data_begin
+***	word	wo|rd	word	word	wo|rd ***
+
+***	word	word	word	word	wo|rd ***
+
+***	単語	単語	単語	単語	単語  ***
+
+***	単語	単語	単語	単語	単語  ***
+# test_region_block_has_tab_data_end
+
+# vim:sw=2:ts=2:ft=conf:et:ai

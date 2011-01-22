@@ -10,11 +10,11 @@ endfunction
 let s:SID = s:get_SID()
 
 let s:AlignerTestCase = unittest#oop#class#new('AlignerTestCase', unittest#testcase#class())
-let s:AlignerTestCase.context_file = expand('<sfile>:p:h') . '/data.txt'
+let s:AlignerTestCase.here = expand('<sfile>:p:h')
 
 function! s:AlignerTestCase_initialize(tc_name) dict
   call self.super('initialize', a:tc_name)
-  let self.context_file = s:AlignerTestCase.context_file
+  let self.context_file = s:AlignerTestCase.here . '/' . self.name . '.dat'
 endfunction
 call s:AlignerTestCase.bind(s:SID, 'initialize')
 
@@ -48,9 +48,9 @@ endfunction
 call s:AlignerTestCase.bind(s:SID, '_test_block')
 
 function! s:tag_range(tag)
-  call search('^# ' . toupper(a:tag) . '_BEGIN', 'w')
+  call search('^# ' . a:tag . '_begin', 'w')
   let from = line('.') + 1
-  call search('^# ' . toupper(a:tag) . '_END', 'w')
+  call search('^# ' . a:tag . '_end', 'w')
   let to = line('.') - 1
   return [from, to]
 endfunction

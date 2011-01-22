@@ -1,7 +1,7 @@
 " alignta.vim test suite
 
 let tc = unittest#testcase#new('test_region')
-let tc.context_file = expand('<sfile>:p:h') . '/data.txt'
+let tc.context_file = expand('<sfile>:p:h') . '/test_region.dat'
 
 "-----------------------------------------------------------------------------
 
@@ -140,9 +140,9 @@ function! tc._test_region_update(...)
 endfunction
 
 function! s:tag_range(tag)
-  call search('^# ' . toupper(a:tag) . '_BEGIN', 'w')
+  call search('^# ' . a:tag . '_begin', 'w')
   let from = line('.') + 1
-  call search('^# ' . toupper(a:tag) . '_END', 'w')
+  call search('^# ' . a:tag . '_end', 'w')
   let to = line('.') - 1
   return [from, to]
 endfunction

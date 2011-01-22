@@ -1,0 +1,144 @@
+# alignta.vim test suite
+
+#-----------------------------------------------------------------------------
+# &ignorecase
+
+#---------------------------------------
+# should_not_ignore_case_data_begin
+  a b
+  A B
+  aa bb
+  AA BB
+  aaa bbb
+  AAA BBB
+# should_not_ignore_case_data_end
+# should_not_ignore_case_expected_begin
+  a   b
+  A B
+  aa  bb
+  AA BB
+  aaa bbb
+  AAA BBB
+# should_not_ignore_case_expected_end
+
+#---------------------------------------
+# should_ignore_case_when_c_data_begin
+  a b
+  A B
+  aa bb
+  AA BB
+  aaa bbb
+  AAA BBB
+# should_ignore_case_when_c_data_end
+# should_ignore_case_when_c_expected_begin
+  a   b
+  A   B
+  aa  bb
+  AA  BB
+  aaa bbb
+  AAA BBB
+# should_ignore_case_when_c_expected_end
+
+#-----------------------------------------------------------------------------
+# -p
+
+#---------------------------------------
+# should_escape_option_string_data_begin
+  a <<< 1
+  bbb <<< 10
+  ccccc <<< 100
+# should_escape_option_string_data_end
+# should_escape_option_string_expected_begin
+  a     <<< 1
+  bbb   <<< 10
+  ccccc <<< 100
+# should_escape_option_string_expected_end
+
+#---------------------------------------
+# should_escape_escape_data_begin
+  a -p 1
+  bbb -p 10
+  ccccc -p 100
+# should_escape_escape_data_end
+# should_escape_escape_expected_begin
+  a     -p 1
+  bbb   -p 10
+  ccccc -p 100
+# should_escape_escape_expected_end
+
+#-----------------------------------------------------------------------------
+# Filtering
+
+#---------------------------------------
+# should_align_only_matching_g_pattern_data_begin
+  # a = 1
+  # bbb = 10
+  # ccccc = 100
+  a = 1
+  bbb = 10
+  ccccc = 100
+# should_align_only_matching_g_pattern_data_end
+# should_align_only_matching_g_pattern_expected_begin
+  # a     = 1
+  # bbb   = 10
+  # ccccc = 100
+  a = 1
+  bbb = 10
+  ccccc = 100
+# should_align_only_matching_g_pattern_expected_end
+
+#---------------------------------------
+# should_align_except_matching_g_pattern_data_begin
+  # a = 1
+  # bbb = 10
+  # ccccc = 100
+  a = 1
+  bbb = 10
+  ccccc = 100
+# should_align_except_matching_g_pattern_data_end
+# should_align_except_matching_g_pattern_expected_begin
+  # a = 1
+  # bbb = 10
+  # ccccc = 100
+  a     = 1
+  bbb   = 10
+  ccccc = 100
+# should_align_except_matching_g_pattern_expected_end
+
+#---------------------------------------
+# should_align_block_only_matching_g_pattern_data_begin
+  #** a = 1       ***
+  #** bbb = 10    ***
+  #** ccccc = 100 ***
+  *** a = 1       ***
+  *** bbb = 10    ***
+  *** ccccc = 100 ***
+# should_align_block_only_matching_g_pattern_data_end
+# should_align_block_only_matching_g_pattern_expected_begin
+  #** a     = 1   ***
+  #** bbb   = 10  ***
+  #** ccccc = 100 ***
+  *** a = 1       ***
+  *** bbb = 10    ***
+  *** ccccc = 100 ***
+# should_align_block_only_matching_g_pattern_expected_end
+
+#---------------------------------------
+# should_align_block_except_matching_g_pattern_data_begin
+  #** a = 1       ***
+  #** bbb = 10    ***
+  #** ccccc = 100 ***
+  *** a = 1       ***
+  *** bbb = 10    ***
+  *** ccccc = 100 ***
+# should_align_block_except_matching_g_pattern_data_end
+# should_align_block_except_matching_g_pattern_expected_begin
+  #** a = 1       ***
+  #** bbb = 10    ***
+  #** ccccc = 100 ***
+  *** a     = 1   ***
+  *** bbb   = 10  ***
+  *** ccccc = 100 ***
+# should_align_block_except_matching_g_pattern_expected_end
+
+# vim:sw=2:ts=2:ft=conf:et:ai

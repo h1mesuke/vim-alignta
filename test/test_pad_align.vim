@@ -3,6 +3,8 @@
 execute 'source' expand('<sfile>:p:h') . '/aligner_testcase.vim'
 let tc = unittest#testcase#new('test_pad_align', 'AlignerTestCase')
 
+"-----------------------------------------------------------------------------
+
 function! tc.should_align_at_1_pattern()
   call self._test('should_align_at_1_pattern', 'Alignta =')
 endfunction

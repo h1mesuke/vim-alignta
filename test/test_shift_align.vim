@@ -3,28 +3,37 @@
 execute 'source' expand('<sfile>:p:h') . '/aligner_testcase.vim'
 let tc = unittest#testcase#new('test_shift_align', 'AlignerTestCase')
 
-function! tc.should_shift_align_at_1_pattern()
-  call self._test('should_shift_align_at_1_pattern', 'Alignta <= b')
+"-----------------------------------------------------------------------------
+
+function! tc.should_align_at_1_pattern()
+  call self._test('should_align_at_1_pattern', 'Alignta <= b')
 endfunction
 
-function! tc.should_shift_align_at_1_pattern_l()
-  call self._test('should_shift_align_at_1_pattern_l', 'Alignta <= b')
+function! tc.should_align_at_1_pattern_l()
+  call self._test('should_align_at_1_pattern_l', 'Alignta <= b')
 endfunction
 
-function! tc.should_shift_align_at_1_pattern_c()
-  call self._test('should_shift_align_at_1_pattern_c', 'Alignta |= b')
+function! tc.should_align_at_1_pattern_c()
+  call self._test('should_align_at_1_pattern_c', 'Alignta |= b')
 endfunction
 
-function! tc.should_shift_align_at_1_pattern_r()
-  call self._test('should_shift_align_at_1_pattern_r', 'Alignta >= b')
+function! tc.should_align_at_1_pattern_r()
+  call self._test('should_align_at_1_pattern_r', 'Alignta >= b')
 endfunction
 
-function! tc.should_shift_align_at_1_pattern_2_times()
-  call self._test('should_shift_align_at_1_pattern_2_times', 'Alignta! <= b\+{2}')
+function! tc.should_align_at_1_pattern_2_times()
+  call self._test('should_align_at_1_pattern_2_times', 'Alignta! <= b\+{2}')
 endfunction
 
-function! tc.should_shift_align_at_1_pattern_n_times()
-  call self._test('should_shift_align_at_1_pattern_n_times', 'Alignta! <= b\+{+}')
+function! tc.should_align_at_1_pattern_n_times()
+  call self._test('should_align_at_1_pattern_n_times', 'Alignta! <= b\+{+}')
+endfunction
+
+"---------------------------------------
+" Block
+
+function! tc.should_align_block()
+  call self._test('should_align_block', 'Alignta <= b')
 endfunction
 
 "---------------------------------------
@@ -36,13 +45,6 @@ endfunction
 
 function! tc.Lpad_should_be_3()
   call self._test('Lpad_should_be_3', 'Alignta <=3 b')
-endfunction
-
-"---------------------------------------
-" Block
-
-function! tc.should_shift_align_block()
-  call self._test('should_shift_align_block', 'Alignta <= b')
 endfunction
 
 unlet tc

@@ -1,0 +1,102 @@
+# alignta.vim test suite
+
+#---------------------------------------
+# should_align_at_1_pattern_data_begin
+  あ ＝ 壱
+  あいう ＝ 壱十
+  あいうえお ＝ 壱十百
+# should_align_at_1_pattern_data_end
+# should_align_at_1_pattern_expected_begin
+  あ         ＝ 壱
+  あいう     ＝ 壱十
+  あいうえお ＝ 壱十百
+# should_align_at_1_pattern_expected_end
+
+#---------------------------------------
+# should_align_at_1_pattern_lll_data_begin
+  あ ＝ 壱
+  あいう ＝ 壱十
+  あいうえお ＝ 壱十百
+# should_align_at_1_pattern_lll_data_end
+# should_align_at_1_pattern_lll_expected_begin
+  あ         ＝ 壱
+  あいう     ＝ 壱十
+  あいうえお ＝ 壱十百
+# should_align_at_1_pattern_lll_expected_end
+
+#---------------------------------------
+# should_align_at_1_pattern_ccc_data_begin
+  あ ＝ 壱
+  あいう ＝ 壱十
+  あいうえお ＝ 壱十百
+# should_align_at_1_pattern_ccc_data_end
+# should_align_at_1_pattern_ccc_expected_begin
+      あ     ＝   壱
+    あいう   ＝  壱十
+  あいうえお ＝ 壱十百
+# should_align_at_1_pattern_ccc_expected_end
+
+#---------------------------------------
+# should_align_at_1_pattern_rrr_data_begin
+  あ ＝ 壱
+  あいう ＝ 壱十
+  あいうえお ＝ 壱十百
+# should_align_at_1_pattern_rrr_data_end
+# should_align_at_1_pattern_rrr_expected_begin
+          あ ＝     壱
+      あいう ＝   壱十
+  あいうえお ＝ 壱十百
+# should_align_at_1_pattern_rrr_expected_end
+
+#---------------------------------------
+# should_align_at_ambiwidth_pattern_when_ambw_double_data_begin
+  あ ＝ 壱
+  ΑΒΓ ＝ 壱十
+  あいうえお ＝ 壱十百
+# should_align_at_ambiwidth_pattern_when_ambw_double_data_end
+# should_align_at_ambiwidth_pattern_when_ambw_double_expected_begin
+  あ         ＝ 壱
+  ΑΒΓ     ＝ 壱十
+  あいうえお ＝ 壱十百
+# should_align_at_ambiwidth_pattern_when_ambw_double_expected_end
+
+#---------------------------------------
+# should_align_at_ambiwidth_pattern_when_ambw_single_data_begin
+  あ ＝ 壱
+  ΑΒΓ ＝ 壱十
+  あいうえお ＝ 壱十百
+# should_align_at_ambiwidth_pattern_when_ambw_single_data_end
+# should_align_at_ambiwidth_pattern_when_ambw_single_expected_begin
+  あ         ＝ 壱
+  ΑΒΓ        ＝ 壱十
+  あいうえお ＝ 壱十百
+# should_align_at_ambiwidth_pattern_when_ambw_single_expected_end
+
+#-----------------------------------------------------------------------------
+# block
+
+#---------------------------------------
+# should_align_block_data_begin
+  外外外 あ ＝ 壱             *外外外
+  外外外 あいう ＝ 壱十       *外外外
+  外外外 あいうえお ＝ 壱十百 *外外外
+# should_align_block_data_end
+# should_align_block_expected_begin
+  外外外 あ         ＝ 壱     *外外外
+  外外外 あいう     ＝ 壱十   *外外外
+  外外外 あいうえお ＝ 壱十百 *外外外
+# should_align_block_expected_end
+
+#---------------------------------------
+# should_error_if_multibyte_block_is_broken_data_begin
+  外外外 あ ＝ 壱             *外外外
+  外外外あいう ＝ 壱十        *外外外
+  外外外 あいうえお ＝ 壱十百 *外外外
+# should_error_if_multibyte_block_is_broken_data_end
+# should_error_if_multibyte_block_is_broken_expected_begin
+  外外外 あ ＝ 壱             *外外外
+  外外外あいう ＝ 壱十        *外外外
+  外外外 あいうえお ＝ 壱十百 *外外外
+# should_error_if_multibyte_block_is_broken_expected_end
+
+# vim:sw=2:ts=2:ft=conf:et:ai

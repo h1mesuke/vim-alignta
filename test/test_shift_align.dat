@@ -1,0 +1,117 @@
+# alignta.vim test suite
+
+#---------------------------------------
+# should_align_at_1_pattern_data_begin
+  a b c
+  aaa bbb ccc
+  aaaaa bbbbb ccccc
+# should_align_at_1_pattern_data_end
+# should_align_at_1_pattern_expected_begin
+  a     b c
+  aaa   bbb ccc
+  aaaaa bbbbb ccccc
+# should_align_at_1_pattern_expected_end
+
+#---------------------------------------
+# should_align_at_1_pattern_l_data_begin
+  a b c
+  aaa bbb ccc
+  aaaaa bbbbb ccccc
+# should_align_at_1_pattern_l_data_end
+# should_align_at_1_pattern_l_expected_begin
+  a     b c
+  aaa   bbb ccc
+  aaaaa bbbbb ccccc
+# should_align_at_1_pattern_l_expected_end
+
+#---------------------------------------
+# should_align_at_1_pattern_c_data_begin
+  a b c
+  aaa bbb ccc
+  aaaaa bbbbb ccccc
+# should_align_at_1_pattern_c_data_end
+# should_align_at_1_pattern_c_expected_begin
+    a   b c
+   aaa  bbb ccc
+  aaaaa bbbbb ccccc
+# should_align_at_1_pattern_c_expected_end
+
+#---------------------------------------
+# should_align_at_1_pattern_r_data_begin
+  a b c
+  aaa bbb ccc
+  aaaaa bbbbb ccccc
+# should_align_at_1_pattern_r_data_end
+# should_align_at_1_pattern_r_expected_begin
+      a b c
+    aaa bbb ccc
+  aaaaa bbbbb ccccc
+# should_align_at_1_pattern_r_expected_end
+
+#---------------------------------------
+# should_align_at_1_pattern_2_times_data_begin
+  a b bbbbb c
+  aaa bbb bbb ccc
+  aaaaa bbbbb b ccccc
+# should_align_at_1_pattern_2_times_data_end
+# should_align_at_1_pattern_2_times_expected_begin
+  a     b     bbbbb c
+  aaa   bbb   bbb ccc
+  aaaaa bbbbb b ccccc
+# should_align_at_1_pattern_2_times_expected_end
+
+#---------------------------------------
+# should_align_at_1_pattern_n_times_data_begin
+  a b bbbbb b bbbbb c
+  aaa bbb bbb bbb bbb ccc
+  aaaaa bbbbb b bbbbb b ccccc
+# should_align_at_1_pattern_n_times_data_end
+# should_align_at_1_pattern_n_times_expected_begin
+  a     b     bbbbb b     bbbbb c
+  aaa   bbb   bbb   bbb   bbb ccc
+  aaaaa bbbbb b     bbbbb b ccccc
+# should_align_at_1_pattern_n_times_expected_end
+
+#-----------------------------------------------------------------------------
+# Block
+
+#---------------------------------------
+# should_align_block_data_begin
+  *** a b c             ***
+  *** aaa bbb ccc       ***
+  *** aaaaa bbbbb ccccc ***
+# should_align_block_data_end
+# should_align_block_expected_begin
+  *** a     b c         ***
+  *** aaa   bbb ccc     ***
+  *** aaaaa bbbbb ccccc ***
+# should_align_block_expected_end
+
+#-----------------------------------------------------------------------------
+# Padding
+
+#---------------------------------------
+# Lpad_should_be_0_data_begin
+  a b c
+  aaa bbb ccc
+  aaaaa bbbbb ccccc
+# Lpad_should_be_0_data_end
+# Lpad_should_be_0_expected_begin
+  a    b c
+  aaa  bbb ccc
+  aaaaabbbbb ccccc
+# Lpad_should_be_0_expected_end
+
+#---------------------------------------
+# Lpad_should_be_3_data_begin
+  a b c
+  aaa bbb ccc
+  aaaaa bbbbb ccccc
+# Lpad_should_be_3_data_end
+# Lpad_should_be_3_expected_begin
+  a       b c
+  aaa     bbb ccc
+  aaaaa   bbbbb ccccc
+# Lpad_should_be_3_expected_end
+
+# vim:sw=2:ts=2:ft=conf:et:ai
