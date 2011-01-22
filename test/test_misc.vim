@@ -86,6 +86,19 @@ function! tc.teardown_buffer_local_options_should_take_precedence()
   unlet b:alignta_default_options
 endfunction
 
+function! tc.setup_extending_options_should_take_precedence()
+  let b:alignta_default_options = '|||'
+  call alignta#reset_extending_options()
+  call alignta#apply_extending_options('>>>')
+endfunction
+function! tc.extending_options_should_take_precedence()
+  call self._test('extending_options_should_take_precedence', 'Alignta =')
+endfunction
+function! tc.teardown_extending_options_should_take_precedence()
+  call alignta#reset_extending_options()
+  unlet b:alignta_default_options
+endfunction
+
 function! tc.setup_should_align_with_default_arguments_if_no_args_given()
   let b:alignta_default_arguments = '>>> ='
 endfunction

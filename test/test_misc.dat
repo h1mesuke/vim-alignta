@@ -172,6 +172,18 @@
 # buffer_local_options_should_take_precedence_expected_end
 
 #---------------------------------------
+# extending_options_should_take_precedence_data_begin
+  a = 1
+  bbb = 10
+  ccccc = 100
+# extending_options_should_take_precedence_data_end
+# extending_options_should_take_precedence_expected_begin
+      a =   1
+    bbb =  10
+  ccccc = 100
+# extending_options_should_take_precedence_expected_end
+
+#---------------------------------------
 # should_align_with_default_arguments_if_no_args_given_data_begin
   a = 1
   bbb = 10
