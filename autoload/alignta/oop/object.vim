@@ -1,11 +1,11 @@
 "=============================================================================
-" Simple OOP Layer for Vimscript
-" Minimum Edition
+" vim-oop
+" Class-based OOP Layer for Vimscript <Mininum Edition>
 "
 " File    : oop/object.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-01-22
-" Version : 0.0.8
+" Updated : 2011-02-01
+" Version : 0.1.6
 " License : MIT license {{{
 "
 "   Permission is hereby granted, free of charge, to any person obtaining
@@ -32,33 +32,74 @@
 function! s:get_SID()
   return matchstr(expand('<sfile>'), '<SNR>\d\+_')
 endfunction
-let s:SID = s:get_SID()
 
-let s:Object = alignta#oop#class#new('Object', '__nil__')
+function! alignta#oop#object#_initialize()
+  let SID = s:get_SID()
+
+  let s:object_id = 1001
+  let s:Object = alignta#oop#class#new('Object', '__nil__')
+
+  call s:Object.bind(SID, 'initialize')
+  call s:Object.bind(SID, 'attributes')
+  call s:Object.bind(SID, 'inspect')
+  call s:Object.bind(SID, 'is_kind_of')
+  call s:Object.alias('is_a', 'is_kind_of')
+  call s:Object.bind(SID, 'to_s')
+
+  return s:Object
+endfunction
+
+function! alignta#oop#object#_get_object_id()
+  let s:object_id += 1
+  return s:object_id
+endfunction
+
+"-----------------------------------------------------------------------------
 
 function! s:Object_initialize(...) dict
 endfunction
-call s:Object.bind(s:SID, 'initialize')
+
+function! s:Object_attributes(...) dict
+  let attrs = filter(copy(self), 'type(v:val) != type(function("tr"))')
+  let all = (a:0 ? a:1 : 0)
+  if !all
+    call s:remove_attrs(attrs, ['class', 'object_id', 'superclass'])
+  else
+    let attrs.__class__ = attrs.class
+    unlet attrs.class
+  endif
+  return attrs
+endfunction
+
+function! s:remove_attrs(dict, attrs)
+  for attr in a:attrs
+    if has_key(a:dict, attr)
+      call remove(a:dict, attr)
+    endif
+  endfor
+endfunction
+
+function! s:Object_inspect() dict
+  let _self = map(copy(self), 'alignta#oop#is_object(v:val) ? v:val.to_s() : v:val')
+  return string(_self)
+endfunction
 
 function! s:Object_is_kind_of(class) dict
   let kind_class = alignta#oop#class#get(a:class)
-  let class = self.class
-  while !empty(class)
+  for class in self.class.ancestors(1)
     if class is kind_class
       return 1
     endif
-    let class = class.superclass
-  endwhile
+  endfor
   return 0
 endfunction
-call s:Object.bind(s:SID, 'is_kind_of')
-call s:Object.alias('is_a', 'is_kind_of')
 
-" classes as objects
-let s:Object_instance_methods = copy(s:Object.prototype)
-unlet s:Object_instance_methods.initialize
-call extend(s:Object, s:Object_instance_methods, 'keep')
-call extend(alignta#oop#class#get('Class'), s:Object_instance_methods, 'keep')
-unlet s:Object_instance_methods
+function! s:Object_to_s() dict
+  return '<' . self.class.name . ':0x' . printf('%08x', self.object_id) . '>'
+endfunction
+
+if !alignta#oop#_is_initialized()
+  call alignta#oop#_initialize()
+endif
 
 " vim: filetype=vim

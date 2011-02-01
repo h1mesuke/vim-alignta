@@ -13,7 +13,7 @@ let s:AlignerTestCase = unittest#oop#class#new('AlignerTestCase', unittest#testc
 let s:AlignerTestCase.here = expand('<sfile>:p:h')
 
 function! s:AlignerTestCase_initialize(tc_name) dict
-  call self.super('initialize', a:tc_name)
+  call s:AlignerTestCase.super('initialize', [a:tc_name], self)
   let self.context_file = s:AlignerTestCase.here . '/' . self.name . '.dat'
 endfunction
 call s:AlignerTestCase.bind(s:SID, 'initialize')

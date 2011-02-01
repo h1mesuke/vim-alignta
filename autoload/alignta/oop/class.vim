@@ -1,11 +1,11 @@
 "=============================================================================
-" Simple OOP Layer for Vimscript
-" Minimum Edition
+" vim-oop
+" Class-based OOP Layer for Vimscript <Mininum Edition>
 "
 " File    : oop/class.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-01-22
-" Version : 0.0.8
+" Updated : 2011-01-31
+" Version : 0.1.6
 " License : MIT license {{{
 "
 "   Permission is hereby granted, free of charge, to any person obtaining
@@ -29,9 +29,69 @@
 " }}}
 "=============================================================================
 
-function! alignta#oop#class#get(name)
+function! s:get_SID()
+  return matchstr(expand('<sfile>'), '<SNR>\d\+_')
+endfunction
+
+function! alignta#oop#class#_initialize()
+  let SID = s:get_SID()
+
+  let s:Class = { 'object_id': 1001 }
+  let s:Class.class = s:Class
+  let s:Class.name = 'Class'
+
+  let s:class_table = { 'Class': s:Class, '__nil__': {} }
+
+  " bind class methods
+let s:Class.get                        = function(SID . 'class_Class_get')
+let s:Class.is_defined                 = function(SID . 'class_Class_is_defined')
+let s:Class.new                        = function(SID . 'class_Class_new')
+
+let s:Class.prototype = {}
+
+  " bind instance methods
+let s:Class.prototype.class_alias      = function(SID . 'Class_class_alias')
+let s:Class.prototype.class_bind       = function(SID . 'Class_class_bind')
+let s:Class.prototype.class_unbind     = function(SID . 'Class_class_unbind')
+let s:Class.prototype.class_super      = function(SID . 'Class_class_super')
+
+let s:Class.prototype.alias            = function(SID . 'Class_alias')
+let s:Class.prototype.ancestors        = function(SID . 'Class_ancestors')
+let s:Class.prototype.bind             = function(SID . 'Class_bind')
+let s:Class.prototype.unbind           = function(SID . 'Class_unbind')
+let s:Class.prototype.export           = function(SID . 'Class_export')
+let s:Class.prototype.is_descendant_of = function(SID . 'Class_is_descendant_of')
+let s:Class.prototype.new              = function(SID . 'Class_new')
+let s:Class.prototype.super            = function(SID . 'Class_super')
+let s:Class.prototype.to_s             = function(SID . 'Class_to_s')
+
+  " define underscored aliases
+  for method_name in ['bind', 'unbind', 'export']
+    let s:Class.prototype['__' . method_name . '__'] = s:Class.prototype[method_name]
+  endfor
+
+  call extend(s:Class, s:Class.prototype, 'keep')
+
+  return s:Class
+endfunction
+
+function! alignta#oop#class#get(...)
+  return call(s:Class.get, a:000, s:Class)
+endfunction
+
+function! alignta#oop#class#is_defined(...)
+  return call(s:Class.is_defined, a:000, s:Class)
+endfunction
+
+function! alignta#oop#class#new(...)
+  return call(s:Class.new, a:000, s:Class)
+endfunction
+
+"-----------------------------------------------------------------------------
+
+function! s:class_Class_get(name) dict
   if type(a:name) == type("")
-    if alignta#oop#class#is_defined(a:name)
+    if s:Class.is_defined(a:name)
       return s:class_table[a:name]
     else
       throw "oop: class " . a:name . " is not defined"
@@ -39,37 +99,28 @@ function! alignta#oop#class#get(name)
   elseif alignta#oop#is_class(a:name)
     return a:name
   else
-    throw "oop: class required, but got " . string(a:name)
+    throw "oop: class required, but got " . alignta#oop#string(a:name)
   endif
 endfunction
 
-function! alignta#oop#class#is_defined(name)
+function! s:class_Class_is_defined(name) dict
   return has_key(s:class_table, a:name)
 endfunction
 
-function! alignta#oop#class#new(name, ...)
-  let _self = deepcopy(s:Class, 1)
+function! s:class_Class_new(name, ...) dict
+  let _self = copy(s:Class.prototype)
+  let _self.object_id = alignta#oop#object#_get_object_id()
   let _self.class = s:Class
   let _self.superclass = alignta#oop#class#get(a:0 ? a:1 : 'Object')
-  let _self.name  = a:name
-  let s:class_table[a:name] = _self
+  let _self.name  = a:name | let s:class_table[a:name] = _self
+  let _self.prototype  = {}
   " inherit methods from superclasses
-  let class = _self.superclass
-  while !empty(class)
+  for class in _self.ancestors()
     call extend(_self, class, 'keep')
     call extend(_self.prototype, class.prototype, 'keep')
-    let class = class.superclass
-  endwhile
+  endfor
   return _self
 endfunction
-
-function! s:get_SID()
-  return matchstr(expand('<sfile>'), '<SNR>\d\+_')
-endfunction
-let s:SID = s:get_SID()
-
-let s:Class = { 'class': {}, 'prototype': {} }
-let s:class_table = { 'Class': s:Class, '__nil__': {} }
 
 function! s:Class_class_alias(alias, method_name) dict
   if has_key(self, a:method_name) && type(self[a:method_name]) == type(function('tr'))
@@ -78,12 +129,29 @@ function! s:Class_class_alias(alias, method_name) dict
     throw "oop: " . self.name . "." . a:method_name . "() is not defined"
   endif
 endfunction
-let s:Class.class_alias = function(s:SID . 'Class_class_alias')
 
 function! s:Class_class_bind(sid, method_name) dict
-  let self[a:method_name] = function(a:sid . self.name . '_class_' . a:method_name)
+  let self[a:method_name] = function(a:sid . 'class_' . self.name . '_' . a:method_name)
 endfunction
-let s:Class.class_bind = function(s:SID . 'Class_class_bind')
+function! s:Class_class_unbind(method_name) dict
+  unlet self[a:method_name]
+endfunction
+
+function! s:Class_class_super(method_name, args, _self) dict
+  let defined_here = (has_key(self, a:method_name) &&
+        \ type(self[a:method_name]) == type(function('tr')))
+  for class in self.ancestors()
+    if has_key(class, a:method_name)
+      if type(class[a:method_name]) != type(function('tr'))
+        throw "oop: " . class.name . "." . a:method_name . " is not a method"
+      elseif !defined_here ||
+            \ (defined_here && self[a:method_name] != class[a:method_name])
+        return call(class[a:method_name], a:args, a:_self)
+      endif
+    endif
+  endfor
+  throw "oop: " . self.name . "." . a:method_name . "()'s super implementation was not found"
+endfunction
 
 function! s:Class_alias(alias, method_name) dict
   if has_key(self.prototype, a:method_name) &&
@@ -93,12 +161,24 @@ function! s:Class_alias(alias, method_name) dict
     throw "oop: " . self.name . "#" . a:method_name . "() is not defined"
   endif
 endfunction
-let s:Class.alias = function(s:SID . 'Class_alias')
+
+function! s:Class_ancestors(...) dict
+  let inclusive = (a:0 ? a:1 : 0)
+  let ancestors = []
+  let class = (inclusive ? self : self.superclass)
+  while !empty(class)
+    call add(ancestors, class)
+    let class = class.superclass
+  endwhile
+  return ancestors
+endfunction
 
 function! s:Class_bind(sid, method_name) dict
   let self.prototype[a:method_name] = function(a:sid . self.name . '_' . a:method_name)
 endfunction
-let s:Class.bind = function(s:SID . 'Class_bind')
+function! s:Class_unbind(method_name) dict
+  unlet self.prototype[a:method_name]
+endfunction
 
 function! s:Class_export(method_name) dict
   if has_key(self.prototype, a:method_name) &&
@@ -108,35 +188,43 @@ function! s:Class_export(method_name) dict
     throw "oop: " . self.name . "#" . a:method_name . "() is not defined"
   endif
 endfunction
-let s:Class.export = function(s:SID . 'Class_export')
 
-function! s:Class_is_kind_of(class) dict
-  let kind_class = alignta#oop#class#get(a:class)
-  if kind_class is s:Class
-    return 1
-  endif
-  let class = self
-  while !empty(class)
-    if class is kind_class
-      return 1
-    endif
-    let class = class.superclass
-  endwhile
-  return 0
+function! s:Class_is_descendant_of(class) dict
+  let test_class = s:Class.get(a:class)
+  return (index(self.ancestors(), test_class) >= 0)
 endfunction
-let s:Class.is_kind_of = function(s:SID . 'Class_is_kind_of')
-let s:Class.is_a = s:Class.is_kind_of
 
 function! s:Class_new(...) dict
   " instantiate
   let obj = copy(self.prototype)
+  let obj.object_id = alignta#oop#object#_get_object_id()
   let obj.class = self
   call call(obj.initialize, a:000, obj)
   return obj
 endfunction
-let s:Class.new = function(s:SID . 'Class_new')
 
-" bootstrap
-execute 'source' expand('<sfile>:p:h') . '/object.vim'
+function! s:Class_super(method_name, args, _self) dict
+  let defined_here = (has_key(self.prototype, a:method_name) &&
+        \ type(self.prototype[a:method_name]) == type(function('tr')))
+  for class in self.ancestors()
+    if has_key(class.prototype, a:method_name)
+      if type(class.prototype[a:method_name]) != type(function('tr'))
+        throw "oop: " . class.name . "#" . a:method_name . " is not a method"
+      elseif !defined_here ||
+            \ (defined_here && self.prototype[a:method_name] != class.prototype[a:method_name])
+        return call(class.prototype[a:method_name], a:args, a:_self)
+      endif
+    endif
+  endfor
+  throw "oop: " . self.name . "#" . a:method_name . "()'s super implementation was not found"
+endfunction
+
+function! s:Class_to_s() dict
+  return self.name
+endfunction
+
+if !alignta#oop#_is_initialized()
+  call alignta#oop#_initialize()
+endif
 
 " vim: filetype=vim

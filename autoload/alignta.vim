@@ -3,7 +3,7 @@
 "
 " File    : autoload/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-01-23
+" Updated : 2011-01-31
 " Version : 0.1.7
 " License : MIT license {{{
 "
@@ -83,13 +83,13 @@ let s:Aligner.DEFAULT_OPTIONS = {
 
 let s:Aligner.extending_options = {}
 
-function! s:Aligner_class_apply_extending_options(options) dict
+function! s:class_Aligner_apply_extending_options(options) dict
   let opts = (type(a:options) == type("") ? s:Aligner._parse_options(a:options) : a:options)
   call extend(s:Aligner.extending_options, opts, 'force')
 endfunction
 call s:Aligner.class_bind(s:SID, 'apply_extending_options')
 
-function! s:Aligner_class_reset_extending_options() dict
+function! s:class_Aligner_reset_extending_options() dict
   let s:Aligner.extending_options = {}
 endfunction
 call s:Aligner.class_bind(s:SID, 'reset_extending_options')
