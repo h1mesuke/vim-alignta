@@ -2,8 +2,8 @@
 
 File    : doc/alignta.jax
 Author  : h1mesuke <himesuke@gmail.com>
-Updated : 2011-01-23
-Version : 0.1.7
+Updated : 2011-01-31
+Version : 0.1.8
 License : MIT license {{{
 
 	Permission is hereby granted, free of charge, to any person obtaining
@@ -185,16 +185,16 @@ SHIFTING ALIGNMENT				*alignta-shifting-alignment*
 ------------------------------------------------------------------------------
 コマンド					*alignta-commands*
 
-:[range]Alignta[!] {arguments}			*:Alignta*
+:[range]Alignta[!] [arguments]			*:Alignta*
 
 	指定範囲に対し、与えられた引数にもとづく整列を行います。
-	{arguments} には整列に使用するパターン、または整列オプションの指定文字
+	[arguments] には整列に使用するパターン、または整列オプションの指定文字
 	列を任意の個数指定できます。
 
 	あるパターンによる整列回数の指定、複数のパターンを指定した場合の挙動、
 	整列オプションの指定文字列の書式については以下の節で説明します。
 
-:[range]Align[!] {arguments}
+:[range]Align[!] [arguments]
 
 	:Alignta の別名。Charles Campbell氏の Align.vim がインストールされてい
 	ない場合に使用できます。
@@ -555,7 +555,7 @@ LINE FILTERING				*alignta-line-filtering*
 
 g:alignta_default_options			*g:alignta_default_options*
 						*b:alignta_default_options*
-	:Aligntaコマンドの初期整列オプションの指定文字列。
+	:Aligntaコマンドの初期整列オプションの指定文字列
 	引数リストに整列オプションの指定文字列が現れない限り、この変数に設定し
 	た整列オプションで整列が行われます。
 
@@ -563,7 +563,7 @@ g:alignta_default_options			*g:alignta_default_options*
 
 g:alignta_default_arguments			*g:alignta_default_arguments*
 						*b:alignta_default_arguments*
-	:Aligntaコマンドの引数リスト文字列。
+	:Aligntaコマンドの引数リスト文字列
 	:Aligntaコマンドを引数なしで実行した場合に、この変数に設定した引数リス
 	トにもとづく整列が行われます。
 
@@ -619,7 +619,7 @@ unite-alignta					*unite-alignta*
 
 g:unite_source_alignta_preset_arguments	*g:unite_source_alignta_preset_arguments*
 					*b:unite_source_alignta_preset_arguments*
-	:Aligntaコマンドの引数リスト文字列のリスト。
+	:Aligntaコマンドの引数リスト文字列のリスト
 	:Unite alignta:visual を実行したとき、候補として表示されます。
 	（詳細は|unite-alignta-usage|を参照して下さい）
 
@@ -630,7 +630,7 @@ g:unite_source_alignta_preset_arguments	*g:unite_source_alignta_preset_arguments
 
 g:unite_source_alignta_preset_options	*g:unite_source_alignta_preset_options*
 					*b:unite_source_alignta_preset_options*
-	:Aligntaコマンドのオプション指定文字列のリスト。
+	:Aligntaコマンドのオプション指定文字列のリスト
 	:Unite alignta:normal を実行したとき、候補として表示されます。
 	（詳細は|unite-alignta-usage|を参照して下さい）
 
@@ -709,6 +709,11 @@ g:unite_source_alignta_preset_options	*g:unite_source_alignta_preset_options*
 <
 ==============================================================================
 TODO						*alignta-todo*
+
+	* タブによる整列
+
+		整列後のフィールドの開始位置が tabstop * n となり、なおかつパ
+		ディングに可能な限りタブ文字が使用される整列
 
 ==============================================================================
 既知の問題					*alignta-bugs*
