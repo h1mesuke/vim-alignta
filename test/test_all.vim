@@ -1,4 +1,4 @@
-" alignta.vim test suite
+" alignta's test suite
 
 let here = expand('<sfile>:p:h')
 execute 'source' here . '/test_pad_align.vim'

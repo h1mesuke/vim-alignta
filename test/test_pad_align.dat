@@ -1,4 +1,4 @@
-# alignta.vim test suite
+# alignta's test suite
 
 #---------------------------------------
 # should_align_at_1_pattern_data_begin
@@ -710,4 +710,4 @@
   ***	ccccc	=	100	***
 # should_error_if_block_has_tab_expected_end
 
-# vim:sw=2:ts=2:ft=conf:et:ai
+# vim:sw=4:ts=4:ft=conf:et:ai:list

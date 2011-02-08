@@ -1,4 +1,4 @@
-# alignta.vim test suite
+# alignta's test suite
 
 #-----------------------------------------------------------------------------
 # &ignorecase
@@ -195,4 +195,4 @@
   ccccc = 100
 # should_align_with_default_arguments_if_no_args_given_expected_end
 
-# vim:sw=2:ts=2:ft=conf:et:ai
+# vim:sw=4:ts=4:ft=conf:et:ai:list

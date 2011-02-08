@@ -1,4 +1,4 @@
-" alignta.vim test suite
+" alignta's test suite
 
 execute 'source' expand('<sfile>:p:h') . '/aligner_testcase.vim'
 let tc = unittest#testcase#new('test_misc', 'AlignerTestCase')

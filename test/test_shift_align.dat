@@ -1,4 +1,4 @@
-# alignta.vim test suite
+# alignta's test suite
 
 #---------------------------------------
 # should_align_at_1_pattern_data_begin
@@ -114,4 +114,4 @@
   aaaaa   bbbbb ccccc
 # Lpad_should_be_3_expected_end
 
-# vim:sw=2:ts=2:ft=conf:et:ai
+# vim:sw=4:ts=4:ft=conf:et:ai:list

@@ -1,4 +1,4 @@
-" alignta.vim test suite
+" alignta's test suite
 
 if exists('s:AlignerTestCase')
   finish
