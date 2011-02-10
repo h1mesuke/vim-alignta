@@ -3,7 +3,7 @@
 "
 " File    : autoload/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-01-31
+" Updated : 2011-02-11
 " Version : 0.1.8
 " License : MIT license {{{
 "
@@ -48,12 +48,12 @@ endfunction
 " API for unite-alignta
 function! alignta#apply_extending_options(options)
   call s:Aligner.apply_extending_options(a:options)
-  call s:print_debug("extending options = " . string(s:Aligner.extending_options))
+  call s:print_debug("extending options", s:Aligner.extending_options)
 endfunction
 
 function! alignta#reset_extending_options()
   call s:Aligner.reset_extending_options()
-  call s:print_debug("extending options = " . string(s:Aligner.extending_options))
+  call s:print_debug("extending options", s:Aligner.extending_options)
 endfunction
 
 "-----------------------------------------------------------------------------
@@ -72,11 +72,9 @@ let s:SID = s:get_SID()
 let s:Aligner = alignta#oop#class#new('Aligner')
 
 let s:Aligner.DEFAULT_OPTIONS = {
-      \ 'L_fld_align': 'left',
-      \ 'M_fld_align': 'left',
-      \ 'R_fld_align': 'left',
-      \ 'L_padding'  : 1,
-      \ 'R_padding'  : 1,
+      \ 'field_align': ['<', '<', '<'],
+      \ 'L_margin'   : 1,
+      \ 'R_margin'   : 1,
       \ 'g_pattern'  : '',
       \ 'v_pattern'  : '',
       \ }
@@ -84,7 +82,7 @@ let s:Aligner.DEFAULT_OPTIONS = {
 let s:Aligner.extending_options = {}
 
 function! s:class_Aligner_apply_extending_options(options) dict
-  let opts = (type(a:options) == type("") ? s:Aligner._parse_options(a:options) : a:options)
+  let opts = (type(a:options) == type("") ? s:Aligner.parse_options(a:options) : a:options)
   call extend(s:Aligner.extending_options, opts, 'force')
 endfunction
 call s:Aligner.class_bind(s:SID, 'apply_extending_options')
@@ -96,37 +94,26 @@ call s:Aligner.class_bind(s:SID, 'reset_extending_options')
 
 function! s:Aligner_initialize(region_args, align_args, use_regexp) dict
   let self.region = call('alignta#region#new', a:region_args)
+  let self.region.had_indent_tab = 0
   let self.arguments = a:align_args
   let self.use_regexp = a:use_regexp
   call self.init_options()
+  let self.align_count = 0
+
+  if self.region.has_indent_tab()
+    call self.region.detab_indent()
+    let self.region.had_indent_tab = 1
+  endif
 
   " initialize the lines to align
-  let self._lines = copy(self.region.lines)
-  if self.region.type ==# 'block'
-    call map(self._lines, 'substitute(v:val, "\\s*$", "", "")')
-  endif
-  " initialize the intermediate data
-  let n_lines = len(self._lines)
-  let self._line_data = map(range(0, n_lines - 1), '{
-        \ "aligned_part": "",
-        \ "aligned_width": 0,
-        \ }')
+  let self.lines = s:Lines.new(self.region.lines)
+" if self.region.type ==# 'block'
+"   call map(self.lines, 'alignta#string#rstrip(v:val)')
+" endif
 
-  " keep the minimum leadings
-  let leading_width = s:get_min_leading_width(self._lines, 1)
-  let leading = alignta#string#padding(leading_width)
-  let idx = 0
-  " freeze leadings
-  while idx < n_lines
-    let line = self._lines[idx]
-    if line =~ '\S'
-      let line_data = self._line_data[idx]
-      let line_data.aligned_part = leading
-      let line_data.aligned_width = leading_width
-      let self._lines[idx] = substitute(line, leading, '', '')
-    endif
-    let idx += 1
-  endwhile
+  " initialize the buffer where the aligned parts will be appended
+  let begin_col = (self.region.type ==# 'block' ? self.region.block_begin_col : 1)
+  let self.aligned = s:Lines.new(map(copy(self.region.lines), '""'), begin_col)
 endfunction
 call s:Aligner.bind(s:SID, 'initialize')
 
@@ -138,77 +125,81 @@ endfunction
 call s:Aligner.bind(s:SID, 'init_options')
 
 function! s:Aligner_apply_options(options) dict
-  let opts = (type(a:options) == type("") ? self._parse_options(a:options) : a:options)
+  let opts = (type(a:options) == type("") ? self.parse_options(a:options) : a:options)
   call extend(self.options, opts, 'force')
 endfunction
 call s:Aligner.bind(s:SID, 'apply_options')
 
-function! s:get_min_leading_width(lines, ...)
-  let ignore_blank = (a:0 ? a:1 : 0)
-  let lines = (ignore_blank ? filter(copy(a:lines), 'v:val =~ "\\S"') : copy(a:lines))
-  let leadings = map(lines, 'matchstr(v:val, "^\\s*")')
-  return min(map(leadings, 'strlen(v:val)'))
-endfunction
-
-function! s:Aligner_alignment_method() dict
-  return (self.options.M_fld_align ==# 'none' ?  'shifting' : 'padding')
-endfunction
-call s:Aligner.bind(s:SID, 'alignment_method')
-
 function! s:Aligner_align() dict
-  call s:print_debug("region = " . self.region.to_s())
-  call s:print_debug("arguments = " . string(self.arguments))
-  call s:print_debug("_lines:", self._lines)
+  call s:print_debug("region",    self.region)
+  call s:print_debug("lines",     self.lines)
+  call s:print_debug("arguments", self.arguments)
 
-  if self.region.type ==# 'block' && self.region.has_tab
-    call alignta#print_error("alignta: RegionError: block contains tabs")
-    return
-  elseif self.region.is_broken
-    call alignta#print_error("alignta: RegionError: broken multi-byte character detected")
-    return
-  endif
-
-  if self.region.has_tab && alignta#get_config_variable('alignta_confirm_for_retab')
-    let resp = input("Region contains tabs, alignta will use :retab, OK? [y/n] ")
-    if resp !~? '\s*y\%[es]\s*$'
-      return
-    endif
-  endif
+" if self.region.type ==# 'block' && self.region.has_tab
+"   call alignta#print_error("alignta: RegionError: block contains tabs")
+"   return
+" elseif self.region.is_broken
+"   call alignta#print_error("alignta: RegionError: broken multi-byte character detected")
+"   return
+" endif
+"
+" if self.region.has_tab && alignta#get_config_variable('alignta_confirm_for_retab')
+"   let resp = input("Region contains tabs, alignta will use :retab, OK? [y/n] ")
+"   if resp !~? '\s*y\%[es]\s*$'
+"     return
+"   endif
+" endif
 
   if exists('g:alignta_profile') && g:alignta_profile && has("reltime")
     let start_time = reltime()
   endif
 
-  let save_vimenv = alignta#vimenv#new('.', '&ignorecase')
+  let vimenv = alignta#vimenv#new('.', '&ignorecase')
   set noignorecase
   " NOTE: alignta#string#width() for Vim 7.2 or older has a side effect that changes
   " the cursor's position.
 
+  let argc = len(self.arguments)
+  let is_pattern = 0
+
   " process arguments
-  let next_as_pattern = 0
-  for value in self.arguments
-    if !next_as_pattern && value =~ '^-p\%[attern]$'
-      let next_as_pattern = 1
+  let idx = 0
+  while idx < argc
+    let value = self.arguments[idx]
+    if idx == argc - 1
+      let is_pattern = 1
+    elseif !is_pattern && value =~ '^-p\%[attern]$'
+      let is_pattern = 1
+      let idx += 1
       continue
     endif
-    let opts = self._parse_options(value)
-    if !next_as_pattern && !empty(opts)
+    let opts = self.parse_options(value)
+    if !is_pattern && !empty(opts)
       " options
       call self.apply_options(opts)
     else
       " pattern
-      let [pattern, times] = self._parse_pattern(value)
+      let [pattern, times] = self.parse_pattern(value)
       call self._align_at(pattern, times)
     endif
-    let next_as_pattern = 0
+    let is_pattern = 0
+    let idx += 1
+  endwhile
+
+  for [idx, line] in self.lines.each()
+    call self.aligned.append(idx, line)
   endfor
+  call self.aligned.rstrip()
+  let self.region.lines = self.aligned.to_a()
+
+  if self.region.had_indent_tab
+    call self.region.entab_indent()
+  endif
 
   " update!
-  let self.region.lines = map(copy(self._line_data),
-        \ 'alignta#string#rstrip(v:val.aligned_part . self._lines[v:key])')
   call self.region.update()
 
-  call save_vimenv.restore()
+  call vimenv.restore()
 
   if exists('g:alignta_profile') && g:alignta_profile && has("reltime")
     let used_time = split(reltimestr(reltime(start_time)))[0]
@@ -217,64 +208,61 @@ function! s:Aligner_align() dict
 endfunction
 call s:Aligner.bind(s:SID, 'align')
 
-function! s:Aligner__parse_options(value) dict
-  let align = { '<': 'left', '|': 'center', '>': 'right' }
+function! s:Aligner_parse_options(value) dict
   let opts = {}
-
   for opts_str in split(a:value, '\(\(^\|[^\\]\)\(\\\{2}\)*\)\@<=\s\s*')
 
     " padding alignment options
-    " <<< or <<<1 or <<<11 or <<<1:1
+    " {N_fld_align}{M_fld_align}...[L_fld_align][margin]
     let matched_list = matchlist(opts_str,
-          \ '^\([<|>]\)\([<|>]\)\([<|>]\)\%(\(\d\)\(\d\)\=\|\(\d\+\):\(\d\+\)\)\=$')
+          \ '^\([<|>=]\{2,}\)\%(\(\d\)\(\d\)\=\|\(\d\+\):\(\d\+\)\)\=$')
     if len(matched_list) > 0
-      let opts.L_fld_align = align[matched_list[1]]
-      let opts.M_fld_align = align[matched_list[2]]
-      let opts.R_fld_align = align[matched_list[3]]
-      if matched_list[4] != ""
+      let opts.method = 'pad'
+      let opts.field_align = split(matched_list[1], '\zs')
+      if matched_list[2] != ''
         " 1 or 11
-        let opts.L_padding = str2nr(matched_list[4])
-        let opts.R_padding = (matched_list[5] != "" ? str2nr(matched_list[5]) : opts.L_padding)
+        let opts.L_margin = str2nr(matched_list[2])
+        let opts.R_margin = (matched_list[3] != '' ? str2nr(matched_list[3]) : opts.L_margin)
       endif
-      if matched_list[6] != ""
+      if matched_list[4] != ''
         " 1:1
-        let opts.L_padding = str2nr(matched_list[6])
-        let opts.R_padding = str2nr(matched_list[7])
+        let opts.L_margin = str2nr(matched_list[4])
+        let opts.R_margin = str2nr(matched_list[5])
       endif
-      call s:print_debug("parsed options = " . string(opts))
+      call s:print_debug("parsed options", opts)
       continue
     endif
 
     " shifting alignment options
-    " <= or <=1
-    let matched_list = matchlist(opts_str, '^\([<|>]\)=\(\d\+\)\=$')
+    " ->[margin] or -->[margin]
+    let matched_list = matchlist(opts_str, '^\(--\=>\)\(\d\+\)\=$')
     if len(matched_list) > 0
-      let opts.L_fld_align = align[matched_list[1]]
-      let opts.M_fld_align = 'none'
-      let opts.R_fld_align = 'none'
-      if matched_list[2] != ""
-        let opts.L_padding = str2nr(matched_list[2])
+      let opts.method = 'shift'
+      if matched_list[1] == '-->'
+        let opts.method .= '_tab'
       endif
-      call s:print_debug("parsed options = " . string(opts))
+      if matched_list[2] != ''
+        let opts.L_margin = str2nr(matched_list[2])
+      endif
+      call s:print_debug("parsed options", opts)
       continue
     endif
 
-    " padding options
-    " @1 or @11 or @1:1
+    " margin options
     let matched_list = matchlist(opts_str,
           \ '^@\%(\(\d\)\(\d\)\=\|\(\d\+\):\(\d\+\)\)\=$')
     if len(matched_list) > 0
-      if matched_list[1] != ""
+      if matched_list[1] != ''
         " 1 or 11
-        let opts.L_padding = str2nr(matched_list[1])
-        let opts.R_padding = (matched_list[2] != "" ? str2nr(matched_list[2]) : opts.L_padding)
+        let opts.L_margin = str2nr(matched_list[1])
+        let opts.R_margin = (matched_list[2] != '' ? str2nr(matched_list[2]) : opts.L_margin)
       endif
-      if matched_list[3] != ""
+      if matched_list[3] != ''
         " 1:1
-        let opts.L_padding = str2nr(matched_list[3])
-        let opts.R_padding = str2nr(matched_list[4])
+        let opts.L_margin = str2nr(matched_list[3])
+        let opts.R_margin = str2nr(matched_list[4])
       endif
-      call s:print_debug("parsed options = " . string(opts))
+      call s:print_debug("parsed options", opts)
       continue
     endif
 
@@ -288,24 +276,24 @@ function! s:Aligner__parse_options(value) dict
         " v/pattern
         let opts.v_pattern = matched_list[2]
       endif
-      call s:print_debug("parsed options = " . string(opts))
+      call s:print_debug("parsed options", opts)
       continue
     endif
   endfor
 
   return opts
 endfunction
-call s:Aligner.bind(s:SID, '_parse_options')
-call s:Aligner.export('_parse_options')
+call s:Aligner.bind(s:SID, 'parse_options')
+call s:Aligner.export('parse_options')
 
-function! s:Aligner__parse_pattern(value) dict
+function! s:Aligner_parse_pattern(value) dict
   let times_str = matchstr(a:value, '{\zs\(\d\+\|+\)\ze}$')
   let pattern = substitute(a:value, '{\(\d\+\|+\)}$', '', '')
   if !self.use_regexp
     let pattern = alignta#string#escape_regexp(pattern)
   endif
-  if times_str == ""
-    if self.alignment_method() ==# 'padding'
+  if times_str == ''
+    if self.options.method ==# 'pad'
       let times = s:HUGE_VALUE
     else
       let times = 1
@@ -319,196 +307,319 @@ function! s:Aligner__parse_pattern(value) dict
   endif
   return [pattern, times]
 endfunction
-call s:Aligner.bind(s:SID, '_parse_pattern')
+call s:Aligner.bind(s:SID, 'parse_pattern')
 
 function! s:Aligner__align_at(pattern, times) dict
-  call s:print_debug("options = " . string(self.options))
-  call s:print_debug("pattern = " . string(a:pattern))
+  call s:print_debug("options", self.options)
+  call s:print_debug("pattern", a:pattern)
 
-  let flds_list = self._split_to_fields(a:pattern, a:times)
-  call self._join_fields(flds_list)
+  let lines = self._filter_lines()
 
-  call s:print_debug("aligned_parts:", map(copy(self._line_data), 'v:val.aligned_part'))
-  call s:print_debug("_lines:", self._lines)
+  if self.align_count == 0 && self.options.method ==# 'pad'
+    call self._keep_min_leading(lines)
+  endif
+
+  let fields = self._split_to_fields(lines, a:pattern, a:times)
+  call self._join_fields(fields)
+  let self.align_count += 1
+
+  call s:print_debug("lines", self.lines)
 endfunction
 call s:Aligner.bind(s:SID, '_align_at')
 
 function! s:Aligner__filter_lines() dict
-  let lines = {}
-  let idx = 0
-  while idx < len(self._lines)
+  let lines = self.lines.dup()
+  for [idx, line] in lines.each()
     let orig_line = self.region.original_lines[idx]
-    if ((self.options.g_pattern != "" && orig_line !~# self.options.g_pattern) ||
-          \ (self.options.v_pattern != "" && orig_line =~# self.options.v_pattern))
-      " filtered
-    else
-      let lines[idx] = self._lines[idx]
+    if ((self.options.g_pattern != '' && orig_line !~# self.options.g_pattern) ||
+      \ (self.options.v_pattern != '' && orig_line =~# self.options.v_pattern))
+      call lines.remove(idx)
     endif
-    let idx += 1
-  endwhile
+  endfor
   return lines
 endfunction
 call s:Aligner.bind(s:SID, '_filter_lines')
 
-function! s:Aligner__split_to_fields(pattern, times) dict
-  let flds_list = []
-  let lines = self._filter_lines()
-  " NOTE: _filter_lines() returns a Dictionary
+function! s:Aligner__keep_min_leading(lines) dict
+  let leading = alignta#string#padding(a:lines.min_leading_width())
+  call a:lines.lstrip(1)
 
-  let n = 0
+  for [idx, line] in self.aligned.each()
+    call self.aligned.append(idx, leading)
+  endfor
+endfunction
+call s:Aligner.bind(s:SID, '_keep_min_leading')
+
+function! s:Aligner__split_to_fields(lines, pattern, times) dict
+  let fields = []
+  let n = 0 | let rest = a:lines
   while n < a:times
     let matched_count = 0
-    let L_flds = {}
-    let M_flds = {}
-    let R_flds = {}
+    let L_fld = s:Lines.new() | " Left
+    let M_fld = s:Lines.new() | " Matched
+    let R_fld = s:Lines.new() | " Right
     " match and split
-    for [idx, line] in items(lines)
+    for [idx, line] in rest.each()
       let match_beg = match(line, a:pattern)
       if match_beg >= 0
         let match_end = matchend(line, a:pattern)
-        let L_flds[idx] = strpart(line, 0, match_beg)
-        let M_flds[idx] = strpart(line, match_beg, match_end - match_beg)
-        let R_flds[idx] = strpart(line, match_end)
+        call L_fld.set(idx, strpart(line, 0, match_beg))
+        call M_fld.set(idx, strpart(line, match_beg, match_end - match_beg))
+        call R_fld.set(idx, strpart(line, match_end))
         let matched_count += 1
       elseif n > 0
-        let L_flds[idx] = line
+        call L_fld.set(idx, line)
       endif
     endfor
     if matched_count > 0
-      call add(flds_list, L_flds)
-      call add(flds_list, M_flds)
-      let lines = R_flds
+      call add(fields, L_fld)
+      call add(fields, M_fld)
+      let rest = R_fld
     else
       break
     endif
     let n += 1
   endwhile
-  call add(flds_list, lines)
-  return flds_list
+
+  let sentinel = s:Lines.new()
+  let fields += [rest, sentinel, sentinel]
+
+  return fields
 endfunction
 call s:Aligner.bind(s:SID, '_split_to_fields')
 
-function! s:Aligner__join_fields(flds_list) dict
-  let flds_list = a:flds_list + [{}, {}]
-  call s:print_debug("flds_list = " . string(flds_list))
+" NOTE:
+" fields -> N, M, N, M, ..., N, M, Last
+"
+" N...Not matched
+" M...Matched
+"
+function! s:Aligner__join_fields(fields) dict
+  call s:print_debug("fields", map(copy(a:fields), 'v:val.each()'))
 
-  let method = self.alignment_method()
+  let fld_idx = 0
+  while fld_idx < len(a:fields) - 2
+    let [N_fld, M_fld]= a:fields[fld_idx : fld_idx + 1]
 
-  let flds_idx = 0
-  while flds_idx < len(flds_list) - 2
-    let [L_flds, M_flds, R_flds]= flds_list[flds_idx : flds_idx + 2]
-    let Last_flds = filter(copy(L_flds), '!has_key(M_flds, v:key)')
-
-    "---------------------------------------
-    " Leading
-
-    if method ==# 'padding'
-      let leading = ""
-    else
-      " keep the minimum leadings
-      let leading_width = s:get_min_leading_width(values(L_flds))
-      let leading = alignta#string#padding(leading_width)
+    if exists('g:alignta_debug') && g:alignta_debug
+      call s:print_debug(printf("[%02d] N_fld:before", fld_idx),     N_fld)
+      call s:print_debug(printf("[%02d] M_fld:before", fld_idx + 1), M_fld)
     endif
 
-    "---------------------------------------
-    " Left field
+    call call(self['_' . self.options.method . '_align_fields'],
+          \ [N_fld, M_fld, fld_idx, (fld_idx == len(a:fields) - 3)], self)
 
-    if method ==# 'padding'
-      call map(L_flds, 'alignta#string#strip(v:val)')
-    else
-      call map(L_flds, 'has_key(Last_flds, v:key)
-            \ ? v:val
-            \ : alignta#string#strip(v:val)
-            \')
-    endif
-
-    let L_fld_width = max(values(map(copy(L_flds),
-          \ 'self._line_data[v:key].aligned_width + alignta#string#width(v:val)')))
-
-    call map(L_flds, 'has_key(Last_flds, v:key)
-          \ ? alignta#string#pad(v:val,
-          \     L_fld_width - self._line_data[v:key].aligned_width,
-          \     self.options.R_fld_align
-          \   )
-          \ : alignta#string#pad(v:val,
-          \     L_fld_width - self._line_data[v:key].aligned_width,
-          \     self.options.L_fld_align
-          \   )
-          \')
-
-    "---------------------------------------
-    " Left padding
-
-    let blank_L_flds = (len(filter(values(L_flds), 'v:val !~ "\\S"')) == len(L_flds))
-    " NOTE: If all Left fields are blank, they should be ignored and the Left
-    " padding should be set to 0.
-
-    let lpad = (blank_L_flds ? "" : alignta#string#padding(self.options.L_padding))
-
-    "---------------------------------------
-    " Matched field
-
-    if method ==# 'padding'
-      let M_fld_width = max(map(values(M_flds), 'alignta#string#width(v:val)'))
-
-      call map(M_flds, 'alignta#string#pad(v:val,
-            \ M_fld_width,
-            \ self.options.M_fld_align
-            \ )')
-    endif
-
-    "---------------------------------------
-    " Right padding
-
-    if method ==# 'padding'
-      let rpad = alignta#string#padding(self.options.R_padding)
-    else
-      let rpad = ""
-    endif
-
-    call s:print_debug("L_flds:", L_flds)
-    call s:print_debug("M_flds:", M_flds)
-    call s:print_debug("R_flds:", R_flds)
-
-    " join fields with paddings
-    for idx in keys(L_flds)
-      if !has_key(Last_flds, idx)
-        let aligned = leading . L_flds[idx] . lpad . M_flds[idx] . rpad
-        let line_data = self._line_data[idx]
-        let line_data.aligned_part .= aligned
-        let line_data.aligned_width += alignta#string#width(aligned)
+    " join fields
+    for [idx, line] in N_fld.each()
+      if M_fld.has(idx)
+        let line = N_fld.get(idx) . M_fld.get(idx)
+        call self.aligned.append(idx, line)
       else
-        " last field
+        " Last field
         " the next pattern matching will start from the beginning of it
-        let self._lines[idx] = L_flds[idx]
+        call self.lines.set(idx, line)
       endif
     endfor
-    let flds_idx += 2
+
+    if exists('g:alignta_debug') && g:alignta_debug
+      call s:print_debug(printf("[%02d] N_fld:after",  fld_idx),     N_fld)
+      call s:print_debug(printf("[%02d] M_fld:after",  fld_idx + 1), M_fld)
+      call s:print_debug("aligned", self.aligned)
+    endif
+
+    let fld_idx += 2
   endwhile
 endfunction
 call s:Aligner.bind(s:SID, '_join_fields')
 
-function! alignta#print_error(msg)
-  echohl ErrorMsg | echomsg a:msg | echohl None
-endfunction
+function! s:Aligner__pad_align_fields(N_fld, M_fld, fld_idx, is_last) dict
+  let N_fld_align = self._get_field_align(a:fld_idx, a:is_last)
+  let M_fld_align = self._get_field_align(a:fld_idx + 1)
 
-function! s:print_debug(msg, ...)
-  if exists('g:alignta_debug') && g:alignta_debug
-    echomsg "alignta: " . a:msg
-    if a:0
-      let lines = a:1
-      if type(lines) == type([])
-        for line in lines
-          echomsg string(line)
-        endfor
-      elseif type(lines) == type({})
-        for idx in s:sort_numbers(keys(lines))
-          echomsg string(lines[idx])
-        endfor
-      endif
+  "---------------------------------------
+  " Not-matched field
+
+  call a:N_fld.strip(N_fld_align == '=')
+
+  let AN_fld_width = max(map(a:N_fld.each(), '
+        \ self.aligned.get_width(v:val[0]) +
+        \ alignta#string#width(v:val[1], self.aligned.get_width(v:val[0]))
+        \'))
+
+  for [idx, line] in a:N_fld.each()
+    let width = AN_fld_width - self.aligned.get_width(idx)
+    let line = alignta#string#pad(line, width, N_fld_align)
+    call a:N_fld.set(idx, line)
+  endfor
+
+  "---------------------------------------
+  " Matched field
+
+  let L_margin = (a:N_fld.is_blank() ? '' : alignta#string#padding(self.options.L_margin))
+  let R_margin = alignta#string#padding(self.options.R_margin)
+
+  let M_fld_width = max(map(a:M_fld.to_a(), '
+        \ alignta#string#width(v:val, AN_fld_width)
+        \'))
+
+  for [idx, line] in a:M_fld.each()
+    let line = L_margin . alignta#string#pad(line, M_fld_width, M_fld_align) . R_margin
+    call a:M_fld.set(idx, line)
+  endfor
+endfunction
+call s:Aligner.bind(s:SID, '_pad_align_fields')
+
+function! s:Aligner__get_field_align(fld_idx, ...) dict
+  let is_last = (a:0 ? a:1 : 0)
+  if len(self.options.field_align) % 2 == 1
+    if is_last
+      return self.options.field_align[-1]
     endif
+    let fld_align = self.options.field_align[:-2]
+  else
+    let fld_align = self.options.field_align
+  endif
+  return fld_align[a:fld_idx % len(fld_align)]
+endfunction
+call s:Aligner.bind(s:SID, '_get_field_align')
+
+function! s:Aligner__shift_align_fields(N_fld, M_fld, fld_idx, is_last) dict
+endfunction
+call s:Aligner.bind(s:SID, '_shift_align_fields')
+
+function! s:Aligner__shift_tab_align_fields(N_fld, M_fld, fld_idx, is_last) dict
+endfunction
+call s:Aligner.bind(s:SID, '_shift_tab_align_fields')
+
+"-----------------------------------------------------------------------------
+" Lines
+
+let s:Lines = alignta#oop#class#new('Lines')
+
+function! s:Lines_initialize(...) dict
+  let self._lines = {}
+  let self._width = {}
+  let self._calc_width = (len(a:000) >= 2)
+
+  if self._calc_width
+    let self._begin_col = get(a:000, 1, 1)
+  endif
+
+  let lines = get(a:000, 0, [])
+  let idx = 0
+  while idx < len(lines)
+    call self.append(idx, lines[idx])
+    let idx += 1
+  endwhile
+endfunction
+call s:Lines.bind(s:SID, 'initialize')
+
+function! s:Lines_append(idx, str) dict
+  if !has_key(self._lines, a:idx)
+    let self._lines[a:idx] = ""
+    let self._width[a:idx] = 0
+  endif
+  let self._lines[a:idx] .= a:str
+
+  if self._calc_width
+    let col = (self._begin_col - 1) + self._width[a:idx]
+    let self._width[a:idx] += alignta#string#width(a:str, col)
   endif
 endfunction
+call s:Lines.bind(s:SID, 'append')
+
+function! s:Lines_min_leading_width() dict
+  let lines = filter(self.to_a(), 'v:val =~ "\\S"')
+  return min(map(map(lines, 'matchstr(v:val, "^\\s*")'), 'strlen(v:val)'))
+endfunction
+call s:Lines.bind(s:SID, 'min_leading_width')
+
+function! s:Lines_dump() dict
+  for [idx, line] in self.each()
+    call s:echomsg(printf('%03x: ', idx) . string(line))
+  endfor
+endfunction
+call s:Lines.bind(s:SID, 'dump')
+
+function! s:Lines_dup() dict
+  let obj = copy(self)
+  let obj._lines = copy(self._lines)
+  let obj._width = copy(self._width)
+  return obj
+endfunction
+call s:Lines.bind(s:SID, 'dup')
+
+function! s:Lines_each() dict
+  let items = []
+  for idx in s:sort_numbers(keys(self._lines))
+    call add(items, [idx, self._lines[idx]])
+  endfor
+  return items
+endfunction
+call s:Lines.bind(s:SID, 'each')
+
+function! s:Lines_get(idx) dict
+  return self._lines[a:idx]
+endfunction
+call s:Lines.bind(s:SID, 'get')
+
+function! s:Lines_get_width(idx) dict
+  return self._width[a:idx]
+endfunction
+call s:Lines.bind(s:SID, 'get_width')
+
+function! s:Lines_has(idx) dict
+  return has_key(self._lines, a:idx)
+endfunction
+call s:Lines.bind(s:SID, 'has')
+
+function! s:Lines_is_blank() dict
+  return (len(filter(values(self._lines), 'v:val =~ "^\\s*$"')) == len(self._lines))
+endfunction
+call s:Lines.bind(s:SID, 'is_blank')
+
+function! s:Lines_set(idx, str) dict
+  if has_key(self._lines, a:idx)
+    call self.remove(a:idx)
+  endif
+  call self.append(a:idx, a:str)
+endfunction
+call s:Lines.bind(s:SID, 'set')
+
+function! s:Lines_remove(idx) dict
+  unlet self._lines[a:idx]
+  unlet self._width[a:idx]
+endfunction
+call s:Lines.bind(s:SID, 'remove')
+
+function! s:Lines_strip(...) dict
+  call self.lstrip(a:0 ? a:1 : 0)
+  call self.rstrip()
+endfunction
+call s:Lines.bind(s:SID, 'strip')
+
+function! s:Lines_lstrip(...) dict
+  let strip_min_leading =  (a:0 ? a:1 : 0)
+  if strip_min_leading
+    let leading = alignta#string#padding(self.min_leading_width())
+    for [idx, line] in self.each()
+      call self.set(idx, substitute(line, '^' . leading, '', ''))
+    endfor
+  else
+    call map(self._lines, 'alignta#string#lstrip(v:val)')
+  endif
+endfunction
+call s:Lines.bind(s:SID, 'lstrip')
+
+function! s:Lines_rstrip() dict
+  call map(self._lines, 'alignta#string#rstrip(v:val)')
+endfunction
+call s:Lines.bind(s:SID, 'rstrip')
+
+function! s:Lines_to_a() dict
+  return map(self.each(), 'v:val[1]')
+endfunction
+call s:Lines.bind(s:SID, 'to_a')
 
 function! s:sort_numbers(list)
   return sort(a:list, 's:compare_numbers')
@@ -516,6 +627,36 @@ endfunction
 
 function! s:compare_numbers(n1, n2)
   return a:n1 == a:n2 ? 0 : a:n1 > a:n2 ? 1 : -1
+endfunction
+
+"-----------------------------------------------------------------------------
+" Utils
+
+function! alignta#print_error(msg)
+  echohl ErrorMsg | echomsg a:msg | echohl None
+endfunction
+
+function! s:print_debug(caption, value)
+  if exists('g:alignta_debug') && g:alignta_debug
+    call s:echomsg("")
+    call s:echomsg("ALIGNTA-DEBUG: " . a:caption)
+    if alignta#oop#is_object(a:value)
+      if a:value.is_a(s:Lines)
+        call a:value.dump()
+      else
+        call s:echomsg(a:value.to_s())
+      endif
+    else
+      call s:echomsg(alignta#oop#string(a:value))
+    endif
+  endif
+endfunction
+function! s:echomsg(msg)
+  if exists('*unittest#is_running') && unittest#is_running()
+    call unittest#results().puts(a:msg)
+  else
+    echomsg a:msg
+  endif
 endfunction
 
 " vim: filetype=vim
