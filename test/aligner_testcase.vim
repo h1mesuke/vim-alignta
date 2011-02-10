@@ -30,33 +30,49 @@ endfunction
 call s:AlignerTestCase.bind(s:SID, 'teardown')
 
 function! s:AlignerTestCase__test(tag, align_command) dict
-  if a:tag =~# '_block'
+  if a:tag =~# '_block\(\>\|_\)'
     call self._test_block(a:tag, a:align_command)
     return
   endif
+
   execute ':' . join(s:data_range(a:tag), ',') . a:align_command
-  let value = s:data_lines(a:tag)
+  let actual = s:data_lines(a:tag)
   silent undo
+
   let expected = s:expected_lines(a:tag)
-  call assert#equal_C(expected, value)
+  call assert#equal_C(expected, actual)
+
   call self.print_lines(expected)
-  call self.print_lines(value)
+  call self.print_lines(actual)
 endfunction
 call s:AlignerTestCase.bind(s:SID, '_test')
 
 function! s:AlignerTestCase__test_block(tag, align_command) dict
-  let range = s:data_range(a:tag)
-  execute range[0]
-  execute "normal! 06l\<C-v>" . (range[1] - range[0]) . "jf*2h\<Esc>"
+  call s:select_visual_block(a:tag)
   execute ":'<,'>" . a:align_command
-  let value = s:data_lines(a:tag)
+  let actual = s:data_lines(a:tag)
   silent undo
+
   let expected = s:expected_lines(a:tag)
-  call assert#equal_C(expected, value)
+  call assert#equal_C(expected, actual)
+
   call self.print_lines(expected)
-  call self.print_lines(value)
+  call self.print_lines(actual)
 endfunction
 call s:AlignerTestCase.bind(s:SID, '_test_block')
+
+function! s:goto_data(tag)
+  execute s:data_range(a:tag)[0]
+  normal! 0
+endfunction
+
+function! s:select_visual_block(tag)
+  let line_range = s:data_range(a:tag)
+  let n_lines = (line_range[1] - line_range[0])
+
+  call s:goto_data(a:tag)
+  execute "normal! f|\<C-v>" . n_lines . "jf|m]\<Esc>"
+endfunction
 
 function! s:tag_range(tag)
   call search('^# ' . a:tag . '_begin', 'w')
