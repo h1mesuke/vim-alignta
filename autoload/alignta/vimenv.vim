@@ -1,8 +1,8 @@
 "=============================================================================
 " File    : vimenv.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-01-23
-" Version : 0.1.0
+" Updated : 2011-02-09
+" Version : 0.1.1
 " License : MIT license {{{
 "
 "   Permission is hereby granted, free of charge, to any person obtaining
@@ -61,7 +61,7 @@ function! s:Vimenv_initialize(...) dict
       let save_vsel = 1
       let visualmode = value
     else
-      throw "Vimenv: ArgumentError: invalid name " . string(value)
+      throw "ArgumentError: invalid name " . string(value)
     endif
   endfor
 
@@ -73,7 +73,7 @@ function! s:Vimenv_initialize(...) dict
   if !empty(save_marks)
     let saved_marks = {}
     for mark_name in save_marks
-      let saved_marks[mark_name] = getpos("'".mark_name)
+      let saved_marks[mark_name] = getpos("'" . mark_name)
     endfor
     let self.marks = saved_marks
   endif
@@ -81,7 +81,7 @@ function! s:Vimenv_initialize(...) dict
   if !empty(save_opts)
     let saved_opts = {}
     for opt_name in save_opts
-      execute 'let saved_opts[opt_name] = &'.opt_name
+      execute 'let saved_opts[opt_name] = &' . opt_name
     endfor
     let self.options = saved_opts
   endif
@@ -113,13 +113,13 @@ function! s:Vimenv_restore() dict
   " restore marks
   if has_key(self, 'marks')
     for [mark_name, mark_pos] in items(self.marks)
-      call setpos("'".mark_name, mark_pos)
+      call setpos("'" . mark_name, mark_pos)
     endfor
   endif
   " restore options
   if has_key(self, 'options')
     for [opt_name, opt_val] in items(self.options)
-      execute 'let &'.opt_name.' = opt_val'
+      execute 'let &' . opt_name .' = opt_val'
     endfor
   endif
   " restore registers
@@ -150,5 +150,10 @@ function! s:Vimenv_restore() dict
   endif
 endfunction
 call s:Vimenv.bind(s:SID, 'restore')
+
+function! s:Vimenv_to_s() dict
+  return alignta#oop#string(self.attributes())
+endfunction
+call s:Vimenv.bind(s:SID, 'to_s')
 
 " vim: filetype=vim
