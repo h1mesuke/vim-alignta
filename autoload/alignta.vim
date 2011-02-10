@@ -107,9 +107,6 @@ function! s:Aligner_initialize(region_args, align_args, use_regexp) dict
 
   " initialize the lines to align
   let self.lines = s:Lines.new(self.region.lines)
-" if self.region.type ==# 'block'
-"   call map(self.lines, 'alignta#string#rstrip(v:val)')
-" endif
 
   " initialize the buffer where the aligned parts will be appended
   let begin_col = (self.region.type ==# 'block' ? self.region.block_begin_col : 1)
@@ -183,6 +180,21 @@ function! s:Aligner_align() dict
     call self.aligned.append(idx, line)
   endfor
   call self.aligned.rstrip()
+
+  if self.region.type ==# 'block'
+    " keep the block width as possible
+    call self.aligned.update_width()
+    let block_width = self.region.block_width
+    for [idx, line] in self.aligned.each()
+      if (line =~ '^\s*$' || self.region.line_is_short(idx)) | continue | endif
+      let line_width = self.aligned.get_width(idx)
+      if line_width < block_width
+        let line .= alignta#string#padding(block_width - line_width)
+        call self.aligned.set(idx, line)
+      endif
+    endfor
+  endif
+
   let self.region.lines = self.aligned.to_a()
 
   if self.region.had_indent_tab
@@ -613,6 +625,16 @@ function! s:Lines_to_a() dict
   return map(self.each(), 'v:val[1]')
 endfunction
 call s:Lines.bind(s:SID, 'to_a')
+
+function! s:Lines_update_width() dict
+  if self._calc_width
+    let col = self._begin_col - 1
+    for [idx, line] in self.each()
+      let self._width[idx] = alignta#string#width(line, col)
+    endfor
+  endif
+endfunction
+call s:Lines.bind(s:SID, 'update_width')
 
 function! s:sort_numbers(list)
   return sort(a:list, 's:compare_numbers')

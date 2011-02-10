@@ -128,6 +128,7 @@ function! s:Region__get_selection() dict
     if self.type ==# 'block'
       let [block_begcol, block_endcol] = s:sort_numbers([virtcol("'<"), virtcol("'>")])
       let self.block_begin_col = block_begcol
+      let self.block_width = block_endcol - block_begcol + 1
       for lnum in range(self.line_range[0], self.line_range[1])
         execute lnum
         let line_endcol = virtcol('$')
@@ -248,6 +249,13 @@ function! s:Region_update() dict
 endfunction
 call s:Region.bind(s:SID, 'update')
 
+function! s:Region_to_s() dict
+  let _self = filter(copy(self), 'type(v:val) != type(function("tr"))')
+  unlet _self.class
+  return string(_self)
+endfunction
+call s:Region.bind(s:SID, 'to_s')
+
 function! s:sort_numbers(list)
   return sort(a:list, 's:compare_numbers')
 endfunction
@@ -255,12 +263,5 @@ endfunction
 function! s:compare_numbers(n1, n2)
   return a:n1 == a:n2 ? 0 : a:n1 > a:n2 ? 1 : -1
 endfunction
-
-function! s:Region_to_s() dict
-  let _self = filter(copy(self), 'type(v:val) != type(function("tr"))')
-  unlet _self.class
-  return string(_self)
-endfunction
-call s:Region.bind(s:SID, 'to_s')
 
 " vim: filetype=vim
