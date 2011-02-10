@@ -2,7 +2,7 @@
 
 File    : doc/alignta.jax
 Author  : h1mesuke <himesuke@gmail.com>
-Updated : 2011-01-31
+Updated : 2011-02-11
 Version : 0.1.8
 License : MIT license {{{
 
@@ -573,20 +573,6 @@ g:alignta_default_arguments			*g:alignta_default_arguments*
 	let g:alignta_default_arguments = '! =>\='
 <
 	初期値なし（未定義）
-
-g:alignta_confirm_for_retab			*g:alignta_confirm_for_retab*
-						*b:alignta_confirm_for_retab*
-	|:retab|の実行前に確認用プロンプトを表示するかどうか。
-
-	初期値は 1
-
-	:Aligntaコマンドは、整列の対象範囲にタブ文字が含まれている場合、:retab
-	でタブ文字を空白文字に置き換えてから整列を行い、その後、バッファのオプ
-	ション設定が noexpandtab なら、インデントのみ空白文字からタブ文字へ復
-	元します。
-	:retab によるタブ文字から空白文字への展開は予期せぬ結果を生じる可能性
-	があるため、注意を喚起するためにプロンプトを表示するようになっています。
-	（詳細は|:retab|を参照して下さい）
 
 バッファローカルな設定 ~
 

@@ -142,13 +142,6 @@ function! s:Aligner_align() dict
 "   call alignta#print_error("alignta: RegionError: broken multi-byte character detected")
 "   return
 " endif
-"
-" if self.region.has_tab && alignta#get_config_variable('alignta_confirm_for_retab')
-"   let resp = input("Region contains tabs, alignta will use :retab, OK? [y/n] ")
-"   if resp !~? '\s*y\%[es]\s*$'
-"     return
-"   endif
-" endif
 
   if exists('g:alignta_profile') && g:alignta_profile && has("reltime")
     let start_time = reltime()
