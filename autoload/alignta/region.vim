@@ -156,7 +156,7 @@ call s:Region.bind(s:SID, 'detab_indent')
 
 function! s:detab_indent(str, col)
   let indent = matchstr(a:str, '^\s*')
-  let indent = lib#string#padding(lib#string#width(indent, a:col))
+  let indent = alignta#string#padding(alignta#string#width(indent, a:col))
   return substitute(a:str, '^\s*', indent, '')
 endfunction
 
@@ -168,7 +168,7 @@ call s:Region.bind(s:SID, 'entab_indent')
 
 function! s:entab_indent(str, col)
   let indent = matchstr(a:str, '^\s*')
-  let indent = lib#string#tab_padding(strlen(indent), a:col)
+  let indent = alignta#string#tab_padding(strlen(indent), a:col)
   return substitute(a:str, '^\s*', indent, '')
 endfunction
 
@@ -213,14 +213,14 @@ function! s:Region_update() dict
     if self.type ==# 'block'
       " calculate the block width
       let col = self.block_begin_col - 1
-      let max_width = max(map(copy(self.lines), 'lib#string#width(v:val, col)'))
+      let max_width = max(map(copy(self.lines), 'alignta#string#width(v:val, col)'))
       " NOTE: If the block contains any multi-byte characters, Vim fails to
       " count the number of paddings and append extra spaces. So, pad the
       " lines here beforehand.
       call map(self.lines, '
             \ (self.line_is_short(v:key) || v:val =~ "^\\s*$")
             \   ? v:val
-            \   : lib#string#pad(v:val, max_width, "left", col)
+            \   : alignta#string#pad(v:val, max_width, "left", col)
             \')
       let regtype .= max_width
     endif
