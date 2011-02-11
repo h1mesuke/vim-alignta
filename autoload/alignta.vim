@@ -3,7 +3,7 @@
 "
 " File    : autoload/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-02-11
+" Updated : 2011-02-12
 " Version : 0.1.8
 " License : MIT license {{{
 "
@@ -236,13 +236,13 @@ function! s:Aligner_parse_options(value) dict
     endif
 
     " shifting alignment options
+    " <-[margin] or <--[margin] or
     " ->[margin] or -->[margin]
-    let matched_list = matchlist(opts_str, '^\(--\=>\)\(\d\+\)\=$')
+    let matched_list = matchlist(opts_str, '^\(<--\=\|--\=>\)\(\d\+\)\=$')
     if len(matched_list) > 0
       let opts.method = 'shift'
-      if matched_list[1] == '-->'
-        let opts.method .= '_tab'
-      endif
+      let opts.method .= (matched_list[1] =~ '<'  ? '_left' : '_right')
+      let opts.method .= (matched_list[1] =~ '--' ? '_tab'  : '')
       if matched_list[2] != ''
         let opts.L_margin = str2nr(matched_list[2])
       endif
@@ -460,9 +460,7 @@ function! s:Aligner__pad_align_fields(N_fld, M_fld, fld_idx, is_last) dict
   let L_margin = (a:N_fld.is_blank() ? '' : alignta#string#padding(self.options.L_margin))
   let R_margin = alignta#string#padding(self.options.R_margin)
 
-  let M_fld_width = max(map(a:M_fld.to_a(), '
-        \ alignta#string#width(v:val, AN_fld_width)
-        \'))
+  let M_fld_width = max(map(a:M_fld.to_a(), 'alignta#string#width(v:val, AN_fld_width)'))
 
   for [idx, line] in a:M_fld.each()
     let line = L_margin . alignta#string#pad(line, M_fld_width, M_fld_align) . R_margin
@@ -472,26 +470,74 @@ endfunction
 call s:Aligner.bind(s:SID, '_pad_align_fields')
 
 function! s:Aligner__get_field_align(fld_idx, ...) dict
+  let fld_align = self.options.field_align
   let is_last = (a:0 ? a:1 : 0)
-  if len(self.options.field_align) % 2 == 1
-    if is_last
-      return self.options.field_align[-1]
-    endif
-    let fld_align = self.options.field_align[:-2]
-  else
-    let fld_align = self.options.field_align
+
+  if len(fld_align) % 2 == 1
+    if is_last | return fld_align[-1] | endif
+    let fld_align = fld_align[:-2]
   endif
   return fld_align[a:fld_idx % len(fld_align)]
 endfunction
 call s:Aligner.bind(s:SID, '_get_field_align')
 
-function! s:Aligner__shift_align_fields(N_fld, M_fld, fld_idx, is_last) dict
-endfunction
-call s:Aligner.bind(s:SID, '_shift_align_fields')
+function! s:Aligner__shift_left_align_fields(N_fld, M_fld, fld_idx, is_last) dict
+  if self.align_count == 0 && a:fld_idx == 0
+    " save the left most position of matches
+    let LM_AN_fld_width = min(map(filter(a:N_fld.each(), 'a:M_fld.has(v:val[0])'), '
+          \ self.aligned.get_width(v:val[0]) +
+          \ alignta#string#width(v:val[1], self.aligned.get_width(v:val[0]))
+          \'))
+  else
+    let LM_AN_fld_width = 0
+  endif
 
-function! s:Aligner__shift_tab_align_fields(N_fld, M_fld, fld_idx, is_last) dict
+  call a:N_fld.rstrip()
+
+  let AN_fld_width = max(map(filter(a:N_fld.each(), 'a:M_fld.has(v:val[0])'), '
+        \ self.aligned.get_width(v:val[0]) +
+        \ alignta#string#width(v:val[1], self.aligned.get_width(v:val[0]))
+        \'))
+
+  let margin = self.options.L_margin
+  let AN_fld_width = max([AN_fld_width + margin, LM_AN_fld_width])
+
+  for [idx, line] in a:N_fld.each()
+    let width = AN_fld_width - self.aligned.get_width(idx)
+    let line = alignta#string#pad(line, width, '=')
+    call a:N_fld.set(idx, line)
+  endfor
 endfunction
-call s:Aligner.bind(s:SID, '_shift_tab_align_fields')
+call s:Aligner.bind(s:SID, '_shift_left_align_fields')
+
+function! s:Aligner__shift_right_align_fields(N_fld, M_fld, fld_idx, is_last) dict
+  if self.align_count == 0 && a:fld_idx == 0
+    " save the left most position of matches
+    let RM_AN_fld_width = max(map(filter(a:N_fld.each(), 'a:M_fld.has(v:val[0])'), '
+          \ self.aligned.get_width(v:val[0]) +
+          \ alignta#string#width(v:val[1], self.aligned.get_width(v:val[0]))
+          \'))
+  else
+    let RM_AN_fld_width = 0
+  endif
+
+  call a:N_fld.rstrip()
+
+  let AN_fld_width = max(map(filter(a:N_fld.each(), 'a:M_fld.has(v:val[0])'), '
+        \ self.aligned.get_width(v:val[0]) +
+        \ alignta#string#width(v:val[1], self.aligned.get_width(v:val[0]))
+        \'))
+
+  let margin = self.options.L_margin
+  let AN_fld_width = max([AN_fld_width + margin, RM_AN_fld_width])
+
+  for [idx, line] in a:N_fld.each()
+    let width = AN_fld_width - self.aligned.get_width(idx)
+    let line = alignta#string#pad(line, width, '=')
+    call a:N_fld.set(idx, line)
+  endfor
+endfunction
+call s:Aligner.bind(s:SID, '_shift_right_align_fields')
 
 "-----------------------------------------------------------------------------
 " Lines
