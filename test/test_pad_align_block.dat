@@ -1,0 +1,133 @@
+# alignta's test suite
+
+#---------------------------------------
+# should_align_block_data_begin
+  **|  a = 1        ***
+  ***  bbb = 10     ***
+  ***  ccccc = 100  |**
+# should_align_block_data_end
+# should_align_block_expected_begin
+  **|  a     = 1    ***
+  ***  bbb   = 10   ***
+  ***  ccccc = 100  |**
+# should_align_block_expected_end
+
+#---------------------------------------
+# should_align_block_with_ragged_rights_data_begin
+  **|  a = 1        ***
+
+  ***  bbb = 10     ***
+
+  ***  ccccc = 100  |**
+# should_align_block_with_ragged_rights_data_end
+# should_align_block_with_ragged_rights_expected_begin
+  **|  a     = 1    ***
+
+  ***  bbb   = 10   ***
+
+  ***  ccccc = 100  |**
+# should_align_block_with_ragged_rights_expected_end
+
+#---------------------------------------
+# should_align_block_with_short_rights_data_begin
+  **|  a = 1        ***
+  ***  bbb = 10
+  ***  ccccc = 100  |**
+# should_align_block_with_short_rights_data_end
+# should_align_block_with_short_rights_expected_begin
+  **|  a     = 1    ***
+  ***  bbb   = 10
+  ***  ccccc = 100  |**
+# should_align_block_with_short_rights_expected_end
+
+#-----------------------------------------------------------------------------
+# Multi-byte
+
+#---------------------------------------
+# should_align_mb_block_data_begin
+  外外*|  あ ＝ 壱              外外外
+  外外外  あいう ＝ 壱十        外外外
+  外外外  あいうえお ＝ 壱十百  |*外外
+# should_align_mb_block_data_end
+# should_align_mb_block_expected_begin
+  外外*|  あ         ＝ 壱      外外外
+  外外外  あいう     ＝ 壱十    外外外
+  外外外  あいうえお ＝ 壱十百  |*外外
+# should_align_mb_block_expected_end
+
+#---------------------------------------
+# should_raise_if_region_is_invalid_for_mb_data_begin
+  外外外|  あ ＝ 壱             外外外
+  外外外あいう ＝ 壱十          外外外
+  外外外  あいうえお ＝ 壱十百  |*外外
+# should_raise_if_region_is_invalid_for_mb_data_end
+# should_raise_if_region_is_invalid_for_mb_expected_begin
+  外外外|  あ ＝ 壱             外外外
+  外外外あいう ＝ 壱十          外外外
+  外外外  あいうえお ＝ 壱十百  |*外外
+# should_raise_if_region_is_invalid_for_mb_expected_end
+
+#-----------------------------------------------------------------------------
+# Tabs
+
+#---------------------------------------
+# should_detab_indent_data_begin
+  **|  a = 1        ***
+  ***	bbb = 10    ***
+  ***  ccccc = 100  |**
+# should_detab_indent_data_end
+# should_detab_indent_expected_begin
+  **|  a     = 1    ***
+  ***  bbb   = 10   ***
+  ***  ccccc = 100  |**
+# should_detab_indent_expected_end
+
+#---------------------------------------
+# should_detab_indent_aa_data_begin
+  **|  a = 1        ***
+  ***	bbb = 10    ***
+  ***  ccccc = 100  |**
+# should_detab_indent_aa_data_end
+# should_detab_indent_aa_expected_begin
+  **|  a     = 1    ***
+  ***	bbb  = 10   ***
+  ***  ccccc = 100  |**
+# should_detab_indent_aa_expected_end
+
+#---------------------------------------
+# should_entab_indent_data_begin
+  **|	a = 1        ***
+  ***	bbb = 10     ***
+  ***	ccccc = 100  |**
+# should_entab_indent_data_end
+# should_entab_indent_expected_begin
+  **|	a     = 1    ***
+  ***	bbb   = 10   ***
+  ***	ccccc = 100  |**
+# should_entab_indent_expected_end
+
+#---------------------------------------
+# should_entab_indent_rr_data_begin
+  **|	a = 1        ***
+  ***	bbb = 10     ***
+  ***	ccccc = 100  |**
+# should_entab_indent_rr_data_end
+# should_entab_indent_rr_expected_begin
+  **|		a =   1  ***
+  ***	  bbb =  10  ***
+  ***	ccccc = 100  |**
+# should_entab_indent_rr_expected_end
+
+#---------------------------------------
+# should_raise_if_region_is_invalid_for_tab_data_begin
+  ***|  a = 1       ***
+  ***	bbb = 10    ***
+  ***  ccccc = 100  |**
+# should_raise_if_region_is_invalid_for_tab_data_end
+# should_raise_if_region_is_invalid_for_tab_expected_begin
+  ***|  a = 1       ***
+  ***	bbb = 10    ***
+  ***  ccccc = 100  |**
+# should_raise_if_region_is_invalid_for_tab_expected_end
+
+# vim:sw=4:ts=4:ft=conf:et:ai:list

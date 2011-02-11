@@ -132,13 +132,10 @@ function! s:Aligner_align() dict
   call s:print_debug("lines",     self.lines)
   call s:print_debug("arguments", self.arguments)
 
-" if self.region.type ==# 'block' && self.region.has_tab
-"   call alignta#print_error("alignta: RegionError: block contains tabs")
-"   return
-" elseif self.region.is_broken
-"   call alignta#print_error("alignta: RegionError: broken multi-byte character detected")
-"   return
-" endif
+  if self.region.is_broken
+    call alignta#print_error("alignta: the region is invalid")
+    return
+  endif
 
   if exists('g:alignta_profile') && g:alignta_profile && has("reltime")
     let start_time = reltime()
