@@ -1,7 +1,7 @@
 "=============================================================================
 " File    : string.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-02-10
+" Updated : 2011-02-11
 " Version : 0.1.1
 " License : MIT license {{{
 "
@@ -59,11 +59,11 @@ function! alignta#string#padding(width)
 endfunction
 
 function! alignta#string#tab_padding(width, ...)
-  let col = (a:0 ? a:1 : 0)
-  let ts = &l:tabstop
-  let width = (col % ts) + a:width
+  let col = (a:0 ? a:1 : 0) | let ts = &l:tabstop
+  let col_r = (col % ts)
+  let width = col_r + a:width
   let n_Tab =  width / ts
-  let n_Spc = (width % ts) - (n_Tab > 0 ? 0 : col)
+  let n_Spc = (width % ts) - (n_Tab > 0 ? 0 : col_r)
   return repeat("\t", n_Tab) . repeat(' ', n_Spc)
 endfunction
 
