@@ -3,7 +3,7 @@
 "
 " File    : plugin/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-02-11
+" Updated : 2011-02-13
 " Version : 0.1.8
 " License : MIT license {{{
 "
@@ -51,7 +51,7 @@ endif
 command! -range -bang -nargs=* Alignta <line1>,<line2>call <SID>align([<f-args>], '<bang>')
 
 if exists(':Align') != 2
-  " :Align is ours, hehehe
+  " :Align is ours, yay!
   command! -range -bang -nargs=* Align <line1>,<line2>Alignta<bang> <args>
 endif
 
