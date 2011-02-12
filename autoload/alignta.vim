@@ -503,18 +503,18 @@ function! s:Aligner__shift_align_fields(N_fld, M_fld, fld_idx, is_last, shift_le
 
   let margin = self.options.L_margin
   let AN_fld_width = max([AN_fld_width + margin, LRM_AN_fld_width])
+  let padding_func = 'alignta#string#padding'
   if a:use_tab
     let AN_fld_width = s:ts_ceil(AN_fld_width)
-    let padding_func = 'alignta#string#tab_padding'
-  else
-    let padding_func = 'alignta#string#padding'
+    if !&l:expandtab
+      let padding_func = 'alignta#string#tab_padding'
+    endif
   endif
 
   for [idx, line] in a:N_fld.each()
     let col = self.aligned.width(idx)
     let col += alignta#string#width(line, col)
-    let width = AN_fld_width - col
-    let line .= call(padding_func, [width, col])
+    let line .= call(padding_func, [AN_fld_width - col, col])
     call a:N_fld.set(idx, line)
   endfor
 endfunction

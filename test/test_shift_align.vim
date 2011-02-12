@@ -109,6 +109,17 @@ endfunction
 "-----------------------------------------------------------------------------
 " shift_left_tab
 
+function! tc.setup_expand_tabs_when_expandtab()
+  let self.save_expandtab = &l:expandtab
+  set expandtab
+endfunction
+function! tc.should_expand_tabs_when_expandtab()
+  call self._test_align('should_expand_tabs_when_expandtab', 'Alignta <-- b')
+endfunction
+function! tc.teardown_expand_tabs_when_expandtab()
+  let &l:expandtab = self.save_expandtab
+endfunction
+
 function! tc.SLT_should_align_at_1_pattern()
   call self._test_align('SLT_should_align_at_1_pattern', 'Alignta <-- b')
 endfunction

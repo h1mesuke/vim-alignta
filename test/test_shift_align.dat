@@ -283,6 +283,18 @@
 # shift_left_tab
 
 #---------------------------------------
+# should_expand_tabs_when_expandtab_data_begin
+  a				b c
+   aaa			 bbb  ccc
+  aaaaa		bbbbb ccccc
+# should_expand_tabs_when_expandtab_data_end
+# should_expand_tabs_when_expandtab_expected_begin
+  a         b c
+   aaa      bbb  ccc
+  aaaaa     bbbbb ccccc
+# should_expand_tabs_when_expandtab_expected_end
+
+#---------------------------------------
 # SLT_should_align_at_1_pattern_data_begin
   a				b c
    aaa			 bbb  ccc
@@ -531,4 +543,4 @@
   阿阿阿			伊伊伊	伊		宇宇宇	壱
 # SRT_should_align_mb_at_multi_patterns_expected_end
 
-# vim:sw=4:ts=4:ft=conf:et:ai:list
+# vim:sw=4:ts=4:ft=conf:noet:ai:list
