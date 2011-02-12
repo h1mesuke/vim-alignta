@@ -109,8 +109,94 @@ endfunction
 "-----------------------------------------------------------------------------
 " shift_left_tab
 
+function! tc.SLT_should_align_at_1_pattern()
+  call self._test_align('SLT_should_align_at_1_pattern', 'Alignta <-- b')
+endfunction
+
+function! tc.SLT_should_align_at_1_pattern_2_times()
+  call self._test_align('SLT_should_align_at_1_pattern_2_times', 'Alignta! <-- b\+{2}')
+endfunction
+
+function! tc.SLT_should_align_at_1_pattern_n_times()
+  call self._test_align('SLT_should_align_at_1_pattern_n_times', 'Alignta! <-- b\+{+}')
+endfunction
+
+function! tc.SLT_should_align_at_1_pattern_x_times()
+  call self._test_align('SLT_should_align_at_1_pattern_x_times', 'Alignta! <-- b\+{+}')
+endfunction
+
+function! tc.SLT_should_align_at_multi_patterns()
+  call self._test_align('SLT_should_align_at_multi_patterns', 'Alignta! <-- b\+{2} c\+ \d\+')
+endfunction
+
+"---------------------------------------
+" Multi-byte
+
+function! tc.SLT_should_align_mb_at_1_pattern()
+  call self._test_align('SLT_should_align_mb_at_1_pattern', 'Alignta <-- 伊')
+endfunction
+
+function! tc.SLT_should_align_mb_at_1_pattern_2_times()
+  call self._test_align('SLT_should_align_mb_at_1_pattern_2_times', 'Alignta! <-- 伊\+{2}')
+endfunction
+
+function! tc.SLT_should_align_mb_at_1_pattern_n_times()
+  call self._test_align('SLT_should_align_mb_at_1_pattern_n_times', 'Alignta! <-- 伊\+{+}')
+endfunction
+
+function! tc.SLT_should_align_mb_at_1_pattern_x_times()
+  call self._test_align('SLT_should_align_mb_at_1_pattern_x_times', 'Alignta! <-- 伊\+{+}')
+endfunction
+
+function! tc.SLT_should_align_mb_at_multi_patterns()
+  call self._test_align('SLT_should_align_mb_at_multi_patterns', 'Alignta! <-- 伊\+{2} 宇\+ 壱')
+endfunction
+
 "-----------------------------------------------------------------------------
 " shift_right_tab
+
+function! tc.SRT_should_align_at_1_pattern()
+  call self._test_align('SRT_should_align_at_1_pattern', 'Alignta --> b')
+endfunction
+
+function! tc.SRT_should_align_at_1_pattern_2_times()
+  call self._test_align('SRT_should_align_at_1_pattern_2_times', 'Alignta! --> b\+{2}')
+endfunction
+
+function! tc.SRT_should_align_at_1_pattern_n_times()
+  call self._test_align('SRT_should_align_at_1_pattern_n_times', 'Alignta! --> b\+{+}')
+endfunction
+
+function! tc.SRT_should_align_at_1_pattern_x_times()
+  call self._test_align('SRT_should_align_at_1_pattern_x_times', 'Alignta! --> b\+{+}')
+endfunction
+
+function! tc.SRT_should_align_at_multi_patterns()
+  call self._test_align('SRT_should_align_at_multi_patterns', 'Alignta! --> b\+{2} c\+ \d\+')
+endfunction
+
+"---------------------------------------
+" Multi-byte
+
+function! tc.SRT_should_align_mb_at_1_pattern()
+  call self._test_align('SRT_should_align_mb_at_1_pattern', 'Alignta --> 伊')
+endfunction
+
+function! tc.SRT_should_align_mb_at_1_pattern_2_times()
+  call self._test_align('SRT_should_align_mb_at_1_pattern_2_times', 'Alignta! --> 伊\+{2}')
+endfunction
+
+function! tc.SRT_should_align_mb_at_1_pattern_n_times()
+  call self._test_align('SRT_should_align_mb_at_1_pattern_n_times', 'Alignta! --> 伊\+{+}')
+endfunction
+
+function! tc.SRT_should_align_mb_at_1_pattern_x_times()
+  call self._test_align('SRT_should_align_mb_at_1_pattern_x_times', 'Alignta! --> 伊\+{+}')
+endfunction
+
+function! tc.SRT_should_align_mb_at_multi_patterns()
+  call self._test_align('SRT_should_align_mb_at_multi_patterns', 'Alignta! --> 伊\+{2} 宇\+ 壱')
+endfunction
 
 unlet tc
 

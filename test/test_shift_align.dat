@@ -30,7 +30,7 @@
 #---------------------------------------
 # SL_should_align_at_1_pattern_n_times_data_begin
   a             b bbbbb     b  bbbbb ccccc
-  aaa           bbb bbb      bbb  bbb ccc
+  aaa            bbb bbb     bbb  bbb ccc
   aaaaa     bbbbb  b            bbbbb b  c
 # SL_should_align_at_1_pattern_n_times_data_end
 # SL_should_align_at_1_pattern_n_times_expected_begin
@@ -42,7 +42,7 @@
 #---------------------------------------
 # SL_should_align_at_1_pattern_x_times_data_begin
   a             b bbbbb     b  bbbbb ccccc
-  aaa           bbb bbb      bbb  ccc
+  aaa            bbb bbb     bbb  ccc
   aaaaa     bbbbb  b c
 # SL_should_align_at_1_pattern_x_times_data_end
 # SL_should_align_at_1_pattern_x_times_expected_begin
@@ -120,7 +120,7 @@
 #---------------------------------------
 # SL_should_align_mb_at_1_pattern_n_times_data_begin
   阿             伊 伊伊伊     伊  伊伊伊 宇宇宇
-  阿阿           伊伊 伊伊      伊伊  伊伊 宇宇
+  阿阿            伊伊 伊伊     伊伊  伊伊 宇宇
   阿阿阿     伊伊伊  伊            伊伊伊 伊  宇
 # SL_should_align_mb_at_1_pattern_n_times_data_end
 # SL_should_align_mb_at_1_pattern_n_times_expected_begin
@@ -132,7 +132,7 @@
 #---------------------------------------
 # SL_should_align_mb_at_1_pattern_x_times_data_begin
   阿             伊 伊伊伊     伊  伊伊伊 宇宇宇
-  阿阿           伊伊 伊伊      伊伊  宇宇
+  阿阿            伊伊 伊伊     伊伊  宇宇
   阿阿阿     伊伊伊  伊 宇
 # SL_should_align_mb_at_1_pattern_x_times_data_end
 # SL_should_align_mb_at_1_pattern_x_times_expected_begin
@@ -183,25 +183,25 @@
 #---------------------------------------
 # SR_should_align_at_1_pattern_n_times_data_begin
   a             b bbbbb     b  bbbbb ccccc
-  aaa           bbb bbb      bbb  bbb ccc
+  aaa            bbb bbb     bbb  bbb ccc
   aaaaa     bbbbb  b            bbbbb b  c
 # SR_should_align_at_1_pattern_n_times_data_end
 # SR_should_align_at_1_pattern_n_times_expected_begin
-  a             b     bbbbb b     bbbbb ccccc
-  aaa           bbb   bbb   bbb   bbb ccc
-  aaaaa         bbbbb b     bbbbb b  c
+  a              b     bbbbb b     bbbbb ccccc
+  aaa            bbb   bbb   bbb   bbb ccc
+  aaaaa          bbbbb b     bbbbb b  c
 # SR_should_align_at_1_pattern_n_times_expected_end
 
 #---------------------------------------
 # SR_should_align_at_1_pattern_x_times_data_begin
   a             b bbbbb     b  bbbbb ccccc
-  aaa           bbb bbb      bbb  ccc
+  aaa            bbb bbb     bbb  ccc
   aaaaa     bbbbb  b c
 # SR_should_align_at_1_pattern_x_times_data_end
 # SR_should_align_at_1_pattern_x_times_expected_begin
-  a             b     bbbbb b bbbbb ccccc
-  aaa           bbb   bbb   bbb  ccc
-  aaaaa         bbbbb b c
+  a              b     bbbbb b bbbbb ccccc
+  aaa            bbb   bbb   bbb  ccc
+  aaaaa          bbbbb b c
 # SR_should_align_at_1_pattern_x_times_expected_end
 
 #---------------------------------------
@@ -246,25 +246,25 @@
 #---------------------------------------
 # SR_should_align_mb_at_1_pattern_n_times_data_begin
   阿             伊 伊伊伊     伊  伊伊伊 宇宇宇
-  阿阿           伊伊 伊伊      伊伊  伊伊 宇宇
+  阿阿            伊伊 伊伊     伊伊  伊伊 宇宇
   阿阿阿     伊伊伊  伊            伊伊伊 伊  宇
 # SR_should_align_mb_at_1_pattern_n_times_data_end
 # SR_should_align_mb_at_1_pattern_n_times_expected_begin
-  阿             伊     伊伊伊 伊     伊伊伊 宇宇宇
-  阿阿           伊伊   伊伊   伊伊   伊伊 宇宇
-  阿阿阿         伊伊伊 伊     伊伊伊 伊  宇
+  阿              伊     伊伊伊 伊     伊伊伊 宇宇宇
+  阿阿            伊伊   伊伊   伊伊   伊伊 宇宇
+  阿阿阿          伊伊伊 伊     伊伊伊 伊  宇
 # SR_should_align_mb_at_1_pattern_n_times_expected_end
 
 #---------------------------------------
 # SR_should_align_mb_at_1_pattern_x_times_data_begin
   阿             伊 伊伊伊     伊  伊伊伊 宇宇宇
-  阿阿           伊伊 伊伊      伊伊  宇宇
+  阿阿            伊伊 伊伊     伊伊  宇宇
   阿阿阿     伊伊伊  伊 宇
 # SR_should_align_mb_at_1_pattern_x_times_data_end
 # SR_should_align_mb_at_1_pattern_x_times_expected_begin
-  阿             伊     伊伊伊 伊 伊伊伊 宇宇宇
-  阿阿           伊伊   伊伊   伊伊  宇宇
-  阿阿阿         伊伊伊 伊 宇
+  阿              伊     伊伊伊 伊 伊伊伊 宇宇宇
+  阿阿            伊伊   伊伊   伊伊  宇宇
+  阿阿阿          伊伊伊 伊 宇
 # SR_should_align_mb_at_1_pattern_x_times_expected_end
 
 #---------------------------------------
@@ -282,7 +282,253 @@
 #=============================================================================
 # shift_left_tab
 
+#---------------------------------------
+# SLT_should_align_at_1_pattern_data_begin
+  a				b c
+   aaa			 bbb  ccc
+  aaaaa		bbbbb ccccc
+# SLT_should_align_at_1_pattern_data_end
+# SLT_should_align_at_1_pattern_expected_begin
+  a			b c
+   aaa		bbb  ccc
+  aaaaa		bbbbb ccccc
+# SLT_should_align_at_1_pattern_expected_end
+
+#---------------------------------------
+# SLT_should_align_at_1_pattern_2_times_data_begin
+  a				b bbbbb c
+   aaa			 bbb bbb  ccc
+  aaaaa		bbbbb  b ccccc
+# SLT_should_align_at_1_pattern_2_times_data_end
+# SLT_should_align_at_1_pattern_2_times_expected_begin
+  a			b		bbbbb c
+   aaa		bbb		bbb  ccc
+  aaaaa		bbbbb	b ccccc
+# SLT_should_align_at_1_pattern_2_times_expected_end
+
+#---------------------------------------
+# SLT_should_align_at_1_pattern_n_times_data_begin
+  a				b bbbbb		b  bbbbb ccccc
+  aaa			 bbb bbb		 bbb  bbb ccc
+  aaaaa		bbbbb  b			bbbbb b  c
+# SLT_should_align_at_1_pattern_n_times_data_end
+# SLT_should_align_at_1_pattern_n_times_expected_begin
+  a			b		bbbbb	b		bbbbb ccccc
+  aaa		bbb		bbb		bbb		bbb ccc
+  aaaaa		bbbbb	b		bbbbb	b  c
+# SLT_should_align_at_1_pattern_n_times_expected_end
+
+#---------------------------------------
+# SLT_should_align_at_1_pattern_x_times_data_begin
+  a				b bbbbb		b  bbbbb ccccc
+  aaa			 bbb bbb	 bbb  ccc
+  aaaaa		bbbbb  b c
+# SLT_should_align_at_1_pattern_x_times_data_end
+# SLT_should_align_at_1_pattern_x_times_expected_begin
+  a			b		bbbbb	b	bbbbb ccccc
+  aaa		bbb		bbb		bbb  ccc
+  aaaaa		bbbbb	b c
+# SLT_should_align_at_1_pattern_x_times_expected_end
+
+#---------------------------------------
+# SLT_should_align_at_multi_patterns_data_begin
+  a				b bbbbb c       1000
+   aaa			 bbb bbb  ccc  100
+  aaaaa		bbbbb  b ccccc 10
+# SLT_should_align_at_multi_patterns_data_end
+# SLT_should_align_at_multi_patterns_expected_begin
+  a			b		bbbbb	c		1000
+   aaa		bbb		bbb		ccc		100
+  aaaaa		bbbbb	b		ccccc	10
+# SLT_should_align_at_multi_patterns_expected_end
+
+#-----------------------------------------------------------------------------
+# Multi-byte
+
+#---------------------------------------
+# SLT_should_align_mb_at_1_pattern_data_begin
+  阿			伊 宇
+   阿阿			 伊伊  宇宇
+  阿阿阿	伊伊伊 宇宇宇
+# SLT_should_align_mb_at_1_pattern_data_end
+# SLT_should_align_mb_at_1_pattern_expected_begin
+  阿		伊 宇
+   阿阿		伊伊  宇宇
+  阿阿阿	伊伊伊 宇宇宇
+# SLT_should_align_mb_at_1_pattern_expected_end
+
+#---------------------------------------
+# SLT_should_align_mb_at_1_pattern_2_times_data_begin
+  阿			伊 伊伊伊 宇
+   阿阿			 伊伊 伊伊  宇宇
+  阿阿阿	伊伊伊  伊 宇宇宇
+# SLT_should_align_mb_at_1_pattern_2_times_data_end
+# SLT_should_align_mb_at_1_pattern_2_times_expected_begin
+  阿		伊		伊伊伊 宇
+   阿阿		伊伊	伊伊  宇宇
+  阿阿阿	伊伊伊	伊 宇宇宇
+# SLT_should_align_mb_at_1_pattern_2_times_expected_end
+
+#---------------------------------------
+# SLT_should_align_mb_at_1_pattern_n_times_data_begin
+  阿			伊 伊伊伊		伊  伊伊伊 宇宇宇
+  阿阿			 伊伊 伊伊			 伊伊  伊伊 宇宇
+  阿阿阿	伊伊伊  伊				伊伊伊 伊  宇
+# SLT_should_align_mb_at_1_pattern_n_times_data_end
+# SLT_should_align_mb_at_1_pattern_n_times_expected_begin
+  阿		伊		伊伊伊	伊		伊伊伊 宇宇宇
+  阿阿		伊伊	伊伊	伊伊	伊伊 宇宇
+  阿阿阿	伊伊伊	伊		伊伊伊	伊  宇
+# SLT_should_align_mb_at_1_pattern_n_times_expected_end
+
+#---------------------------------------
+# SLT_should_align_mb_at_1_pattern_x_times_data_begin
+  阿			伊 伊伊伊		伊  伊伊伊 宇宇宇
+  阿阿			 伊伊 伊伊		 伊伊  宇宇
+  阿阿阿	伊伊伊  伊 宇
+# SLT_should_align_mb_at_1_pattern_x_times_data_end
+# SLT_should_align_mb_at_1_pattern_x_times_expected_begin
+  阿		伊		伊伊伊	伊	伊伊伊 宇宇宇
+  阿阿		伊伊	伊伊	伊伊  宇宇
+  阿阿阿	伊伊伊	伊 宇
+# SLT_should_align_mb_at_1_pattern_x_times_expected_end
+
+#---------------------------------------
+# SLT_should_align_mb_at_multi_patterns_data_begin
+  阿			伊 伊伊伊 宇       壱百
+   阿阿			 伊伊 伊伊  宇宇  壱十
+  阿阿阿	伊伊伊  伊 宇宇宇 壱
+# SLT_should_align_mb_at_multi_patterns_data_end
+# SLT_should_align_mb_at_multi_patterns_expected_begin
+  阿		伊		伊伊伊	宇		壱百
+   阿阿		伊伊	伊伊	宇宇	壱十
+  阿阿阿	伊伊伊	伊		宇宇宇	壱
+# SLT_should_align_mb_at_multi_patterns_expected_end
+
 #=============================================================================
 # shift_right_tab
+
+#---------------------------------------
+# SRT_should_align_at_1_pattern_data_begin
+  a				b c
+   aaa			 bbb  ccc
+  aaaaa		bbbbb ccccc
+# SRT_should_align_at_1_pattern_data_end
+# SRT_should_align_at_1_pattern_expected_begin
+  a					b c
+   aaa				bbb  ccc
+  aaaaa				bbbbb ccccc
+# SRT_should_align_at_1_pattern_expected_end
+
+#---------------------------------------
+# SRT_should_align_at_1_pattern_2_times_data_begin
+  a				b bbbbb c
+   aaa			 bbb bbb  ccc
+  aaaaa		bbbbb  b ccccc
+# SRT_should_align_at_1_pattern_2_times_data_end
+# SRT_should_align_at_1_pattern_2_times_expected_begin
+  a					b		bbbbb c
+   aaa				bbb		bbb  ccc
+  aaaaa				bbbbb	b ccccc
+# SRT_should_align_at_1_pattern_2_times_expected_end
+
+#---------------------------------------
+# SRT_should_align_at_1_pattern_n_times_data_begin
+  a				b bbbbb		b  bbbbb ccccc
+  aaa			 bbb bbb		 bbb  bbb ccc
+  aaaaa		bbbbb  b			bbbbb b  c
+# SRT_should_align_at_1_pattern_n_times_data_end
+# SRT_should_align_at_1_pattern_n_times_expected_begin
+  a					b		bbbbb	b		bbbbb ccccc
+  aaa				bbb		bbb		bbb		bbb ccc
+  aaaaa				bbbbb	b		bbbbb	b  c
+# SRT_should_align_at_1_pattern_n_times_expected_end
+
+#---------------------------------------
+# SRT_should_align_at_1_pattern_x_times_data_begin
+  a				b bbbbb		b  bbbbb ccccc
+  aaa			 bbb bbb	 bbb  ccc
+  aaaaa		bbbbb  b c
+# SRT_should_align_at_1_pattern_x_times_data_end
+# SRT_should_align_at_1_pattern_x_times_expected_begin
+  a					b		bbbbb	b	bbbbb ccccc
+  aaa				bbb		bbb		bbb  ccc
+  aaaaa				bbbbb	b c
+# SRT_should_align_at_1_pattern_x_times_expected_end
+
+#---------------------------------------
+# SRT_should_align_at_multi_patterns_data_begin
+  a				b bbbbb c       1000
+   aaa			 bbb bbb  ccc  100
+  aaaaa		bbbbb  b ccccc 10
+# SRT_should_align_at_multi_patterns_data_end
+# SRT_should_align_at_multi_patterns_expected_begin
+  a					b		bbbbb	c		1000
+   aaa				bbb		bbb		ccc		100
+  aaaaa				bbbbb	b		ccccc	10
+# SRT_should_align_at_multi_patterns_expected_end
+
+#-----------------------------------------------------------------------------
+# Multi-byte
+
+#---------------------------------------
+# SRT_should_align_mb_at_1_pattern_data_begin
+  阿			伊 宇
+   阿阿			 伊伊  宇宇
+  阿阿阿	伊伊伊 宇宇宇
+# SRT_should_align_mb_at_1_pattern_data_end
+# SRT_should_align_mb_at_1_pattern_expected_begin
+  阿				伊 宇
+   阿阿				伊伊  宇宇
+  阿阿阿			伊伊伊 宇宇宇
+# SRT_should_align_mb_at_1_pattern_expected_end
+
+#---------------------------------------
+# SRT_should_align_mb_at_1_pattern_2_times_data_begin
+  阿			伊 伊伊伊 宇
+   阿阿			 伊伊 伊伊  宇宇
+  阿阿阿	伊伊伊  伊 宇宇宇
+# SRT_should_align_mb_at_1_pattern_2_times_data_end
+# SRT_should_align_mb_at_1_pattern_2_times_expected_begin
+  阿				伊		伊伊伊 宇
+   阿阿				伊伊	伊伊  宇宇
+  阿阿阿			伊伊伊	伊 宇宇宇
+# SRT_should_align_mb_at_1_pattern_2_times_expected_end
+
+#---------------------------------------
+# SRT_should_align_mb_at_1_pattern_n_times_data_begin
+  阿			伊 伊伊伊		伊  伊伊伊 宇宇宇
+  阿阿			 伊伊 伊伊			 伊伊  伊伊 宇宇
+  阿阿阿	伊伊伊  伊				伊伊伊 伊  宇
+# SRT_should_align_mb_at_1_pattern_n_times_data_end
+# SRT_should_align_mb_at_1_pattern_n_times_expected_begin
+  阿				伊		伊伊伊	伊		伊伊伊 宇宇宇
+  阿阿				伊伊	伊伊	伊伊	伊伊 宇宇
+  阿阿阿			伊伊伊	伊		伊伊伊	伊  宇
+# SRT_should_align_mb_at_1_pattern_n_times_expected_end
+
+#---------------------------------------
+# SRT_should_align_mb_at_1_pattern_x_times_data_begin
+  阿			伊 伊伊伊		伊  伊伊伊 宇宇宇
+  阿阿			 伊伊 伊伊		 伊伊  宇宇
+  阿阿阿	伊伊伊  伊 宇
+# SRT_should_align_mb_at_1_pattern_x_times_data_end
+# SRT_should_align_mb_at_1_pattern_x_times_expected_begin
+  阿				伊		伊伊伊	伊	伊伊伊 宇宇宇
+  阿阿				伊伊	伊伊	伊伊  宇宇
+  阿阿阿			伊伊伊	伊 宇
+# SRT_should_align_mb_at_1_pattern_x_times_expected_end
+
+#---------------------------------------
+# SRT_should_align_mb_at_multi_patterns_data_begin
+  阿			伊 伊伊伊 宇       壱百
+   阿阿			 伊伊 伊伊  宇宇  壱十
+  阿阿阿	伊伊伊  伊 宇宇宇 壱
+# SRT_should_align_mb_at_multi_patterns_data_end
+# SRT_should_align_mb_at_multi_patterns_expected_begin
+  阿				伊		伊伊伊	宇		壱百
+   阿阿				伊伊	伊伊	宇宇	壱十
+  阿阿阿			伊伊伊	伊		宇宇宇	壱
+# SRT_should_align_mb_at_multi_patterns_expected_end
 
 # vim:sw=4:ts=4:ft=conf:et:ai:list
