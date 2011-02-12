@@ -346,7 +346,8 @@ function! s:Aligner__keep_min_leading(lines) dict
   let leading = alignta#string#padding(a:lines.min_leading_width())
   call a:lines.lstrip(1)
 
-  for [idx, line] in self.aligned.each()
+  for [idx, line] in a:lines.each()
+    call self.lines.set(idx, line)
     call self.aligned.append(idx, leading)
   endfor
 endfunction
