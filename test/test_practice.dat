@@ -1,0 +1,299 @@
+# alignta's test suite
+
+#---------------------------------------
+# test_leader_a?_data_begin
+  (x == ABC)? "abc" :
+  (x == DEFG)? "defg" :
+  (x == HIJKL)? "hijkl" : "mno");
+# test_leader_a?_data_end
+# test_leader_a?_expected_begin
+  (x == ABC)   ? "abc"   :
+  (x == DEFG)  ? "defg"  :
+  (x == HIJKL) ? "hijkl" : "mno");
+# test_leader_a?_expected_end
+
+#---------------------------------------
+# test_leader_a<_data_begin
+  cin << x;
+  cin      << y;
+  cout << "this is x=" << x;
+  cout << "but y=" << y << "is not";
+# test_leader_a<_data_end
+# test_leader_a<_expected_begin
+  cin  << x;
+  cin  << y;
+  cout << "this is x=" << x;
+  cout << "but y="     << y  << "is not";
+# test_leader_a<_expected_end
+
+#---------------------------------------
+# test_leader_a=_data_begin
+  aa:=bb:=cc:=1;
+  a:=b:=c:=1;
+  aaa:=bbb:=ccc:=1;
+# test_leader_a=_data_end
+# test_leader_a=_expected_begin
+  aa  := bb  := cc  := 1;
+  a   := b   := c   := 1;
+  aaa := bbb := ccc := 1;
+# test_leader_a=_expected_end
+
+#---------------------------------------
+# test_leader_acom_data_begin
+  /* align sample code */
+  if(itworks) { /* this */
+      then= dothis;
+  } /* set of three comments */
+# test_leader_acom_data_end
+# test_leader_acom_expected_begin
+                    /* align sample code     */
+  if(itworks) {     /* this                  */
+      then= dothis;
+  }                 /* set of three comments */
+# test_leader_acom_expected_end
+
+#---------------------------------------
+# test_leader_aocom_data_begin
+  /* align sample code */
+  if(itworks) { /* this */
+      then= dothis;
+  } /* set of three comments */
+# test_leader_aocom_data_end
+# test_leader_aocom_expected_begin
+                /* align sample code     */
+  if(itworks) { /* this                  */
+      then= dothis;
+  }             /* set of three comments */
+# test_leader_aocom_expected_end
+
+#---------------------------------------
+# test_leader_ascom_data_begin
+  /* align sample code */
+  if(itworks) { /* this */
+      then= dothis;
+  } /* set of three comments */
+# test_leader_ascom_data_end
+# test_leader_ascom_expected_begin
+  /* align sample code     */
+  if(itworks) { /* this                  */
+      then= dothis;
+  }             /* set of three comments */
+# test_leader_ascom_expected_end
+
+#---------------------------------------
+# test_leader_adec_data_begin
+  int a;
+  float b;
+  double *c=NULL;
+  char x[5];
+  struct abc_str abc;
+  struct abc_str *pabc;
+  int a;              /* a   */
+  float b;              /* b   */
+  double *c=NULL;              /* b   */
+  char x[5]; /* x[5] */
+  struct abc_str abc;    /* abc */
+  struct abc_str *pabc;    /* pabc */
+  static int a;              /* a   */
+  static float b;              /* b   */
+  static double *c=NULL;              /* b   */
+  static char x[5]; /* x[5] */
+  static struct abc_str abc;    /* abc */
+  static struct abc_str *pabc;    /* pabc */
+# test_leader_adec_data_end
+# test_leader_adec_expected_begin
+  int                    a;
+  float                  b;
+  double                *c    = NULL;
+  char                   x[5];
+  struct abc_str         abc;
+  struct abc_str        *pabc;
+  int                    a;           /* a    */
+  float                  b;           /* b    */
+  double                *c    = NULL; /* b    */
+  char                   x[5];        /* x[5] */
+  struct abc_str         abc;         /* abc  */
+  struct abc_str        *pabc;        /* pabc */
+  static int             a;           /* a    */
+  static float           b;           /* b    */
+  static double         *c    = NULL; /* b    */
+  static char            x[5];        /* x[5] */
+  static struct abc_str  abc;         /* abc  */
+  static struct abc_str *pabc;        /* pabc */
+# test_leader_adec_expected_end
+
+#---------------------------------------
+# test_leader_anum_data_begin
+  -1.234 .5678 -.901e-4
+  1.234 5.678 9.01e-4
+  12.34 56.78 90.1e-4
+  123.4 567.8 901.e-4
+# test_leader_anum_data_end
+# test_leader_anum_expected_begin
+   -1.234    .5678   -.901e-4
+    1.234   5.678    9.01e-4
+   12.34   56.78    90.1e-4
+  123.4   567.8    901.e-4
+# test_leader_anum_expected_end
+
+#---------------------------------------
+# test_leader_t=_data_begin
+  aa=bb=cc=1;
+  a=b=c=1;
+  aaa=bbb=ccc=1;
+# test_leader_t=_data_end
+# test_leader_t=_expected_begin
+  aa  = bb  = cc  = 1;
+  a   = b   = c   = 1;
+  aaa = bbb = ccc = 1;
+# test_leader_t=_expected_end
+
+#---------------------------------------
+# test_leader_T=_data_begin
+  aa=bb=cc=1;
+  a=b=c=1;
+  aaa=bbb=ccc=1;
+# test_leader_T=_data_end
+# test_leader_T=_expected_begin
+   aa =  bb =  cc = 1;
+    a =   b =   c = 1;
+  aaa = bbb = ccc = 1;
+# test_leader_T=_expected_end
+
+#---------------------------------------
+# test_leader_t|_data_begin
+  |one|two|three|
+  |four|five|six|
+  |seven|eight|nine|
+# test_leader_t|_data_end
+# test_leader_t|_expected_begin
+  |one  |two  |three|
+  |four |five |six  |
+  |seven|eight|nine |
+# test_leader_t|_expected_end
+
+#---------------------------------------
+# test_leader_T|_data_begin
+  |one|two|three|
+  |four|five|six|
+  |seven|eight|nine|
+# test_leader_T|_data_end
+# test_leader_T|_expected_begin
+  |  one|  two|three|
+  | four| five|  six|
+  |seven|eight| nine|
+# test_leader_T|_expected_end
+
+#---------------------------------------
+# test_leader_t:_data_begin
+  one:two:three
+  four:five:six
+  seven:eight:nine
+# test_leader_t:_data_end
+# test_leader_t:_expected_begin
+  one   : two   : three
+  four  : five  : six
+  seven : eight : nine
+# test_leader_t:_expected_end
+
+#---------------------------------------
+# test_leader_T:_data_begin
+  one:two:three
+  four:five:six
+  seven:eight:nine
+# test_leader_T:_data_end
+# test_leader_T:_expected_begin
+    one :   two : three
+   four :  five :   six
+  seven : eight :  nine
+# test_leader_T:_expected_end
+
+#---------------------------------------
+# test_leader_tab_data_begin
+    aa	bbb	cccc	ddddd	ee
+    1111	22	33	4444	5
+# test_leader_tab_data_end
+# test_leader_tab_expected_begin
+	aa		bbb		cccc	ddddd	ee
+	1111	22		33		4444	5
+# test_leader_tab_expected_end
+
+#---------------------------------------
+# test_leader_tml_data_begin
+  one \
+  two three \
+  four five six \
+  seven \\ \
+  eight \nine \
+  ten \
+# test_leader_tml_data_end
+# test_leader_tml_expected_begin
+  one           \
+  two three     \
+  four five six \
+  seven \\      \
+  eight \nine   \
+  ten           \
+# test_leader_tml_expected_end
+
+#---------------------------------------
+# test_leader_tsp_data_begin
+  one two three four five
+  six seven eight nine ten
+  eleven twelve thirteen fourteen fifteen
+# test_leader_tsp_data_end
+# test_leader_tsp_expected_begin
+  one    two    three    four     five
+  six    seven  eight    nine     ten
+  eleven twelve thirteen fourteen fifteen
+# test_leader_tsp_expected_end
+
+#---------------------------------------
+# test_leader_Tsp_data_begin
+  one two three four five
+  six seven eight nine ten
+  eleven twelve thirteen fourteen fifteen
+# test_leader_Tsp_data_end
+# test_leader_Tsp_expected_begin
+     one    two    three     four    five
+     six  seven    eight     nine     ten
+  eleven twelve thirteen fourteen fifteen
+# test_leader_Tsp_expected_end
+
+#---------------------------------------
+# test_leader_tsq_data_begin
+  "one two" three
+  four "five six"
+  'seven eight' nine
+# test_leader_tsq_data_end
+# test_leader_tsq_expected_begin
+  "one two"     three
+  four          "five six"
+  'seven eight' nine
+# test_leader_tsq_expected_end
+
+#---------------------------------------
+# test_leader_Htd_data_begin
+  <TR><TD>one</TD><TD>two</TD><TD>three</TD></TR>
+  <TR><TD>four</TD><TD>five</TD><TD>six</TD></TR>
+  <TR><TD>seven</TD><TD>eight</TD><TD>nine</TD></TR>
+# test_leader_Htd_data_end
+# test_leader_Htd_expected_begin
+  <TR><TD>one  </TD><TD>two  </TD><TD>three</TD></TR>
+  <TR><TD>four </TD><TD>five </TD><TD>six  </TD></TR>
+  <TR><TD>seven</TD><TD>eight</TD><TD>nine </TD></TR>
+# test_leader_Htd_expected_end
+
+#---------------------------------------
+# test_leader_tt_data_begin
+  one&two&three\\ \hline
+  four&five&six\\
+  seven&eight&nine\\
+# test_leader_tt_data_end
+# test_leader_tt_expected_begin
+  one   & two   & three \\ \hline
+  four  & five  & six   \\
+  seven & eight & nine  \\
+# test_leader_tt_expected_end
+
+# vim:sw=4:ts=4:ft=conf:et:ai:list
