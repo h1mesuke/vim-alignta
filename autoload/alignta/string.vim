@@ -1,7 +1,7 @@
 "=============================================================================
 " File    : string.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-02-11
+" Updated : 2011-02-12
 " Version : 0.1.1
 " License : MIT license {{{
 "
@@ -54,7 +54,7 @@ function! alignta#string#pad(str, width, align, ...)
   return lpad . a:str . rpad
 endfunction
 
-function! alignta#string#padding(width)
+function! alignta#string#padding(width, ...)
   return repeat(' ', a:width)
 endfunction
 

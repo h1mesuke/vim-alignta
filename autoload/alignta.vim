@@ -184,7 +184,7 @@ function! s:Aligner_align() dict
     let block_width = self.region.block_width
     for [idx, line] in self.aligned.each()
       if (line =~ '^\s*$' || self.region.line_is_short(idx)) | continue | endif
-      let line_width = self.aligned.get_width(idx)
+      let line_width = self.aligned.width(idx)
       if line_width < block_width
         let line .= alignta#string#padding(block_width - line_width)
         call self.aligned.set(idx, line)
@@ -414,7 +414,7 @@ function! s:Aligner__join_fields(fields) dict
     " join fields
     for [idx, line] in N_fld.each()
       if M_fld.has(idx)
-        let line = N_fld.get(idx) . M_fld.get(idx)
+        let line = N_fld.line(idx) . M_fld.line(idx)
         call self.aligned.append(idx, line)
       else
         " Last field
@@ -444,12 +444,12 @@ function! s:Aligner__pad_align_fields(N_fld, M_fld, fld_idx, is_last) dict
   call a:N_fld.strip(N_fld_align == '=')
 
   let AN_fld_width = max(map(a:N_fld.each(), '
-        \ self.aligned.get_width(v:val[0]) +
-        \ alignta#string#width(v:val[1], self.aligned.get_width(v:val[0]))
+        \ self.aligned.width(v:val[0]) +
+        \ alignta#string#width(v:val[1], self.aligned.width(v:val[0]))
         \'))
 
   for [idx, line] in a:N_fld.each()
-    let width = AN_fld_width - self.aligned.get_width(idx)
+    let width = AN_fld_width - self.aligned.width(idx)
     let line = alignta#string#pad(line, width, N_fld_align)
     call a:N_fld.set(idx, line)
   endfor
@@ -481,63 +481,68 @@ function! s:Aligner__get_field_align(fld_idx, ...) dict
 endfunction
 call s:Aligner.bind(s:SID, '_get_field_align')
 
-function! s:Aligner__shift_left_align_fields(N_fld, M_fld, fld_idx, is_last) dict
+function! s:Aligner__shift_align_fields(N_fld, M_fld, fld_idx, is_last, shift_left, use_tab) dict
   if self.align_count == 0 && a:fld_idx == 0
-    " save the left most position of matches
-    let LM_AN_fld_width = min(map(filter(a:N_fld.each(), 'a:M_fld.has(v:val[0])'), '
-          \ self.aligned.get_width(v:val[0]) +
-          \ alignta#string#width(v:val[1], self.aligned.get_width(v:val[0]))
-          \'))
+    " save the left/right most position of matches
+    let width_list = map(filter(a:N_fld.each(), 'a:M_fld.has(v:val[0])'), '
+          \ self.aligned.width(v:val[0]) +
+          \ alignta#string#width(v:val[1], self.aligned.width(v:val[0]))
+          \')
+    let LRM_AN_fld_width = (a:shift_left ? min(width_list) : max(width_list))
   else
-    let LM_AN_fld_width = 0
+    let LRM_AN_fld_width = 0
   endif
 
   call a:N_fld.rstrip()
 
   let AN_fld_width = max(map(filter(a:N_fld.each(), 'a:M_fld.has(v:val[0])'), '
-        \ self.aligned.get_width(v:val[0]) +
-        \ alignta#string#width(v:val[1], self.aligned.get_width(v:val[0]))
+        \ self.aligned.width(v:val[0]) +
+        \ alignta#string#width(v:val[1], self.aligned.width(v:val[0]))
         \'))
 
   let margin = self.options.L_margin
-  let AN_fld_width = max([AN_fld_width + margin, LM_AN_fld_width])
+  let AN_fld_width = max([AN_fld_width + margin, LRM_AN_fld_width])
+  if a:use_tab
+    let AN_fld_width = s:ts_ceil(AN_fld_width)
+    let padding_func = 'alignta#string#tab_padding'
+  else
+    let padding_func = 'alignta#string#padding'
+  endif
 
   for [idx, line] in a:N_fld.each()
-    let width = AN_fld_width - self.aligned.get_width(idx)
-    let line = alignta#string#pad(line, width, '=')
+    let col = self.aligned.width(idx)
+    let col += alignta#string#width(line, col)
+    let width = AN_fld_width - col
+    let line .= call(padding_func, [width, col])
     call a:N_fld.set(idx, line)
   endfor
+endfunction
+call s:Aligner.bind(s:SID, '_shift_align_fields')
+
+function! s:Aligner__shift_left_align_fields(...) dict
+  call call(self._shift_align_fields, a:000 + [1, 0], self)
 endfunction
 call s:Aligner.bind(s:SID, '_shift_left_align_fields')
 
-function! s:Aligner__shift_right_align_fields(N_fld, M_fld, fld_idx, is_last) dict
-  if self.align_count == 0 && a:fld_idx == 0
-    " save the left most position of matches
-    let RM_AN_fld_width = max(map(filter(a:N_fld.each(), 'a:M_fld.has(v:val[0])'), '
-          \ self.aligned.get_width(v:val[0]) +
-          \ alignta#string#width(v:val[1], self.aligned.get_width(v:val[0]))
-          \'))
-  else
-    let RM_AN_fld_width = 0
-  endif
-
-  call a:N_fld.rstrip()
-
-  let AN_fld_width = max(map(filter(a:N_fld.each(), 'a:M_fld.has(v:val[0])'), '
-        \ self.aligned.get_width(v:val[0]) +
-        \ alignta#string#width(v:val[1], self.aligned.get_width(v:val[0]))
-        \'))
-
-  let margin = self.options.L_margin
-  let AN_fld_width = max([AN_fld_width + margin, RM_AN_fld_width])
-
-  for [idx, line] in a:N_fld.each()
-    let width = AN_fld_width - self.aligned.get_width(idx)
-    let line = alignta#string#pad(line, width, '=')
-    call a:N_fld.set(idx, line)
-  endfor
+function! s:Aligner__shift_right_align_fields(...) dict
+  call call(self._shift_align_fields, a:000 + [0, 0], self)
 endfunction
 call s:Aligner.bind(s:SID, '_shift_right_align_fields')
+
+function! s:Aligner__shift_left_tab_align_fields(...) dict
+  call call(self._shift_align_fields, a:000 + [1, 1], self)
+endfunction
+call s:Aligner.bind(s:SID, '_shift_left_tab_align_fields')
+
+function! s:Aligner__shift_right_tab_align_fields(...) dict
+  call call(self._shift_align_fields, a:000 + [0, 1], self)
+endfunction
+call s:Aligner.bind(s:SID, '_shift_right_tab_align_fields')
+
+function! s:ts_ceil(w)
+  let ts = &l:tabstop
+  return (a:w % ts == 0 ? a:w : ts * (a:w / ts + 1))
+endfunction
 
 "-----------------------------------------------------------------------------
 " Lines
@@ -606,16 +611,6 @@ function! s:Lines_each() dict
 endfunction
 call s:Lines.bind(s:SID, 'each')
 
-function! s:Lines_get(idx) dict
-  return self._lines[a:idx]
-endfunction
-call s:Lines.bind(s:SID, 'get')
-
-function! s:Lines_get_width(idx) dict
-  return self._width[a:idx]
-endfunction
-call s:Lines.bind(s:SID, 'get_width')
-
 function! s:Lines_has(idx) dict
   return has_key(self._lines, a:idx)
 endfunction
@@ -625,6 +620,16 @@ function! s:Lines_is_blank() dict
   return (len(filter(values(self._lines), 'v:val =~ "^\\s*$"')) == len(self._lines))
 endfunction
 call s:Lines.bind(s:SID, 'is_blank')
+
+function! s:Lines_line(idx) dict
+  return self._lines[a:idx]
+endfunction
+call s:Lines.bind(s:SID, 'line')
+
+function! s:Lines_width(idx) dict
+  return self._width[a:idx]
+endfunction
+call s:Lines.bind(s:SID, 'width')
 
 function! s:Lines_set(idx, str) dict
   if has_key(self._lines, a:idx)
