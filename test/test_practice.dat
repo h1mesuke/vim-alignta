@@ -74,7 +74,7 @@
   } /* set of three comments */
 # test_leader_ascom_data_end
 # test_leader_ascom_expected_begin
-  /* align sample code     */
+  /* align sample code */
   if(itworks) { /* this                  */
       then= dothis;
   }             /* set of three comments */
