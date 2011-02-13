@@ -3,7 +3,7 @@
 "
 " File    : autoload/unite/sources/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-01-23
+" Updated : 2011-02-13
 " Version : 0.1.8
 " License : MIT license {{{
 "
@@ -41,9 +41,12 @@ endif
 
 if !exists('g:unite_source_alignta_preset_options')
   let g:unite_source_alignta_preset_options = [
-        \ '|||',
-        \ '>>>',
-        \ '<=',
+        \ '||',
+        \ '>>',
+        \ '<-',
+        \ '->',
+        \ '<--',
+        \ '-->',
         \ '@0',
         \ '@01',
         \ '@10',
@@ -61,13 +64,12 @@ let s:source = {
 
 function! s:source.gather_candidates(args, context)
   try
-    let mode = (len(a:args) > 0 ? a:args[0] : 'unknown')
+    let mode = (len(a:args) > 0 ? a:args[0] : 'both')
     let cands = []
 
-    if mode =~? '^v\%[isual]$' || mode ==# 'unknown'
+    if mode =~? '^\(a\%[rguments]\|v\%[isual]\)$' || mode ==# 'both'
       " preset arguments
-      let preset_args = alignta#get_config_variable('unite_source_alignta_preset_arguments')
-      for arg_list in preset_args
+      for arg_list in g:unite_source_alignta_preset_arguments
         let arg_list = substitute(substitute(arg_list, '^\s*', '', ''), '^!\@!', ' ', '')
         let command_line = "'<,'>Alignta" . arg_list
         call add(cands, {
@@ -79,13 +81,12 @@ function! s:source.gather_candidates(args, context)
       endfor
     endif
 
-    if mode =~? '^n\%[ormal]$' || mode ==# 'unknown'
+    if mode =~? '^\(o\%[ptions]\|n\%[ormal]\)$' || mode ==# 'both'
       " preset options
-      let preset_opts = alignta#get_config_variable('unite_source_alignta_preset_options')
+      let preset_opts = g:unite_source_alignta_preset_options
       let idx = 0
       while idx < len(preset_opts)
-        let opts_str = 'alignta#get_config_variable(' .
-              \ '"unite_source_alignta_preset_options")[' . idx . ']'
+        let opts_str = 'g:unite_source_alignta_preset_options[' . idx . ']'
         call add(cands, {
               \ 'word'  : "Options: " . preset_opts[idx],
               \ 'source': 'alignta',
