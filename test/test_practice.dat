@@ -2,14 +2,14 @@
 
 #---------------------------------------
 # test_leader_a?_data_begin
-  (x == ABC)? "abc" :
-  (x == DEFG)? "defg" :
-  (x == HIJKL)? "hijkl" : "mno");
+  (x == ABC) ? "abc" :
+  (x == DEFG) ? "defg" :
+  (x == HIJKL) ? "hijkl" : "???");
 # test_leader_a?_data_end
 # test_leader_a?_expected_begin
   (x == ABC)   ? "abc"   :
   (x == DEFG)  ? "defg"  :
-  (x == HIJKL) ? "hijkl" : "mno");
+  (x == HIJKL) ? "hijkl" : "???");
 # test_leader_a?_expected_end
 
 #---------------------------------------

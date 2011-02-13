@@ -7,7 +7,7 @@ let tc = unittest#testcase#new('test_practice', 'AlignerTestCase')
 
 " equivalent to Align.vim's <Leader>a?
 function! tc.test_leader_a_q()
-  call self._test_align('test_leader_a?', 'Alignta ? :')
+  call self._test_align('test_leader_a?', 'Alignta @01 \ ? \ :')
 endfunction
 
 " equivalent to Align.vim's <Leader>a<
