@@ -4,7 +4,7 @@
 "
 " File    : oop/class.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-01-31
+" Updated : 2011-02-14
 " Version : 0.1.6
 " License : MIT license {{{
 "
@@ -43,27 +43,28 @@ function! alignta#oop#class#_initialize()
   let s:class_table = { 'Class': s:Class, '__nil__': {} }
 
   " bind class methods
-let s:Class.get                        = function(SID . 'class_Class_get')
-let s:Class.is_defined                 = function(SID . 'class_Class_is_defined')
-let s:Class.new                        = function(SID . 'class_Class_new')
+  let s:Class.get        = function(SID . 'class_Class_get')
+  let s:Class.is_defined = function(SID . 'class_Class_is_defined')
+  let s:Class.new        = function(SID . 'class_Class_new')
 
-let s:Class.prototype = {}
+  let s:Class.prototype = {}
 
   " bind instance methods
-let s:Class.prototype.class_alias      = function(SID . 'Class_class_alias')
-let s:Class.prototype.class_bind       = function(SID . 'Class_class_bind')
-let s:Class.prototype.class_unbind     = function(SID . 'Class_class_unbind')
-let s:Class.prototype.class_super      = function(SID . 'Class_class_super')
+  let s:Class.prototype.class_alias  = function(SID . 'Class_class_alias')
+  let s:Class.prototype.class_bind   = function(SID . 'Class_class_bind')
+  let s:Class.prototype.class_unbind = function(SID . 'Class_class_unbind')
+  let s:Class.prototype.class_super  = function(SID . 'Class_class_super')
 
-let s:Class.prototype.alias            = function(SID . 'Class_alias')
-let s:Class.prototype.ancestors        = function(SID . 'Class_ancestors')
-let s:Class.prototype.bind             = function(SID . 'Class_bind')
-let s:Class.prototype.unbind           = function(SID . 'Class_unbind')
-let s:Class.prototype.export           = function(SID . 'Class_export')
-let s:Class.prototype.is_descendant_of = function(SID . 'Class_is_descendant_of')
-let s:Class.prototype.new              = function(SID . 'Class_new')
-let s:Class.prototype.super            = function(SID . 'Class_super')
-let s:Class.prototype.to_s             = function(SID . 'Class_to_s')
+  let s:Class.prototype.alias        = function(SID . 'Class_alias')
+  let s:Class.prototype.ancestors    = function(SID . 'Class_ancestors')
+  let s:Class.prototype.bind         = function(SID . 'Class_bind')
+  let s:Class.prototype.unbind       = function(SID . 'Class_unbind')
+  let s:Class.prototype.export       = function(SID . 'Class_export')
+  let s:Class.prototype.is_descendant_of
+        \                            = function(SID . 'Class_is_descendant_of')
+  let s:Class.prototype.new          = function(SID . 'Class_new')
+  let s:Class.prototype.super        = function(SID . 'Class_super')
+  let s:Class.prototype.to_s         = function(SID . 'Class_to_s')
 
   " define underscored aliases
   for method_name in ['bind', 'unbind', 'export']
