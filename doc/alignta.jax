@@ -143,9 +143,9 @@ PADDING ALIGNMENT				*alignta-padding-alignment*
 	フィールドを連結する整列方式です。
 
 	３つのフィールドのパディングについては、整列オプションの指定により「左
-	寄せ」「中央寄せ」「右寄せ」を選択でき、フィールド間のパディングの個数
-	も指定できます。（詳細は|alignta-padding-alignment-options|を参照して
-	下さい）
+	寄せ」「中央寄せ」「右寄せ」「幅揃えのみ」を選択でき、フィールド間のマ
+	ージンの幅も指定できます。（詳細は |alignta-padding-alignment-options|
+	を参照して下さい）
 
 SHIFTING ALIGNMENT				*alignta-shifting-alignment*
 >
@@ -449,7 +449,6 @@ SHIFTING ALIGNMENT OPTIONS		*alignta-shifting-alignment-options*
 <
 	{margin} にはパターンの開始位置とその左側の部分との間に最低限もうける
 	べきマージンの幅を指定します。
-	書式は|alignta-padding-alignment-margin|と同じです。
 	マージンの指定を省略した場合、現在の値が継続して使用されます。
 
 MARGIN OPTIONS					*alignta-margin-options*
@@ -556,6 +555,9 @@ LINE FILTERING				*alignta-line-filtering*
 	| ccccc -p 100  | ccccc -p 100   |
 	+---------------+----------------+
 <
+	注意：|:Alignta|コマンドは最後の引数をパターンとして解釈しますので、用
+	例に挙げたケースでは実際は "-p" は不要です。
+
 ==============================================================================
 設定						*alignta-settings*
 
@@ -631,11 +633,6 @@ g:unite_source_alignta_preset_options	*g:unite_source_alignta_preset_options*
 
 	初期値については :Unite alignta:options を確認のこと
 
-バッファローカルな設定 ~
-
-	これらの変数はいずれも同名のバッファローカル変数によって設定を上書き
-	できます。
-
 ------------------------------------------------------------------------------
 使い方						*unite-alignta-usage*
 
@@ -710,7 +707,7 @@ TODO						*alignta-todo*
 
 		整列後、パターンにマッチした部分を、さらに別の引数リストで整列
 		できるような仕組み。入れ子になった引数リストでの整列。よい記法
-		が考え出せれば導入したい。
+		が見つかれば導入したい。
 
 	* ヘルプの英訳
 
