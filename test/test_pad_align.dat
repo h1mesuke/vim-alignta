@@ -253,16 +253,16 @@
 # should_align_at_1_pattern_n_times_rcl_expected_end
 
 #---------------------------------------
-# should_align_at_1_pattern_n_times_lcrca_data_begin
+# should_align_at_1_pattern_n_times_llclrle_data_begin
   a = bbbbb =  c = ddddd =  e = fffff =  1
    aaa = bbb = ccc =  ddd = eee = fff = 10
   aaaaa =  b = ccccc = d = eeeee =  f = 100
-# should_align_at_1_pattern_n_times_lcrca_data_end
-# should_align_at_1_pattern_n_times_lcrca_expected_begin
-  a     = bbbbb = c     = ddddd = e     = fffff =  1
-  aaa   =   bbb = ccc   =   ddd = eee   =   fff = 10
-  aaaaa =     b = ccccc =     d = eeeee =     f = 100
-# should_align_at_1_pattern_n_times_lcrca_expected_end
+# should_align_at_1_pattern_n_times_llclrle_data_end
+# should_align_at_1_pattern_n_times_llclrle_expected_begin
+  a     = bbbbb =     c = ddddd =   e   = fffff =  1
+  aaa   =  bbb  =   ccc = ddd   =  eee  =   fff = 10
+  aaaaa =   b   = ccccc = d     = eeeee =     f = 100
+# should_align_at_1_pattern_n_times_llclrle_expected_end
 
 #---------------------------------------
 # should_align_at_1_pattern_x_times_data_begin

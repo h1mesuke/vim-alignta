@@ -89,8 +89,8 @@ function! tc.should_align_at_1_pattern_n_times_rcl()
   call self._test_align('should_align_at_1_pattern_n_times_rcl', 'Alignta >|< =')
 endfunction
 
-function! tc.should_align_at_1_pattern_n_times_lcrca()
-  call self._test_align('should_align_at_1_pattern_n_times_lcrca', 'Alignta <|>|= =')
+function! tc.should_align_at_1_pattern_n_times_llclrle()
+  call self._test_align('should_align_at_1_pattern_n_times_llclrle', 'Alignta <<|<><= =')
 endfunction
 
 function! tc.should_align_at_1_pattern_x_times()
