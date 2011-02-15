@@ -684,7 +684,9 @@ function! s:sort_numbers(list)
 endfunction
 
 function! s:compare_numbers(n1, n2)
-  return a:n1 == a:n2 ? 0 : a:n1 > a:n2 ? 1 : -1
+  let n1 = str2nr(a:n1)
+  let n2 = str2nr(a:n2)
+  return n1 == n2 ? 0 : n1 > n2 ? 1 : -1
 endfunction
 
 "-----------------------------------------------------------------------------
