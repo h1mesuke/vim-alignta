@@ -3,7 +3,7 @@
 "
 " File    : autoload/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-02-13
+" Updated : 2011-02-16
 " Version : 0.2.0
 " License : MIT license {{{
 "
@@ -711,7 +711,8 @@ function! s:print_debug(caption, value)
 endfunction
 function! s:echomsg(msg)
   if exists('*unittest#is_running') && unittest#is_running()
-    call unittest#results().puts(a:msg)
+    let results = unittest#results()
+    call results.puts(a:msg)
   else
     echomsg a:msg
   endif
