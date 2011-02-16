@@ -2,7 +2,7 @@
 
 File    : doc/alignta.jax
 Author  : h1mesuke <himesuke@gmail.com>
-Updated : 2011-02-14
+Updated : 2011-02-16
 Version : 0.2.0
 License : MIT license {{{
 
@@ -91,8 +91,8 @@ alignta ~
 ==============================================================================
 インストール					*alignta-install*
 
-	配布アーカイブに含まれるファイル群を、そのフォルダごと Vim
-	の 'runtimepath' にコピーします。 $HOME/.vim（Windows の場合は
+	配布アーカイブに含まれるファイル群を、そのフォルダごと Vim の
+	'runtimepath' にコピーします。 $HOME/.vim（Windows の場合は
 	$HOME/vimfiles）へのインストールがもっとも一般的でしょう。
 	インストール後の配置は
 
@@ -144,8 +144,9 @@ PADDING ALIGNMENT				*alignta-padding-alignment*
 
 	３つのフィールドのパディングについては、整列オプションの指定により「左
 	寄せ」「中央寄せ」「右寄せ」「幅揃えのみ」を選択でき、フィールド間のマ
-	ージンの幅も指定できます。（詳細は |alignta-padding-alignment-options|
-	を参照して下さい）
+	ージンの幅も指定できます。
+
+	詳細は|alignta-padding-alignment-options|を参照して下さい。
 
 SHIFTING ALIGNMENT				*alignta-shifting-alignment*
 >
@@ -160,8 +161,9 @@ SHIFTING ALIGNMENT				*alignta-shifting-alignment*
 	単純にパターンの開始位置だけを揃える整列方式です。
 
 	整列オプションの指定により、最左／最右どちらの位置で揃えるかを選択でき、
-	整列にタブ文字を使用することもできます。（詳細は
-	|alignta-shifting-alignment-options|を参照して下さい）
+	整列にタブ文字を使用することもできます。
+
+	詳細は|alignta-shifting-alignment-options|を参照して下さい。
 
 ------------------------------------------------------------------------------
 コマンド					*alignta-commands*
@@ -593,7 +595,7 @@ g:alignta_default_arguments			*g:alignta_default_arguments*
 	let b:alignta_default_arguments = '@01 ,'
 <
 ------------------------------------------------------------------------------
-設定例						*alignta-setting-example*
+設定例						*alignta-settings-example*
 >
 	set ambiwidth=double
 
@@ -615,7 +617,7 @@ unite-alignta					*unite-alignta*
 変数					*unite-source-alignta-variables*
 
 g:unite_source_alignta_preset_arguments	*g:unite_source_alignta_preset_arguments*
-					*b:unite_source_alignta_preset_arguments*
+
 	:Aligntaコマンドの引数リスト文字列のリスト
 	:Unite alignta:arguments を実行したとき、候補として表示されます。
 	（詳細は|unite-alignta-usage|を参照して下さい）
@@ -626,12 +628,18 @@ g:unite_source_alignta_preset_arguments	*g:unite_source_alignta_preset_arguments
 	初期値は []
 
 g:unite_source_alignta_preset_options	*g:unite_source_alignta_preset_options*
-					*b:unite_source_alignta_preset_options*
+
 	:Aligntaコマンドのオプション指定文字列のリスト
 	:Unite alignta:options を実行したとき、候補として表示されます。
 	（詳細は|unite-alignta-usage|を参照して下さい）
 
-	初期値については :Unite alignta:options を確認のこと
+	初期値については autoload/unite/sources/alignta.vim を参照して下さい。
+
+ラベルの設定 ~
+
+	これらの変数はリストの要素にリストを設定することで、unite.vim の候補
+	一覧に表示するラベルを設定できるようになっています。
+	（詳細は|unite-alignta-settings-example| を参照して下さい）
 
 ------------------------------------------------------------------------------
 使い方						*unite-alignta-usage*
@@ -666,7 +674,7 @@ g:unite_source_alignta_preset_options	*g:unite_source_alignta_preset_options*
 	"Options: <RESET>" を選択します。
 
 ------------------------------------------------------------------------------
-設定例					*unite-source-alignta-setting-example*
+設定例					*unite-source-alignta-settings-example*
 >
 	nnoremap [unite] <Nop>
 	xnoremap [unite] <Nop>
@@ -674,29 +682,34 @@ g:unite_source_alignta_preset_options	*g:unite_source_alignta_preset_options*
 	xmap f [unite]
 
 	let g:unite_source_alignta_preset_arguments = [
-	      \ ':',
-	      \ '|',
-	      \ '}',
-	      \ '@0 )',
-	      \ '@0 ]',
-	      \ ]
-	
+	      \ ["Align at '='", '! =>\='],  
+	      \ ["Align at ':'", '@01 :' ],
+	      \ ["Align at '|'", '|'     ],
+	      \ ["Align at ')'", '@0 )'  ],
+	      \ ["Align at ']'", '@0 ]'  ],
+	      \ ["Align at '}'", '}'     ],
+	      \]
+
 	let s:comment_leadings = '^\s*\("\|#\|/\*\|//\|<!--\)'
 	let g:unite_source_alignta_preset_options = [
-	      \ '||',
-	      \ '>>',
-	      \ '<-',
-	      \ '->',
-	      \ '<--',
-	      \ '-->',
-	      \ '@0',
-	      \ '@01',
-	      \ '@10',
+	      \ ["Justify Left",      '<<' ],
+	      \ ["Justify Center",    '||' ],
+	      \ ["Justify Right",     '>>' ],
+	      \ ["Justify None",      '==' ],
+	      \ ["Shift Left",        '<-' ],
+	      \ ["Shift Right",       '->' ],
+	      \ ["Shift Left  [Tab]", '<--'],
+	      \ ["Shift Right [Tab]", '-->'],
+	      \ ["Margin 0:0",        '@0' ],
+	      \ ["Margin 0:1",        '@01'],
+	      \ ["Margin 1:0",        '@10'],
+	      \ ["Margin 1:1",        '@1' ],
+	      \
 	      \ 'v/' . s:comment_leadings,
 	      \ 'g/' . s:comment_leadings,
-	      \ ]
+	      \]
 	unlet s:comment_leadings
-	
+
 	nnoremap <silent> [unite]a :<C-u>Unite alignta:options<CR>
 	xnoremap <silent> [unite]a :<C-u>Unite alignta:arguments<CR>
 <
@@ -718,6 +731,10 @@ TODO						*alignta-todo*
 更新履歴					*alignta-changelog*
 
 https://github.com/h1mesuke/vim-alignta/commits/master
+
+0.2.1	2011-02-16
+	* UNITE-ALIGNTA
+	  - 候補一覧に表示するラベルを別途設定できるようにした
 
 0.2.0	2011-02-14
 	- 空白を含むパターンを使用できるように修正
