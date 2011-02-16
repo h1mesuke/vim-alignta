@@ -3,7 +3,7 @@
 "
 " File    : autoload/unite/sources/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-02-13
+" Updated : 2011-02-16
 " Version : 0.2.0
 " License : MIT license {{{
 "
@@ -41,16 +41,19 @@ endif
 
 if !exists('g:unite_source_alignta_preset_options')
   let g:unite_source_alignta_preset_options = [
-        \ '||',
-        \ '>>',
-        \ '<-',
-        \ '->',
-        \ '<--',
-        \ '-->',
-        \ '@0',
-        \ '@01',
-        \ '@10',
-        \ ]
+        \ ["Justify Left",      '<<' ],
+        \ ["Justify Center",    '||' ],
+        \ ["Justify Right",     '>>' ],
+        \ ["Justify None",      '==' ],
+        \ ["Shift Left",        '<-' ],
+        \ ["Shift Right",       '->' ],
+        \ ["Shift Left  [Tab]", '<--'],
+        \ ["Shift Right [Tab]", '-->'],
+        \ ["Margin 0:0",        '@0' ],
+        \ ["Margin 0:1",        '@01'],
+        \ ["Margin 1:0",        '@10'],
+        \ ["Margin 1:1",        '@1' ],
+        \]
 endif
 
 "-----------------------------------------------------------------------------
@@ -69,15 +72,23 @@ function! s:source.gather_candidates(args, context)
 
     if mode =~? '^\(a\%[rguments]\|v\%[isual]\)$' || mode ==# 'both'
       " preset arguments
-      for arg_list in g:unite_source_alignta_preset_arguments
+      for value in g:unite_source_alignta_preset_arguments
+        if type(value) == type([])
+          let arg_list = value[1]
+          let label = value[0]
+        else
+          let arg_list = value
+          let label = arg_list
+        endif
         let arg_list = substitute(substitute(arg_list, '^\s*', '', ''), '^!\@!', ' ', '')
         let command_line = "'<,'>Alignta" . arg_list
         call add(cands, {
-              \ 'word'  : command_line,
+              \ 'word'  : label,
               \ 'source': 'alignta',
               \ 'kind'  : 'command',
               \ 'action__command': command_line,
               \ })
+        unlet value
       endfor
     endif
 
@@ -86,14 +97,22 @@ function! s:source.gather_candidates(args, context)
       let preset_opts = g:unite_source_alignta_preset_options
       let idx = 0
       while idx < len(preset_opts)
-        let opts_str = 'g:unite_source_alignta_preset_options[' . idx . ']'
+        let value = preset_opts[idx]
+        if type(value) == type([])
+          let opts_expr = 'g:unite_source_alignta_preset_options[' . idx . '][1]'
+          let label = value[0]
+        else
+          let opts_expr = 'g:unite_source_alignta_preset_options[' . idx . ']'
+          let label = value
+        endif
         call add(cands, {
-              \ 'word'  : "Options: " . preset_opts[idx],
+              \ 'word'  : "Options: " . label,
               \ 'source': 'alignta',
               \ 'kind'  : 'command',
-              \ 'action__command': 'call alignta#apply_extending_options(' . opts_str . ')',
+              \ 'action__command': 'call alignta#apply_extending_options(' . opts_expr . ')',
               \ })
         let idx += 1
+        unlet value
       endwhile
 
       " reset
