@@ -165,6 +165,10 @@ function! tc.should_align_at_complex_patterns_rr()
   call self._test_align('should_align_at_complex_patterns_rr', 'Alignta >> = { } /* */')
 endfunction
 
+function! tc.should_align_big_data()
+  call self._test_align('should_align_big_data', 'Alignta =')
+endfunction
+
 function! tc.should_freeze_aligned_parts()
   call self._test_align('should_freeze_aligned_parts', 'Alignta! \S\+')
 endfunction

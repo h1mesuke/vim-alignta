@@ -519,6 +519,36 @@
 # should_align_at_complex_patterns_rr_expected_end
 
 #---------------------------------------
+# should_align_big_data_data_begin
+  a =  1
+   bbb = 10
+  ccccc = 100
+  a =  2
+   bbb = 20
+  ccccc = 200
+  a =  3
+   bbb = 30
+  ccccc = 300
+  a =  4
+   bbb = 40
+  ccccc = 400
+# should_align_big_data_data_end
+# should_align_big_data_expected_begin
+  a     = 1
+  bbb   = 10
+  ccccc = 100
+  a     = 2
+  bbb   = 20
+  ccccc = 200
+  a     = 3
+  bbb   = 30
+  ccccc = 300
+  a     = 4
+  bbb   = 40
+  ccccc = 400
+# should_align_big_data_expected_end
+
+#---------------------------------------
 # should_freeze_aligned_parts_data_begin
   a = 1  /* A */
     bbb = 10
