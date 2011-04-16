@@ -2,7 +2,7 @@
 
 File    : doc/alignta.jax
 Author  : h1mesuke <himesuke@gmail.com>
-Updated : 2011-02-16
+Updated : 2011-04-16
 Version : 0.2.1
 License : MIT license {{{
 
@@ -105,8 +105,8 @@ alignta ~
 
 	になります。
 
-	※|unite|をお使いの場合、インストールしておくと alignta がより便利に使
-	えます。（詳細は|unite-alignta|を参照して下さい）
+     ※	|unite|をお使いの場合、インストールしておくと alignta がより便利に使
+	えます。詳細は|unite-alignta|を参照
 
 ==============================================================================
 整列						*alignta-alignment*
@@ -135,7 +135,7 @@ PADDING ALIGNMENT				*alignta-padding-alignment*
 	| ccccc | @      | =       | @      | 100   |
 	+-------+--------+---------+--------+-------+
 <
-	※ @ はパディングとして付加される <Space> を示す
+     ※	@ はパディングとして付加される <Space> を示す
 
 	パターンにマッチした部分[M] と、その左側[L]、右側[R] で行を３つのフィ
 	ールドに分割し、各フィールドをその最大幅にあわせて空白文字でパディング
@@ -146,7 +146,7 @@ PADDING ALIGNMENT				*alignta-padding-alignment*
 	寄せ」「中央寄せ」「右寄せ」「幅揃えのみ」を選択でき、フィールド間のマ
 	ージンの幅も指定できます。
 
-	詳細は|alignta-padding-alignment-options|を参照して下さい。
+	詳細は|alignta-padding-alignment-options|を参照
 
 SHIFTING ALIGNMENT				*alignta-shifting-alignment*
 >
@@ -163,7 +163,7 @@ SHIFTING ALIGNMENT				*alignta-shifting-alignment*
 	整列オプションの指定により、最左／最右どちらの位置で揃えるかを選択でき、
 	整列にタブ文字を使用することもできます。
 
-	詳細は|alignta-shifting-alignment-options|を参照して下さい。
+	詳細は|alignta-shifting-alignment-options|を参照
 
 ------------------------------------------------------------------------------
 コマンド					*alignta-commands*
@@ -505,8 +505,8 @@ LINE FILTERING				*alignta-line-filtering*
 	行だけを整列できます。
 	フィルタリングに使用するパターンの指定書式は以下の２通りです。
 
-	(1) g/{pattern}
-	(2) v/{pattern}
+	g/{pattern}
+	v/{pattern}
 
 	g/{pattern} によってパターンが指定されると、そのパターンにマッチする行
 	だけが整列の対象になります。v/{pattern} はその逆で、そのパターンにマッ
@@ -620,7 +620,8 @@ g:unite_source_alignta_preset_arguments	*g:unite_source_alignta_preset_arguments
 
 	:Aligntaコマンドの引数リスト文字列のリスト
 	:Unite alignta:arguments を実行したとき、候補として表示されます。
-	（詳細は|unite-alignta-usage|を参照して下さい）
+
+	詳細は|unite-alignta-usage|を参照
 
 	パターンに正規表現を使用する場合は、引数リストを "!" で始めることでそ
 	れを指示します。
@@ -631,15 +632,17 @@ g:unite_source_alignta_preset_options	*g:unite_source_alignta_preset_options*
 
 	:Aligntaコマンドのオプション指定文字列のリスト
 	:Unite alignta:options を実行したとき、候補として表示されます。
-	（詳細は|unite-alignta-usage|を参照して下さい）
 
-	初期値については autoload/unite/sources/alignta.vim を参照して下さい。
+	詳細は|unite-alignta-usage|を参照
+
+	初期値については autoload/unite/sources/alignta.vim を参照
 
 ラベルの設定 ~
 
 	これらの変数はリストの要素にリストを設定することで、unite.vim の候補
 	一覧に表示するラベルを設定できるようになっています。
-	（詳細は|unite-alignta-settings-example| を参照して下さい）
+
+	詳細は|unite-alignta-settings-example| を参照
 
 ------------------------------------------------------------------------------
 使い方						*unite-alignta-usage*
