@@ -41,8 +41,10 @@ License : MIT license {{{
 	    LINE FILTERING		    |alignta-line-filtering|
 	設定				|alignta-settings|
 	  変数				  |alignta-variables|
+	  設定例			  |alignta-settings-example|
 	unite-alignta			|unite-alignta|
-	  変数				  |unite-source-alignta-variables|
+	  変数				  |unite-alignta-variables|
+	  設定例			  |unite-alignta-settings-example|
 	ToDo				|alignta-todo|
 	既知の問題			|alignta-bugs|
 	更新履歴			|alignta-changelog|
@@ -105,8 +107,8 @@ alignta ~
 
 	になります。
 
-     ※	|unite|をお使いの場合、インストールしておくと alignta がより便利に使
-	えます。詳細は|unite-alignta|を参照
+     ※	|unite|をお使いの場合、インストールしておくと alignta がより便利に
+	使えます。詳細は|unite-alignta|を参照
 
 ==============================================================================
 整列						*alignta-alignment*
@@ -614,7 +616,7 @@ unite-alignta					*unite-alignta*
 	2. 初期整列オプションの切り替え
 
 ------------------------------------------------------------------------------
-変数					*unite-source-alignta-variables*
+変数					*unite-alignta-variables*
 
 g:unite_source_alignta_preset_arguments	*g:unite_source_alignta_preset_arguments*
 
@@ -677,7 +679,7 @@ g:unite_source_alignta_preset_options	*g:unite_source_alignta_preset_options*
 	"Options: <RESET>" を選択します。
 
 ------------------------------------------------------------------------------
-設定例					*unite-source-alignta-settings-example*
+設定例					*unite-alignta-settings-example*
 >
 	nnoremap [unite] <Nop>
 	xnoremap [unite] <Nop>
