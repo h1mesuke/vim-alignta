@@ -1,8 +1,8 @@
 "=============================================================================
 " File    : vimenv.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-02-09
-" Version : 0.1.1
+" Updated : 2011-05-06
+" Version : 0.1.2
 " License : MIT license {{{
 "
 "   Permission is hereby granted, free of charge, to any person obtaining
@@ -26,16 +26,25 @@
 " }}}
 "=============================================================================
 
-function! alignta#vimenv#new(...)
-  return call(s:Vimenv.new, a:000, s:Vimenv)
+" Inspired by Yukihiro Nakadaira's nsexample.vim
+" https://gist.github.com/867896
+"
+let s:lib = expand('<sfile>:p:h:gs?[\\/]?#?:s?^.*#autoload#??')
+" => path#to#lib
+
+function! {s:lib}#vimenv#import()
+  return s:Vimenv
 endfunction
+
+"-----------------------------------------------------------------------------
 
 function! s:get_SID()
   return matchstr(expand('<sfile>'), '<SNR>\d\+_')
 endfunction
 let s:SID = s:get_SID()
+delfunction s:get_SID
 
-let s:Vimenv = alignta#oop#class#new('Vimenv')
+let s:Vimenv = {s:lib}#oop#class#new('Vimenv', s:SID)
 
 function! s:Vimenv_initialize(...) dict
   let args = a:000
@@ -107,7 +116,7 @@ function! s:Vimenv_initialize(...) dict
     let self.selection = saved_vsel
   endif
 endfunction
-call s:Vimenv.bind(s:SID, 'initialize')
+call s:Vimenv.method('initialize')
 
 function! s:Vimenv_restore() dict
   " restore marks
@@ -149,11 +158,6 @@ function! s:Vimenv_restore() dict
     call setpos('.', self.cursor)
   endif
 endfunction
-call s:Vimenv.bind(s:SID, 'restore')
-
-function! s:Vimenv_to_s() dict
-  return alignta#oop#string(self.attributes())
-endfunction
-call s:Vimenv.bind(s:SID, 'to_s')
+call s:Vimenv.method('restore')
 
 " vim: filetype=vim

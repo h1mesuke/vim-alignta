@@ -3,7 +3,7 @@
 "
 " File    : autoload/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-02-16
+" Updated : 2011-05-06
 " Version : 0.2.1
 " License : MIT license {{{
 "
@@ -57,19 +57,24 @@ function! alignta#reset_extending_options()
 endfunction
 
 "-----------------------------------------------------------------------------
-" Constants
+" Constant
 
 let s:HUGE_VALUE = 9999
+
+"-----------------------------------------------------------------------------
+" Aligner
+
+let s:Region = alignta#region#import()
+let s:Vimenv = alignta#vimenv#import()
+let s:String = alignta#string#import()
 
 function! s:get_SID()
   return matchstr(expand('<sfile>'), '<SNR>\d\+_')
 endfunction
 let s:SID = s:get_SID()
+delfunction s:get_SID
 
-"-----------------------------------------------------------------------------
-" Aligner
-
-let s:Aligner = alignta#oop#class#new('Aligner')
+let s:Aligner = alignta#oop#class#new('Aligner', s:SID)
 
 let s:Aligner.DEFAULT_OPTIONS = {
       \ 'field_align': ['<', '<', '<'],
@@ -81,19 +86,19 @@ let s:Aligner.DEFAULT_OPTIONS = {
 
 let s:Aligner.extending_options = {}
 
-function! s:class_Aligner_apply_extending_options(options) dict
+function! s:Aligner_apply_extending_options(options) dict
   let opts = (type(a:options) == type("") ? s:Aligner.parse_options(a:options) : a:options)
   call extend(s:Aligner.extending_options, opts, 'force')
 endfunction
-call s:Aligner.class_bind(s:SID, 'apply_extending_options')
+call s:Aligner.class_method('apply_extending_options')
 
-function! s:class_Aligner_reset_extending_options() dict
+function! s:Aligner_reset_extending_options() dict
   let s:Aligner.extending_options = {}
 endfunction
-call s:Aligner.class_bind(s:SID, 'reset_extending_options')
+call s:Aligner.class_method('reset_extending_options')
 
 function! s:Aligner_initialize(region_args, align_args, use_regexp) dict
-  let self.region = call('alignta#region#new', a:region_args)
+  let self.region = call(s:Region.new, a:region_args, s:Region)
   let self.region.had_indent_tab = 0
   let self.arguments = a:align_args
   let self.use_regexp = a:use_regexp
@@ -112,20 +117,20 @@ function! s:Aligner_initialize(region_args, align_args, use_regexp) dict
   let begin_col = (self.region.type ==# 'block' ? self.region.block_begin_col : 1)
   let self.aligned = s:Lines.new(map(copy(self.region.lines), '""'), begin_col)
 endfunction
-call s:Aligner.bind(s:SID, 'initialize')
+call s:Aligner.method('initialize')
 
 function! s:Aligner_init_options() dict
   let self.options = copy(s:Aligner.DEFAULT_OPTIONS)
   call self.apply_options(alignta#get_config_variable('alignta_default_options'))
   call self.apply_options(s:Aligner.extending_options)
 endfunction
-call s:Aligner.bind(s:SID, 'init_options')
+call s:Aligner.method('init_options')
 
 function! s:Aligner_apply_options(options) dict
   let opts = (type(a:options) == type("") ? self.parse_options(a:options) : a:options)
   call extend(self.options, opts, 'force')
 endfunction
-call s:Aligner.bind(s:SID, 'apply_options')
+call s:Aligner.method('apply_options')
 
 function! s:Aligner_align() dict
   call s:print_debug("region",    self.region)
@@ -141,9 +146,9 @@ function! s:Aligner_align() dict
     let start_time = reltime()
   endif
 
-  let vimenv = alignta#vimenv#new('.', '&ignorecase')
+  let vimenv = s:Vimenv.new('.', '&ignorecase')
   set noignorecase
-  " NOTE: alignta#string#width() for Vim 7.2 or older has a side effect that changes
+  " NOTE: s:String.width() for Vim 7.2 or older has a side effect that changes
   " the cursor's position.
 
   let argc = len(self.arguments)
@@ -186,7 +191,7 @@ function! s:Aligner_align() dict
       if (line =~ '^\s*$' || self.region.line_is_short(idx)) | continue | endif
       let line_width = self.aligned.width(idx)
       if line_width < block_width
-        let line .= alignta#string#padding(block_width - line_width)
+        let line .= s:String.padding(block_width - line_width)
         call self.aligned.set(idx, line)
       endif
     endfor
@@ -208,7 +213,7 @@ function! s:Aligner_align() dict
     echomsg "alignta: used=" . used_time . "s"
   endif
 endfunction
-call s:Aligner.bind(s:SID, 'align')
+call s:Aligner.method('align')
 
 function! s:Aligner_parse_options(value) dict
   let opts = {}
@@ -285,14 +290,14 @@ function! s:Aligner_parse_options(value) dict
 
   return opts
 endfunction
-call s:Aligner.bind(s:SID, 'parse_options')
-call s:Aligner.export('parse_options')
+call s:Aligner.class_method('parse_options')
+call s:Aligner.method('parse_options')
 
 function! s:Aligner_parse_pattern(value) dict
   let times_str = matchstr(a:value, '{\zs\(\d\+\|+\)\ze}$')
   let pattern = substitute(a:value, '{\(\d\+\|+\)}$', '', '')
   if !self.use_regexp
-    let pattern = alignta#string#escape_regexp(pattern)
+    let pattern = s:String.escape_regexp(pattern)
   endif
   if times_str == ''
     if self.options.method ==# 'pad'
@@ -309,7 +314,7 @@ function! s:Aligner_parse_pattern(value) dict
   endif
   return [pattern, times]
 endfunction
-call s:Aligner.bind(s:SID, 'parse_pattern')
+call s:Aligner.method('parse_pattern')
 
 function! s:Aligner__align_at(pattern, times) dict
   call s:print_debug("options", self.options)
@@ -327,7 +332,7 @@ function! s:Aligner__align_at(pattern, times) dict
 
   call s:print_debug("lines", self.lines)
 endfunction
-call s:Aligner.bind(s:SID, '_align_at')
+call s:Aligner.method('_align_at')
 
 function! s:Aligner__filter_lines() dict
   let lines = self.lines.dup()
@@ -340,10 +345,10 @@ function! s:Aligner__filter_lines() dict
   endfor
   return lines
 endfunction
-call s:Aligner.bind(s:SID, '_filter_lines')
+call s:Aligner.method('_filter_lines')
 
 function! s:Aligner__keep_min_leading(lines) dict
-  let leading = alignta#string#padding(a:lines.min_leading_width())
+  let leading = s:String.padding(a:lines.min_leading_width())
   call a:lines.lstrip(1)
 
   for [idx, line] in a:lines.each()
@@ -351,7 +356,7 @@ function! s:Aligner__keep_min_leading(lines) dict
     call self.aligned.append(idx, leading)
   endfor
 endfunction
-call s:Aligner.bind(s:SID, '_keep_min_leading')
+call s:Aligner.method('_keep_min_leading')
 
 function! s:Aligner__split_to_fields(lines, pattern, times) dict
   let fields = []
@@ -389,7 +394,7 @@ function! s:Aligner__split_to_fields(lines, pattern, times) dict
 
   return fields
 endfunction
-call s:Aligner.bind(s:SID, '_split_to_fields')
+call s:Aligner.method('_split_to_fields')
 
 function! s:Aligner__join_fields(fields) dict
   call s:print_debug("fields", map(copy(a:fields), 'v:val.each()'))
@@ -427,7 +432,7 @@ function! s:Aligner__join_fields(fields) dict
     let fld_idx += 2
   endwhile
 endfunction
-call s:Aligner.bind(s:SID, '_join_fields')
+call s:Aligner.method('_join_fields')
 
 function! s:Aligner__pad_align_fields(L_fld, M_fld, fld_idx, is_last) dict
   let L_fld_align = self._get_field_align(a:fld_idx, a:is_last)
@@ -440,29 +445,29 @@ function! s:Aligner__pad_align_fields(L_fld, M_fld, fld_idx, is_last) dict
 
   let AL_fld_width = max(map(a:L_fld.each(), '
         \ self.aligned.width(v:val[0]) +
-        \ alignta#string#width(v:val[1], self.aligned.width(v:val[0]))
+        \ s:String.width(v:val[1], self.aligned.width(v:val[0]))
         \'))
 
   for [idx, line] in a:L_fld.each()
     let width = AL_fld_width - self.aligned.width(idx)
-    let line = alignta#string#pad(line, width, L_fld_align)
+    let line = s:String.justify(line, width, L_fld_align)
     call a:L_fld.set(idx, line)
   endfor
 
   "---------------------------------------
   " Matched field
 
-  let L_margin = (a:L_fld.is_blank() ? '' : alignta#string#padding(self.options.L_margin))
-  let R_margin = alignta#string#padding(self.options.R_margin)
+  let L_margin = (a:L_fld.is_blank() ? '' : s:String.padding(self.options.L_margin))
+  let R_margin = s:String.padding(self.options.R_margin)
 
-  let M_fld_width = max(map(a:M_fld.to_a(), 'alignta#string#width(v:val, AL_fld_width)'))
+  let M_fld_width = max(map(a:M_fld.to_a(), 's:String.width(v:val, AL_fld_width)'))
 
   for [idx, line] in a:M_fld.each()
-    let line = L_margin . alignta#string#pad(line, M_fld_width, M_fld_align) . R_margin
+    let line = L_margin . s:String.justify(line, M_fld_width, M_fld_align) . R_margin
     call a:M_fld.set(idx, line)
   endfor
 endfunction
-call s:Aligner.bind(s:SID, '_pad_align_fields')
+call s:Aligner.method('_pad_align_fields')
 
 function! s:Aligner__get_field_align(fld_idx, ...) dict
   let fld_align = self.options.field_align
@@ -474,14 +479,14 @@ function! s:Aligner__get_field_align(fld_idx, ...) dict
   endif
   return fld_align[a:fld_idx % len(fld_align)]
 endfunction
-call s:Aligner.bind(s:SID, '_get_field_align')
+call s:Aligner.method('_get_field_align')
 
 function! s:Aligner__shift_align_fields(L_fld, M_fld, fld_idx, is_last, shift_left, use_tab) dict
   if self.align_count == 0 && a:fld_idx == 0
     " save the left/right most position of matches
     let width_list = map(filter(a:L_fld.each(), 'a:M_fld.has(v:val[0])'), '
           \ self.aligned.width(v:val[0]) +
-          \ alignta#string#width(v:val[1], self.aligned.width(v:val[0]))
+          \ s:String.width(v:val[1], self.aligned.width(v:val[0]))
           \')
     let LRM_AL_fld_width = (a:shift_left ? min(width_list) : max(width_list))
   else
@@ -492,47 +497,47 @@ function! s:Aligner__shift_align_fields(L_fld, M_fld, fld_idx, is_last, shift_le
 
   let AL_fld_width = max(map(filter(a:L_fld.each(), 'a:M_fld.has(v:val[0])'), '
         \ self.aligned.width(v:val[0]) +
-        \ alignta#string#width(v:val[1], self.aligned.width(v:val[0]))
+        \ s:String.width(v:val[1], self.aligned.width(v:val[0]))
         \'))
 
   let margin = self.options.L_margin
   let AL_fld_width = max([AL_fld_width + margin, LRM_AL_fld_width])
-  let padding_func = 'alignta#string#padding'
+  let Padding_func = s:String.padding
   if a:use_tab
     let AL_fld_width = s:ts_ceil(AL_fld_width)
     if !&l:expandtab
-      let padding_func = 'alignta#string#tab_padding'
+      let Padding_func = s:String.tab_padding
     endif
   endif
 
   for [idx, line] in a:L_fld.each()
     let col = self.aligned.width(idx)
-    let col += alignta#string#width(line, col)
-    let line .= call(padding_func, [AL_fld_width - col, col])
+    let col += s:String.width(line, col)
+    let line .= call(Padding_func, [AL_fld_width - col, col])
     call a:L_fld.set(idx, line)
   endfor
 endfunction
-call s:Aligner.bind(s:SID, '_shift_align_fields')
+call s:Aligner.method('_shift_align_fields')
 
 function! s:Aligner__shift_left_align_fields(...) dict
   call call(self._shift_align_fields, a:000 + [1, 0], self)
 endfunction
-call s:Aligner.bind(s:SID, '_shift_left_align_fields')
+call s:Aligner.method('_shift_left_align_fields')
 
 function! s:Aligner__shift_right_align_fields(...) dict
   call call(self._shift_align_fields, a:000 + [0, 0], self)
 endfunction
-call s:Aligner.bind(s:SID, '_shift_right_align_fields')
+call s:Aligner.method('_shift_right_align_fields')
 
 function! s:Aligner__shift_left_tab_align_fields(...) dict
   call call(self._shift_align_fields, a:000 + [1, 1], self)
 endfunction
-call s:Aligner.bind(s:SID, '_shift_left_tab_align_fields')
+call s:Aligner.method('_shift_left_tab_align_fields')
 
 function! s:Aligner__shift_right_tab_align_fields(...) dict
   call call(self._shift_align_fields, a:000 + [0, 1], self)
 endfunction
-call s:Aligner.bind(s:SID, '_shift_right_tab_align_fields')
+call s:Aligner.method('_shift_right_tab_align_fields')
 
 function! s:ts_ceil(w)
   let ts = &l:tabstop
@@ -542,7 +547,7 @@ endfunction
 "-----------------------------------------------------------------------------
 " Lines
 
-let s:Lines = alignta#oop#class#new('Lines')
+let s:Lines = alignta#oop#class#new('Lines', s:SID)
 
 function! s:Lines_initialize(...) dict
   let self._lines = {}
@@ -560,7 +565,7 @@ function! s:Lines_initialize(...) dict
     let idx += 1
   endwhile
 endfunction
-call s:Lines.bind(s:SID, 'initialize')
+call s:Lines.method('initialize')
 
 function! s:Lines_append(idx, str) dict
   if !has_key(self._lines, a:idx)
@@ -571,23 +576,23 @@ function! s:Lines_append(idx, str) dict
 
   if self._calc_width
     let col = (self._begin_col - 1) + self._width[a:idx]
-    let self._width[a:idx] += alignta#string#width(a:str, col)
+    let self._width[a:idx] += s:String.width(a:str, col)
   endif
 endfunction
-call s:Lines.bind(s:SID, 'append')
+call s:Lines.method('append')
 
 function! s:Lines_min_leading_width() dict
   let lines = filter(self.to_a(), 'v:val =~ "\\S"')
   return min(map(map(lines, 'matchstr(v:val, "^\\s*")'), 'strlen(v:val)'))
 endfunction
-call s:Lines.bind(s:SID, 'min_leading_width')
+call s:Lines.method('min_leading_width')
 
 function! s:Lines_dump() dict
   for [idx, line] in self.each()
     call s:echomsg(printf('%03x: ', idx) . string(line))
   endfor
 endfunction
-call s:Lines.bind(s:SID, 'dump')
+call s:Lines.method('dump')
 
 function! s:Lines_dup() dict
   let obj = copy(self)
@@ -595,7 +600,7 @@ function! s:Lines_dup() dict
   let obj._width = copy(self._width)
   return obj
 endfunction
-call s:Lines.bind(s:SID, 'dup')
+call s:Lines.method('dup')
 
 function! s:Lines_each() dict
   let items = []
@@ -604,27 +609,27 @@ function! s:Lines_each() dict
   endfor
   return items
 endfunction
-call s:Lines.bind(s:SID, 'each')
+call s:Lines.method('each')
 
 function! s:Lines_has(idx) dict
   return has_key(self._lines, a:idx)
 endfunction
-call s:Lines.bind(s:SID, 'has')
+call s:Lines.method('has')
 
 function! s:Lines_is_blank() dict
   return (len(filter(values(self._lines), 'v:val =~ "^\\s*$"')) == len(self._lines))
 endfunction
-call s:Lines.bind(s:SID, 'is_blank')
+call s:Lines.method('is_blank')
 
 function! s:Lines_line(idx) dict
   return self._lines[a:idx]
 endfunction
-call s:Lines.bind(s:SID, 'line')
+call s:Lines.method('line')
 
 function! s:Lines_width(idx) dict
   return self._width[a:idx]
 endfunction
-call s:Lines.bind(s:SID, 'width')
+call s:Lines.method('width')
 
 function! s:Lines_set(idx, str) dict
   if has_key(self._lines, a:idx)
@@ -632,52 +637,52 @@ function! s:Lines_set(idx, str) dict
   endif
   call self.append(a:idx, a:str)
 endfunction
-call s:Lines.bind(s:SID, 'set')
+call s:Lines.method('set')
 
 function! s:Lines_remove(idx) dict
   unlet self._lines[a:idx]
   unlet self._width[a:idx]
 endfunction
-call s:Lines.bind(s:SID, 'remove')
+call s:Lines.method('remove')
 
 function! s:Lines_strip(...) dict
   call self.lstrip(a:0 ? a:1 : 0)
   call self.rstrip()
 endfunction
-call s:Lines.bind(s:SID, 'strip')
+call s:Lines.method('strip')
 
 function! s:Lines_lstrip(...) dict
   let strip_min_leading =  (a:0 ? a:1 : 0)
   if strip_min_leading
-    let leading = alignta#string#padding(self.min_leading_width())
+    let leading = s:String.padding(self.min_leading_width())
     for [idx, line] in self.each()
       call self.set(idx, substitute(line, '^' . leading, '', ''))
     endfor
   else
-    call map(self._lines, 'alignta#string#lstrip(v:val)')
+    call map(self._lines, 's:String.lstrip(v:val)')
   endif
 endfunction
-call s:Lines.bind(s:SID, 'lstrip')
+call s:Lines.method('lstrip')
 
 function! s:Lines_rstrip() dict
-  call map(self._lines, 'alignta#string#rstrip(v:val)')
+  call map(self._lines, 's:String.rstrip(v:val)')
 endfunction
-call s:Lines.bind(s:SID, 'rstrip')
+call s:Lines.method('rstrip')
 
 function! s:Lines_to_a() dict
   return map(self.each(), 'v:val[1]')
 endfunction
-call s:Lines.bind(s:SID, 'to_a')
+call s:Lines.method('to_a')
 
 function! s:Lines_update_width() dict
   if self._calc_width
     let col = self._begin_col - 1
     for [idx, line] in self.each()
-      let self._width[idx] = alignta#string#width(line, col)
+      let self._width[idx] = s:String.width(line, col)
     endfor
   endif
 endfunction
-call s:Lines.bind(s:SID, 'update_width')
+call s:Lines.method('update_width')
 
 function! s:sort_numbers(list)
   return sort(a:list, 's:compare_numbers')

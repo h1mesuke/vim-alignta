@@ -1,11 +1,11 @@
 "=============================================================================
 " vim-oop
-" Class-based OOP Layer for Vim script <Mininum Edition>
+" Simple OOP Layer for Vim script
 "
 " File    : oop.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-02-01
-" Version : 0.1.6
+" Updated : 2011-05-04
+" Version : 0.2.0
 " License : MIT license {{{
 "
 "   Permission is hereby granted, free of charge, to any person obtaining
@@ -29,74 +29,52 @@
 " }}}
 "=============================================================================
 
-let s:initialized = 0
+" Inspired by Yukihiro Nakadaira's nsexample.vim
+" https://gist.github.com/867896
+"
+let s:oop = expand('<sfile>:p:r:gs?[\\/]?#?:s?^.*#autoload#??')
+" => path#to#oop
 
-function! alignta#oop#_is_initialized()
-  return s:initialized
+function! {s:oop}#is_object(value)
+  return type(a:value) == type({}) && has_key(a:value, '__type_Object__')
 endfunction
 
-function! alignta#oop#_initialize()
-  if s:initialized | return | endif
-  let s:initialized = 1
-
-  let Class = alignta#oop#class#_initialize()
-  let Object = alignta#oop#object#_initialize()
-
-  let Class.superclass = Object
-
-  let Object_instance_methods = copy(Object.prototype)
-  unlet Object_instance_methods.initialize
-
-  call extend(Object, Object_instance_methods, 'keep')
-
-  call extend(Class, Object_instance_methods, 'keep')
-  call extend(Class.prototype, Object_instance_methods, 'keep')
+function! {s:oop}#is_class(value)
+  return type(a:value) == type({}) && has_key(a:value, '__type_Class__')
 endfunction
 
-function! alignta#oop#is_object(obj)
-  return (type(a:obj) == type({}) && has_key(a:obj, 'class') &&
-        \ type(a:obj.class) == type({}) && has_key(a:obj.class, 'class') &&
-        \ a:obj.class.class is alignta#oop#class#get('Class'))
+function! {s:oop}#is_instance(value)
+  return type(a:value) == type({}) && has_key(a:value, '__type_Instance__')
 endfunction
 
-function! alignta#oop#is_class(obj)
-  return (alignta#oop#is_object(a:obj) && a:obj.class is alignta#oop#class#get('Class'))
+function! {s:oop}#is_module(value)
+  return type(a:value) == type({}) && has_key(a:value, '__type_Module__')
 endfunction
 
-function! alignta#oop#is_instance(obj)
-  return (alignta#oop#is_object(a:obj) && a:obj.class isnot alignta#oop#class#get('Class'))
-endfunction
+let s:TYPE_DICT = type({})
+let s:TYPE_LIST = type([])
+let s:TYPE_FUNC = type(function('tr'))
 
-function! alignta#oop#inspect(value)
-  if alignta#oop#is_object(a:value)
-    return a:value.inspect()
-  else
-    return s:safe_dump(a:value)
-  endif
+function! {s:oop}#string(value)
+  return string(s:dump_copy(a:value))
 endfunction
-
-function! alignta#oop#string(value)
-  if alignta#oop#is_object(a:value)
-    return a:value.to_s()
-  else
-    return s:safe_dump(a:value)
-  endif
-endfunction
-
-function! s:safe_dump(value)
-  return string(s:_safe_dump(a:value))
-endfunction
-function! s:_safe_dump(value)
+function! s:dump_copy(value)
+  let Value = a:value
   let value_type = type(a:value)
-  if value_type == type({}) || value_type == type([])
-    return map(copy(a:value), 'alignta#oop#is_object(v:val) ? v:val.to_s() : s:_safe_dump(v:val)')
-  else
-    return a:value
+  if value_type == s:TYPE_DICT
+    if has_key(a:value, '__type_Class__')
+      return '<Class: ' . a:value.__name__ . '>'
+    elseif has_key(a:value, '__type_Module__')
+      return '<Module: ' . a:value.__name__ . '>'
+    elseif has_key(a:value, '__type_Instance__')
+      let Value = filter(copy(a:value), '
+            \ !(type(v:val) == s:TYPE_FUNC || v:key =~ "^__type_")')
+    endif
   endif
+  if value_type == s:TYPE_DICT || value_type == s:TYPE_LIST
+    return map(copy(Value), 's:dump_copy(v:val)')
+  endif
+  return Value
 endfunction
-
-if !s:initialized
-  call alignta#oop#_initialize()
-endif
 
 " vim: filetype=vim

@@ -1,8 +1,8 @@
 "=============================================================================
-" File    : string.vim
+" File    : lib/string.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-02-12
-" Version : 0.1.1
+" Updated : 2011-05-06
+" Version : 0.1.2
 " License : MIT license {{{
 "
 "   Permission is hereby granted, free of charge, to any person obtaining
@@ -26,67 +26,98 @@
 " }}}
 "=============================================================================
 
-function! alignta#string#escape_regexp(str, ...)
-  let chars = '^$[].*\~' . (a:0 ? a:1 : '')
-  return escape(a:str, chars)
+" Inspired by Yukihiro Nakadaira's nsexample.vim
+" https://gist.github.com/867896
+"
+let s:lib = expand('<sfile>:p:h:gs?[\\/]?#?:s?^.*#autoload#??')
+" => path#to#lib
+
+function! {s:lib}#string#import()
+  return s:String
 endfunction
 
-function! alignta#string#pad(str, width, align, ...)
+"-----------------------------------------------------------------------------
+
+function! s:get_SID()
+  return matchstr(expand('<sfile>'), '<SNR>\d\+_')
+endfunction
+let s:SID = s:get_SID()
+delfunction s:get_SID
+
+let s:String = {s:lib}#oop#module#new('String', s:SID)
+
+function! s:String_escape_regexp(str)
+  return escape(a:str, '^$[].*\~')
+endfunction
+call s:String.function('escape_regexp')
+
+function! s:String_justify(str, width, align, ...)
   if ((a:align == '<' || a:align =~# 'l\%[eft]') ||
     \ (a:align == '=' || a:align =~# 'a\%[ppend]'))
     let col = (a:0 ? a:1 : 0)
-    let str_w = alignta#string#width(a:str, col)
+    let str_w = s:String_width(a:str, col)
     let lpad = ''
-    let rpad = alignta#string#padding(a:width - str_w)
+    let rpad = s:String_padding(a:width - str_w)
   elseif a:str =~ '\t'
     throw "ArgumentError: the string contains a Tab"
   else
-    let str_w = alignta#string#width(a:str)
+    let str_w = s:String_width(a:str)
     if a:align == '|' || a:align =~# 'c\%[enter]'
       let lpad_w = (a:width - str_w) / 2
-      let lpad = alignta#string#padding(lpad_w)
-      let rpad = alignta#string#padding(a:width - lpad_w - str_w)
+      let lpad = s:String_padding(lpad_w)
+      let rpad = s:String_padding(a:width - lpad_w - str_w)
     elseif a:align == '>' || a:align =~# 'r\%[ight]'
-      let lpad = alignta#string#padding(a:width - str_w)
+      let lpad = s:String_padding(a:width - str_w)
       let rpad = ''
     endif
   endif
   return lpad . a:str . rpad
 endfunction
+call s:String.function('justify')
 
-function! alignta#string#padding(width, ...)
+" NOTE: This function's interface must be same as String.tab_padding's.
+" Don't remove "...".
+function! s:String_padding(width, ...)
   return repeat(' ', a:width)
 endfunction
+call s:String.function('padding')
 
-function! alignta#string#tab_padding(width, ...)
+function! s:String_tab_padding(width, ...)
   let col = (a:0 ? a:1 : 0) | let ts = &l:tabstop
-  let col_r = (col % ts)
-  let width = col_r + a:width
+  let rem = (col % ts)
+  let width = rem + a:width
   let n_Tab =  width / ts
-  let n_Spc = (width % ts) - (n_Tab > 0 ? 0 : col_r)
+  let n_Spc = (width % ts) - (n_Tab > 0 ? 0 : rem)
   return repeat("\t", n_Tab) . repeat(' ', n_Spc)
 endfunction
+call s:String.function('tab_padding')
 
-function! alignta#string#strip(str)
+function! s:String_strip(str)
   return substitute(substitute(a:str, '^\s*', '', ''), '\s*$', '', '')
 endfunction
+call s:String.function('strip')
 
-function! alignta#string#lstrip(str)
+function! s:String_lstrip(str)
   return substitute(a:str, '^\s*', '', '')
 endfunction
+call s:String.function('lstrip')
 
-function! alignta#string#rstrip(str)
+function! s:String_rstrip(str)
   return substitute(a:str, '\s*$', '', '')
 endfunction
+call s:String.function('rstrip')
 
 if v:version >= 703
-  function! alignta#string#width(str, ...)
+
+  function! s:String_width(str, ...)
     let col = (a:0 ? a:1 : 0)
     return strdisplaywidth(a:str, col)
   endfunction
+  call s:String.function('width')
 
 else
-  function! alignta#string#width(str, ...)
+
+  function! s:String_width(str, ...)
     if a:str =~ '^[\x00-\x08\x0a-\x7f]*$'
       " NOTE: If the given string consists of only 7-bit ASCII characters
       " excluding Tab, we can use strlen() to calculate the width of it.
@@ -95,7 +126,7 @@ else
 
     let col = (a:0 ? a:1 : 0)
 
-    " borrowed from Charles Campbell's Align.vim
+    " Borrowed from Charles Campbell's Align.vim
     " http://www.vim.org/scripts/script.php?script_id=294
     "
     " NOTE: This code has a side effect that changes the cursor's position.
@@ -107,6 +138,8 @@ else
     let &l:modified = save_mod
     return width
   endfunction
+  call s:String.function('width')
+
 endif
 
 " vim: filetype=vim

@@ -1,8 +1,8 @@
 "=============================================================================
-" File    : region.vim
+" File    : lib/region.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-02-11
-" Version : 0.1.2
+" Updated : 2011-05-06
+" Version : 0.1.3
 " License : MIT license {{{
 "
 "   Permission is hereby granted, free of charge, to any person obtaining
@@ -26,17 +26,30 @@
 " }}}
 "=============================================================================
 
-function! alignta#region#new(...)
-  return call(s:Region.new, a:000, s:Region)
+" Inspired by Yukihiro Nakadaira's nsexample.vim
+" https://gist.github.com/867896
+"
+let s:lib = expand('<sfile>:p:h:gs?[\\/]?#?:s?^.*#autoload#??')
+" => path#to#lib
+
+function! {s:lib}#region#import()
+  return s:Region
 endfunction
+
+"-----------------------------------------------------------------------------
+
+let s:Vimenv = {s:lib}#vimenv#import()
+let s:String = {s:lib}#string#import()
 
 function! s:get_SID()
   return matchstr(expand('<sfile>'), '<SNR>\d\+_')
 endfunction
 let s:SID = s:get_SID()
+delfunction s:get_SID
 
-let s:Region = alignta#oop#class#new('Region')
+let s:Region = {s:lib}#oop#class#new('Region', s:SID)
 
+" TODO: doc
 function! s:Region_initialize(...) dict
   let [type, line_range, char_range] = self._parse_arguments(a:000)
   let self.type = type
@@ -61,7 +74,7 @@ function! s:Region_initialize(...) dict
     let self.is_broken = 1
   endif
 endfunction
-call s:Region.bind(s:SID, 'initialize')
+call s:Region.method('initialize')
 
 function! s:Region__parse_arguments(args) dict
   let argc = len(a:args)
@@ -88,7 +101,7 @@ function! s:Region__parse_arguments(args) dict
   endif
   return [type, line_range, char_range]
 endfunction
-call s:Region.bind(s:SID, '_parse_arguments')
+call s:Region.method('_parse_arguments')
 
 function! s:Region__get_selection() dict
   let self._ragged = {}
@@ -102,7 +115,7 @@ function! s:Region__get_selection() dict
     " get the selection via register 'v'
     let vismode = { 'char': 'v', 'line': 'V', 'block': "\<C-v>" }[self.type]
 
-    let vimenv = alignta#vimenv#new('.', '&selection', '@v', vismode)
+    let vimenv = s:Vimenv.new('.', '&selection', '@v', vismode)
     set selection=inclusive
 
     call setpos('.', self.char_range[0])
@@ -146,17 +159,17 @@ function! s:Region__get_selection() dict
     call vimenv.restore()
   endif
 endfunction
-call s:Region.bind(s:SID, '_get_selection')
+call s:Region.method('_get_selection')
 
 function! s:Region_detab_indent() dict
   let col = (self.type ==# 'block' ? self.block_begin_col - 1 : 0)
   call map(self.lines, 's:detab_indent(v:val, col)')
 endfunction
-call s:Region.bind(s:SID, 'detab_indent')
+call s:Region.method('detab_indent')
 
 function! s:detab_indent(str, col)
   let indent = matchstr(a:str, '^\s*')
-  let indent = alignta#string#padding(alignta#string#width(indent, a:col))
+  let indent = s:String.padding(s:String.width(indent, a:col))
   return substitute(a:str, '^\s*', indent, '')
 endfunction
 
@@ -164,11 +177,11 @@ function! s:Region_entab_indent() dict
   let col = (self.type ==# 'block' ? self.block_begin_col - 1 : 0)
   call map(self.lines, 's:entab_indent(v:val, col)')
 endfunction
-call s:Region.bind(s:SID, 'entab_indent')
+call s:Region.method('entab_indent')
 
 function! s:entab_indent(str, col)
   let indent = matchstr(a:str, '^\s*')
-  let indent = alignta#string#tab_padding(strlen(indent), a:col)
+  let indent = s:String.tab_padding(strlen(indent), a:col)
   return substitute(a:str, '^\s*', indent, '')
 endfunction
 
@@ -178,24 +191,24 @@ function! s:Region_has_indent_tab(...) dict
   let indents = map(lines, 'matchstr(v:val, "^\\s*")')
   return !empty(filter(indents, 'v:val =~ "\\t"'))
 endfunction
-call s:Region.bind(s:SID, 'has_indent_tab')
+call s:Region.method('has_indent_tab')
 
 function! s:Region_has_tab(...) dict
   let orig = (a:0 ? a:1 : 0)
   let lines = copy(orig ? self.original_lines : self.lines)
   return !empty(filter(lines, 'v:val =~ "\\t"'))
 endfunction
-call s:Region.bind(s:SID, 'has_tab')
+call s:Region.method('has_tab')
 
 function! s:Region_line_is_ragged(line_idx) dict
   return has_key(self._ragged, self.line_range[0] + a:line_idx)
 endfunction
-call s:Region.bind(s:SID, 'line_is_ragged')
+call s:Region.method('line_is_ragged')
 
 function! s:Region_line_is_short(line_idx) dict
   return has_key(self._short, self.line_range[0] + a:line_idx)
 endfunction
-call s:Region.bind(s:SID, 'line_is_short')
+call s:Region.method('line_is_short')
 
 function! s:Region_update() dict
   if self.is_broken
@@ -205,7 +218,7 @@ function! s:Region_update() dict
   if self.type ==# 'line'
     call setline(self.line_range[0], self.lines)
   else              
-    let vimenv = alignta#vimenv#new('.', '@v')
+    let vimenv = s:Vimenv.new('.', '@v')
 
     let vismode = { 'char': 'v', 'line': 'V', 'block': "\<C-v>" }[self.type]
     let regtype = vismode
@@ -213,14 +226,14 @@ function! s:Region_update() dict
     if self.type ==# 'block'
       " calculate the block width
       let col = self.block_begin_col - 1
-      let max_width = max(map(copy(self.lines), 'alignta#string#width(v:val, col)'))
+      let max_width = max(map(copy(self.lines), 's:String.width(v:val, col)'))
       " NOTE: If the block contains any multi-byte characters, Vim fails to
-      " count the number of paddings and append extra spaces. So, pad the
+      " count the number of paddings and append extra spaces. So, justify the
       " lines here beforehand.
       call map(self.lines, '
             \ (self.line_is_short(v:key) || v:val =~ "^\\s*$")
             \   ? v:val
-            \   : alignta#string#pad(v:val, max_width, "left", col)
+            \   : s:String.justify(v:val, max_width, "left", col)
             \')
       let regtype .= max_width
     endif
@@ -247,14 +260,7 @@ function! s:Region_update() dict
     endif
   endif
 endfunction
-call s:Region.bind(s:SID, 'update')
-
-function! s:Region_to_s() dict
-  let _self = filter(copy(self), 'type(v:val) != type(function("tr"))')
-  unlet _self.class
-  return string(_self)
-endfunction
-call s:Region.bind(s:SID, 'to_s')
+call s:Region.method('update')
 
 function! s:sort_numbers(list)
   return sort(a:list, 's:compare_numbers')
