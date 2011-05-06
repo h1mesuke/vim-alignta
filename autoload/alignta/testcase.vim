@@ -1,35 +1,38 @@
 " alignta's test suite
 
-if exists('s:AlignerTestCase')
-  finish
-endif
+function! alignta#testcase#class()
+  return s:TestCase
+endfunction
+
+"-----------------------------------------------------------------------------
 
 function! s:get_SID()
   return matchstr(expand('<sfile>'), '<SNR>\d\+_')
 endfunction
 let s:SID = s:get_SID()
+delfunction s:get_SID
 
-let s:AlignerTestCase = unittest#oop#class#new('AlignerTestCase', unittest#testcase#class())
-let s:AlignerTestCase.here = expand('<sfile>:p:h')
+let s:TestCase = unittest#oop#class#new('TestCase', s:SID, unittest#testcase#class())
+let s:TestCase.test_dir = expand('<sfile>:p:h:h:h') . '/test'
 
-function! s:AlignerTestCase_initialize(tc_name) dict
-  call s:AlignerTestCase.super('initialize', [a:tc_name], self)
-  let self.context_file = s:AlignerTestCase.here . '/' . self.name . '.dat'
+function! s:TestCase_initialize(tc_name) dict
+  call s:TestCase.super('initialize', self, a:tc_name)
+  let self.context_file = s:TestCase.test_dir . '/' . self.name . '.dat'
 endfunction
-call s:AlignerTestCase.bind(s:SID, 'initialize')
+call s:TestCase.method('initialize')
 
-function! s:AlignerTestCase_setup() dict
+function! s:TestCase_setup() dict
   let self.save_default_options = g:alignta_default_options
   let g:alignta_default_options = '<<<1:1'
 endfunction
-call s:AlignerTestCase.bind(s:SID, 'setup')
+call s:TestCase.method('setup')
 
-function! s:AlignerTestCase_teardown() dict
+function! s:TestCase_teardown() dict
   let g:alignta_default_options = self.save_default_options
 endfunction
-call s:AlignerTestCase.bind(s:SID, 'teardown')
+call s:TestCase.method('teardown')
 
-function! s:AlignerTestCase__test_align(tag, align_command) dict
+function! s:TestCase__test_align(tag, align_command) dict
   execute ':' . join(s:data_range(a:tag), ',') . a:align_command
   let actual = s:data_lines(a:tag)
   silent undo
@@ -40,9 +43,9 @@ function! s:AlignerTestCase__test_align(tag, align_command) dict
   call self.print_lines(expected)
   call self.print_lines(actual)
 endfunction
-call s:AlignerTestCase.bind(s:SID, '_test_align')
+call s:TestCase.method('_test_align')
 
-function! s:AlignerTestCase__test_align_block(tag, align_command) dict
+function! s:TestCase__test_align_block(tag, align_command) dict
   call s:select_visual_block(a:tag)
   execute ":'<,'>" . a:align_command
   let actual = s:data_lines(a:tag)
@@ -54,7 +57,7 @@ function! s:AlignerTestCase__test_align_block(tag, align_command) dict
   call self.print_lines(expected)
   call self.print_lines(actual)
 endfunction
-call s:AlignerTestCase.bind(s:SID, '_test_align_block')
+call s:TestCase.method('_test_align_block')
 
 function! s:goto_data(tag)
   execute s:data_range(a:tag)[0]
@@ -91,12 +94,12 @@ function! s:expected_lines(tag)
   return getline(range[0], range[1])
 endfunction
 
-function! s:AlignerTestCase_print_lines(lines) dict
+function! s:TestCase_print_lines(lines) dict
   call self.puts()
   for line in a:lines
     call self.puts(string(line))
   endfor
 endfunction
-call s:AlignerTestCase.bind(s:SID, 'print_lines')
+call s:TestCase.method('print_lines')
 
 " vim: filetype=vim

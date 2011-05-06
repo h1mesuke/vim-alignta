@@ -1,7 +1,6 @@
 " alignta's test suite
 
-execute 'source' expand('<sfile>:p:h') . '/aligner_testcase.vim'
-let tc = unittest#testcase#new('test_practice', 'AlignerTestCase')
+let tc = unittest#testcase#new('test_practice', alignta#testcase#class())
 
 "-----------------------------------------------------------------------------
 
