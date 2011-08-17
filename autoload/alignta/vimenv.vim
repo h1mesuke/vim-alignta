@@ -70,7 +70,7 @@ function! s:Vimenv_initialize(...) dict
       let save_vsel = 1
       let visualmode = value
     else
-      throw "ArgumentError: invalid name " . string(value)
+      throw "VimenvError: Invalid name " . string(value)
     endif
   endfor
 

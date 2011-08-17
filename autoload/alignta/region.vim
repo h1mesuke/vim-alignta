@@ -100,7 +100,7 @@ function! s:Region__parse_arguments(args) dict
     let line_range = a:args
     let char_range = []
   else
-    throw "ArgumentError: wrong number of arguments (" . argc . " for 1..2)"
+    throw "ArgumentError: Wrong number of arguments (" . argc . " for 1..2)"
   endif
   return [type, line_range, char_range]
 endfunction
@@ -214,7 +214,7 @@ call s:Region.method('line_is_short')
 
 function! s:Region_update() dict
   if self.is_broken
-    throw "RuntimeError: the region is broken"
+    throw "RegionError: The region is broken."
   endif
 
   if self.type ==# 'line'

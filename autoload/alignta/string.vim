@@ -1,7 +1,7 @@
 "=============================================================================
 " File    : lib/string.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-05-06
+" Updated : 2011-08-17
 " Version : 0.1.2
 " License : MIT license {{{
 "
@@ -59,7 +59,7 @@ function! s:String_justify(str, width, align, ...)
     let lpad = ''
     let rpad = s:String_padding(a:width - str_w)
   elseif a:str =~ '\t'
-    throw "ArgumentError: the string contains a Tab"
+    throw "StringError: The string contains a Tab."
   else
     let str_w = s:String_width(a:str)
     if a:align == '|' || a:align =~# 'c\%[enter]'

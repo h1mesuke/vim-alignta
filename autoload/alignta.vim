@@ -40,7 +40,7 @@ function! alignta#get_config_variable(name)
   elseif exists('g:' . a:name)
     execute 'let value = g:' . a:name
   else
-    throw "alignta: undefined variable `" . a:name . "'"
+    throw "alignta: Undefined variable `" . a:name . "'"
   endif
   return value
 endfunction
@@ -138,7 +138,7 @@ function! s:Aligner_align() dict
   call s:print_debug("arguments", self.arguments)
 
   if self.region.is_broken
-    call alignta#print_error("alignta: the region is invalid")
+    call alignta#print_error("alignta: The selected region is invalid.")
     return
   endif
 
