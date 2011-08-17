@@ -3,7 +3,7 @@
 "
 " File    : autoload/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-05-06
+" Updated : 2011-08-17
 " Version : 0.2.1
 " License : MIT license {{{
 "
@@ -110,10 +110,10 @@ function! s:Aligner_initialize(region_args, align_args, use_regexp) dict
     let self.region.had_indent_tab = 1
   endif
 
-  " initialize the lines to align
+  " Initialize the lines to align.
   let self.lines = s:Lines.new(self.region.lines)
 
-  " initialize the buffer where the aligned parts will be appended
+  " Initialize the buffer where the aligned parts will be appended.
   let begin_col = (self.region.type ==# 'block' ? self.region.block_begin_col : 1)
   let self.aligned = s:Lines.new(map(copy(self.region.lines), '""'), begin_col)
 endfunction
@@ -154,7 +154,7 @@ function! s:Aligner_align() dict
   let argc = len(self.arguments)
   let is_pattern = 0
 
-  " process arguments
+  " Process arguments.
   let idx = 0
   while idx < argc
     let value = self.arguments[idx]
@@ -184,7 +184,7 @@ function! s:Aligner_align() dict
   call self.aligned.rstrip()
 
   if self.region.type ==# 'block'
-    " keep the block width as possible
+    " Keep the block width as possible.
     call self.aligned.update_width()
     let block_width = self.region.block_width
     for [idx, line] in self.aligned.each()
@@ -203,7 +203,7 @@ function! s:Aligner_align() dict
     call self.region.entab_indent()
   endif
 
-  " update!
+  " Update!
   call self.region.update()
 
   call vimenv.restore()
@@ -366,7 +366,7 @@ function! s:Aligner__split_to_fields(lines, pattern, times) dict
     let L_fld = s:Lines.new() | " Left
     let M_fld = s:Lines.new() | " Matched
     let R_fld = s:Lines.new() | " Right
-    " match and split
+    " Match and split.
     for [idx, line] in rest.each()
       let match_beg = match(line, a:pattern)
       if match_beg >= 0
@@ -411,7 +411,7 @@ function! s:Aligner__join_fields(fields) dict
     call call(self['_' . self.options.method . '_align_fields'],
           \ [L_fld, M_fld, fld_idx, (fld_idx == len(a:fields) - 3)], self)
 
-    " join fields
+    " Join fields.
     for [idx, line] in L_fld.each()
       if M_fld.has(idx)
         let line = L_fld.line(idx) . M_fld.line(idx)
@@ -483,7 +483,7 @@ call s:Aligner.method('_get_field_align')
 
 function! s:Aligner__shift_align_fields(L_fld, M_fld, fld_idx, is_last, shift_left, use_tab) dict
   if self.align_count == 0 && a:fld_idx == 0
-    " save the left/right most position of matches
+    " Save the left/right most position of matches.
     let width_list = map(filter(a:L_fld.each(), 'a:M_fld.has(v:val[0])'), '
           \ self.aligned.width(v:val[0]) +
           \ s:String.width(v:val[1], self.aligned.width(v:val[0]))

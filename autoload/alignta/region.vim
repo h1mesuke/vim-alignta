@@ -1,7 +1,7 @@
 "=============================================================================
 " File    : lib/region.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-05-06
+" Updated : 2011-08-17
 " Version : 0.1.3
 " License : MIT license {{{
 "
@@ -58,10 +58,11 @@ function! s:Region_initialize(...) dict
   let self.char_range = char_range
   let self.original_lines = getline(line_range[0], line_range[1])
 
-  " capture the selection
+  " Capture the selection.
   call self._get_selection()
 
   if type !=# 'line'
+    " Select the appropriate command for writing the region's content back.
     for writeback_command in ['P', 'p']
       let self.writeback_command = writeback_command
       call self.update()
@@ -71,6 +72,8 @@ function! s:Region_initialize(...) dict
         return
       endif
     endfor
+    " Both 'P' and 'p' failed. We will never update the region without
+    " destroying the selection...
     let self.is_broken = 1
   endif
 endfunction
@@ -112,9 +115,9 @@ function! s:Region__get_selection() dict
     let self.lines = getline(self.line_range[0], self.line_range[1])
   else
     " Characterwise or Blockwise
-    " get the selection via register 'v'
-    let vismode = { 'char': 'v', 'line': 'V', 'block': "\<C-v>" }[self.type]
 
+    " Get the selection via register 'v'.
+    let vismode = { 'char': 'v', 'line': 'V', 'block': "\<C-v>" }[self.type]
     let vimenv = s:Vimenv.new('.', '&selection', '@v', vismode)
     set selection=inclusive
 
@@ -146,7 +149,7 @@ function! s:Region__get_selection() dict
         execute lnum
         let line_endcol = virtcol('$')
         if line_endcol <= block_begcol
-          " collect lnums of lines that cause ragged rights to avoid the extra
+          " Collect lnums of lines that cause ragged rights to avoid the extra
           " spaces issue on s:Region.update()
           let self._ragged[lnum] = 1
           let self.lines[lnum - self.line_range[0]] = ''
@@ -155,7 +158,6 @@ function! s:Region__get_selection() dict
         endif
       endfor
     endif
-
     call vimenv.restore()
   endif
 endfunction
@@ -219,12 +221,11 @@ function! s:Region_update() dict
     call setline(self.line_range[0], self.lines)
   else              
     let vimenv = s:Vimenv.new('.', '@v')
-
     let vismode = { 'char': 'v', 'line': 'V', 'block': "\<C-v>" }[self.type]
     let regtype = vismode
 
     if self.type ==# 'block'
-      " calculate the block width
+      " Calculate the block width.
       let col = self.block_begin_col - 1
       let max_width = max(map(copy(self.lines), 's:String.width(v:val, col)'))
       " NOTE: If the block contains any multi-byte characters, Vim fails to

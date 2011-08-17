@@ -1,7 +1,7 @@
 "=============================================================================
 " File    : vimenv.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-05-06
+" Updated : 2011-08-17
 " Version : 0.1.2
 " License : MIT license {{{
 "
@@ -54,7 +54,7 @@ function! s:Vimenv_initialize(...) dict
   let save_regs   = []
   let save_vsel   = 0
 
-  " parse args
+  " Parse arguments.
   for value in args
     if value == '.'
       let save_cursor = 1
@@ -74,11 +74,11 @@ function! s:Vimenv_initialize(...) dict
     endif
   endfor
 
-  " save cursor
+  " Save the cursor.
   if save_cursor
     let self.cursor = getpos('.')
   endif
-  " save marks
+  " Save marks.
   if !empty(save_marks)
     let saved_marks = {}
     for mark_name in save_marks
@@ -86,7 +86,7 @@ function! s:Vimenv_initialize(...) dict
     endfor
     let self.marks = saved_marks
   endif
-  " save options
+  " Save options.
   if !empty(save_opts)
     let saved_opts = {}
     for opt_name in save_opts
@@ -94,7 +94,7 @@ function! s:Vimenv_initialize(...) dict
     endfor
     let self.options = saved_opts
   endif
-  " save registers
+  " Save registers.
   if !empty(save_regs)
     let saved_regs = {}
     for reg_name in save_regs
@@ -106,7 +106,7 @@ function! s:Vimenv_initialize(...) dict
     endfor
     let self.registers = saved_regs
   endif
-  " save the visual selection
+  " Save the visual selection.
   if save_vsel
     let saved_vsel = {
           \ 'mode' : visualmode,
@@ -119,19 +119,19 @@ endfunction
 call s:Vimenv.method('initialize')
 
 function! s:Vimenv_restore() dict
-  " restore marks
+  " Restore marks.
   if has_key(self, 'marks')
     for [mark_name, mark_pos] in items(self.marks)
       call setpos("'" . mark_name, mark_pos)
     endfor
   endif
-  " restore options
+  " Restore options.
   if has_key(self, 'options')
     for [opt_name, opt_val] in items(self.options)
       execute 'let &' . opt_name .' = opt_val'
     endfor
   endif
-  " restore registers
+  " Restore registers.
   if has_key(self, 'registers')
     for [reg_name, reg_data] in items(self.registers)
       call setreg(reg_name, reg_data.value, reg_data.type)
@@ -143,7 +143,7 @@ function! s:Vimenv_restore() dict
       call setreg('"', reg_data.value, reg_data.type)
     endif
   endif
-  " restore the visual selection
+  " Restore the visual selection.
   if has_key(self, 'selection')
     let vsel = self.selection
     let save_cursor = getpos('.')
@@ -153,7 +153,7 @@ function! s:Vimenv_restore() dict
     execute 'normal!' vsel.mode                                  
     call setpos('.', save_cursor)
   endif
-  " restore the cursor
+  " Restore the cursor.
   if has_key(self, 'cursor')
     call setpos('.', self.cursor)
   endif
