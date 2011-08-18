@@ -100,7 +100,7 @@ call s:Aligner.class_method('reset_extending_options')
 function! s:Aligner_initialize(region_args, align_args, use_regexp) dict
   let self.region = call(s:Region.new, a:region_args, s:Region)
   let self.region.had_indent_tab = 0
-  let self.arguments = a:align_args
+  let self.arguments  = a:align_args
   let self.use_regexp = a:use_regexp
   call self.init_options()
   let self.align_count = 0
@@ -110,12 +110,12 @@ function! s:Aligner_initialize(region_args, align_args, use_regexp) dict
     call self.region.detab_indent()
     let self.region.had_indent_tab = 1
   endif
-
   " Initialize the lines to align.
   let self.lines = s:Fragments.new(self.region.lines)
   " Initialize the buffer where the aligned parts will be appended.
-  let begin_col = (self.region.type ==# 'block' ? self.region.block_begin_col : 1)
-  let self.aligned = s:Fragments.new(map(copy(self.region.lines), '""'), begin_col)
+  let size = len(self.region.lines)
+  let col  = (self.region.type ==# 'block' ? self.region.block_begin_col - 1 : 0)
+  let self.aligned = s:Aligned.new(size, col)
 endfunction
 call s:Aligner.method('initialize')
 
@@ -185,7 +185,6 @@ function! s:Aligner_align() dict
 
   if self.region.type ==# 'block'
     " Keep the block width as possible.
-    call self.aligned.update_width()
     let block_width = self.region.block_width
     for [idx, line] in self.aligned.each()
       if (line =~ '^\s*$' || self.region.line_is_short(idx)) | continue | endif
@@ -219,8 +218,8 @@ function! s:Aligner_parse_options(value) dict
   let opts = {}
   for opts_str in split(a:value, '\(\(^\|[^\\]\)\(\\\{2}\)*\)\@<=\s\s*')
 
-    " padding alignment options
-    " {L_fld_align}{M_fld_align}...[L_fld_align][margin]
+    " Padding Alignment Options
+    "   {L_fld_align}{M_fld_align}...[L_fld_align][margin]
     let matched_list = matchlist(opts_str,
           \ '^\([<|>=]\{2,}\)\%(\(\d\)\(\d\)\=\|\(\d\+\):\(\d\+\)\)\=$')
     if len(matched_list) > 0
@@ -240,9 +239,9 @@ function! s:Aligner_parse_options(value) dict
       continue
     endif
 
-    " shifting alignment options
-    " <-[margin] or <--[margin] or
-    " ->[margin] or -->[margin]
+    " Shifting Alignment Options
+    "   <-[margin] or <--[margin] or
+    "   ->[margin] or -->[margin]
     let matched_list = matchlist(opts_str, '^\(<--\=\|--\=>\)\(\d\+\)\=$')
     if len(matched_list) > 0
       let opts.method = 'shift'
@@ -255,7 +254,7 @@ function! s:Aligner_parse_options(value) dict
       continue
     endif
 
-    " margin options
+    " Margin Options
     let matched_list = matchlist(opts_str,
           \ '^@\%(\(\d\)\(\d\)\=\|\(\d\+\):\(\d\+\)\)\=$')
     if len(matched_list) > 0
@@ -273,7 +272,7 @@ function! s:Aligner_parse_options(value) dict
       continue
     endif
 
-    " filtering pattern
+    " Filtering Pattern
     let matched_list = matchlist(opts_str, '^\([gv]\)/\(.*\)$')
     if len(matched_list) > 0
       if matched_list[1] ==# 'g'
@@ -418,7 +417,7 @@ function! s:Aligner__join_fields(fields) dict
         call self.aligned.append(idx, line)
       else
         " Last field
-        " the next pattern matching will start from the beginning of it
+        " The next pattern matching will start from the beginning of it.
         call self.lines.set(idx, line)
       endif
     endfor
@@ -553,34 +552,25 @@ endfunction
 
 let s:Fragments = alignta#oop#class#new('Fragments', s:SID)
 
+" Fragments.new( [{lines}])
 function! s:Fragments_initialize(...) dict
   let self._lines = {}
-  let self._width = {}
-  let self._calc_width = (len(a:000) >= 2)
-
-  if self._calc_width
-    let self._begin_col = get(a:000, 1, 1)
+  if a:0
+    let lines = a:1
+    let idx = 0
+    while idx < len(lines)
+      let self._lines[idx] = lines[idx]
+      let idx += 1
+    endwhile
   endif
-
-  let lines = get(a:000, 0, [])
-  let idx = 0
-  while idx < len(lines)
-    call self.append(idx, lines[idx])
-    let idx += 1
-  endwhile
 endfunction
 call s:Fragments.method('initialize')
 
 function! s:Fragments_append(idx, str) dict
   if !has_key(self._lines, a:idx)
     let self._lines[a:idx] = ""
-    let self._width[a:idx] = 0
   endif
   let self._lines[a:idx] .= a:str
-  if self._calc_width
-    let col = (self._begin_col - 1) + self._width[a:idx]
-    let self._width[a:idx] += s:String.width(a:str, col)
-  endif
 endfunction
 call s:Fragments.method('append')
 
@@ -600,7 +590,6 @@ call s:Fragments.method('dump')
 function! s:Fragments_dup() dict
   let obj = copy(self)
   let obj._lines = copy(self._lines)
-  let obj._width = copy(self._width)
   return obj
 endfunction
 call s:Fragments.method('dup')
@@ -629,31 +618,24 @@ function! s:Fragments_line(idx) dict
 endfunction
 call s:Fragments.method('line')
 
-function! s:Fragments_width(idx) dict
-  return self._width[a:idx]
-endfunction
-call s:Fragments.method('width')
-
 function! s:Fragments_set(idx, str) dict
-  if has_key(self._lines, a:idx)
-    call self.remove(a:idx)
-  endif
-  call self.append(a:idx, a:str)
+  let self._lines[a:idx] = a:str
 endfunction
 call s:Fragments.method('set')
 
 function! s:Fragments_remove(idx) dict
   unlet self._lines[a:idx]
-  unlet self._width[a:idx]
 endfunction
 call s:Fragments.method('remove')
 
+" Fragments.strip( [{strip_min_leading}])
 function! s:Fragments_strip(...) dict
   call self.lstrip(a:0 ? a:1 : 0)
   call self.rstrip()
 endfunction
 call s:Fragments.method('strip')
 
+" Fragments.lstrip( [{strip_min_leading}])
 function! s:Fragments_lstrip(...) dict
   let strip_min_leading =  (a:0 ? a:1 : 0)
   if strip_min_leading
@@ -677,16 +659,6 @@ function! s:Fragments_to_list() dict
 endfunction
 call s:Fragments.method('to_list')
 
-function! s:Fragments_update_width() dict
-  if self._calc_width
-    let col = self._begin_col - 1
-    for [idx, line] in self.each()
-      let self._width[idx] = s:String.width(line, col)
-    endfor
-  endif
-endfunction
-call s:Fragments.method('update_width')
-
 function! s:sort_numbers(list)
   return sort(a:list, 's:compare_numbers')
 endfunction
@@ -696,6 +668,79 @@ function! s:compare_numbers(n1, n2)
   let n2 = str2nr(a:n2)
   return n1 == n2 ? 0 : n1 > n2 ? 1 : -1
 endfunction
+
+"-----------------------------------------------------------------------------
+" Aligned
+
+let s:Aligned = alignta#oop#class#new('Aligned', s:SID)
+
+function! s:Aligned_initialize(size, col) dict
+  let empties = []
+  let self._width = {}
+  let self._col = a:col
+  let idx = 0
+  while idx < a:size
+    call add(empties, "")
+    let self._width[idx] = 0
+    let idx += 1
+  endwhile
+  let self._fragments = s:Fragments.new(empties)
+endfunction
+call s:Aligned.method('initialize')
+
+function! s:Aligned_append(idx, str) dict
+  call self._fragments.append(a:idx, a:str)
+  if !has_key(self._width, a:idx)
+    let self._width[a:idx] = 0
+  endif
+  let col = self._col + self._width[a:idx]
+  let self._width[a:idx] += s:String.width(a:str, col)
+endfunction
+call s:Aligned.method('append')
+
+function! s:Aligned_dump() dict
+  call self._fragments.dump()
+endfunction
+call s:Aligned.method('dump')
+
+function! s:Aligned_each() dict
+  return self._fragments.each()
+endfunction
+call s:Aligned.method('each')
+
+function! s:Aligned_line(idx) dict
+  return self._fragments.line(a:idx)
+endfunction
+call s:Aligned.method('line')
+
+function! s:Aligned_width(idx) dict
+  return self._width[a:idx]
+endfunction
+call s:Aligned.method('width')
+
+function! s:Aligned_set(idx, str) dict
+  call self._fragments.set(a:idx, a:str)
+  let self._width[a:idx] = s:String.width(a:str, self._col)
+endfunction
+call s:Aligned.method('set')
+
+function! s:Aligned_rstrip() dict
+  call self._fragments.rstrip()
+  call self._update_width()
+endfunction
+call s:Aligned.method('rstrip')
+
+function! s:Aligned__update_width() dict
+  for [idx, line] in self._fragments.each()
+    let self._width[idx] = s:String.width(line, self._col)
+  endfor
+endfunction
+call s:Aligned.method('_update_width')
+
+function! s:Aligned_to_list() dict
+  return self._fragments.to_list()
+endfunction
+call s:Aligned.method('to_list')
 
 "-----------------------------------------------------------------------------
 " Utils
