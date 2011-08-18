@@ -3,7 +3,7 @@
 "
 " File    : autoload/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-08-17
+" Updated : 2011-08-19
 " Version : 0.2.1
 " License : MIT license {{{
 "
@@ -111,11 +111,10 @@ function! s:Aligner_initialize(region_args, align_args, use_regexp) dict
   endif
 
   " Initialize the lines to align.
-  let self.lines = s:Lines.new(self.region.lines)
-
+  let self.lines = s:Fragments.new(self.region.lines)
   " Initialize the buffer where the aligned parts will be appended.
   let begin_col = (self.region.type ==# 'block' ? self.region.block_begin_col : 1)
-  let self.aligned = s:Lines.new(map(copy(self.region.lines), '""'), begin_col)
+  let self.aligned = s:Fragments.new(map(copy(self.region.lines), '""'), begin_col)
 endfunction
 call s:Aligner.method('initialize')
 
@@ -197,7 +196,7 @@ function! s:Aligner_align() dict
     endfor
   endif
 
-  let self.region.lines = self.aligned.to_a()
+  let self.region.lines = self.aligned.to_list()
 
   if self.region.had_indent_tab
     call self.region.entab_indent()
@@ -363,9 +362,9 @@ function! s:Aligner__split_to_fields(lines, pattern, times) dict
   let n = 0 | let rest = a:lines
   while n < a:times
     let matched_count = 0
-    let L_fld = s:Lines.new() | " Left
-    let M_fld = s:Lines.new() | " Matched
-    let R_fld = s:Lines.new() | " Right
+    let L_fld = s:Fragments.new() | " Left
+    let M_fld = s:Fragments.new() | " Matched
+    let R_fld = s:Fragments.new() | " Right
     " Match and split.
     for [idx, line] in rest.each()
       let match_beg = match(line, a:pattern)
@@ -389,7 +388,7 @@ function! s:Aligner__split_to_fields(lines, pattern, times) dict
     let n += 1
   endwhile
 
-  let sentinel = s:Lines.new()
+  let sentinel = s:Fragments.new()
   let fields += [rest, sentinel, sentinel]
 
   return fields
@@ -428,7 +427,6 @@ function! s:Aligner__join_fields(fields) dict
       call s:print_debug(printf("[%02d] M_fld:after",  fld_idx + 1), M_fld)
       call s:print_debug("aligned", self.aligned)
     endif
-
     let fld_idx += 2
   endwhile
 endfunction
@@ -438,29 +436,25 @@ function! s:Aligner__pad_align_fields(L_fld, M_fld, fld_idx, is_last) dict
   let L_fld_align = self._get_field_align(a:fld_idx, a:is_last)
   let M_fld_align = self._get_field_align(a:fld_idx + 1)
 
-  "---------------------------------------
   " Left field
-
   call a:L_fld.strip(L_fld_align == '=')
 
-  let AL_fld_width = max(map(a:L_fld.each(), '
+  let AL_flds_width = max(map(a:L_fld.each(), '
         \ self.aligned.width(v:val[0]) +
         \ s:String.width(v:val[1], self.aligned.width(v:val[0]))
         \'))
 
   for [idx, line] in a:L_fld.each()
-    let width = AL_fld_width - self.aligned.width(idx)
+    let width = AL_flds_width - self.aligned.width(idx)
     let line = s:String.justify(line, width, L_fld_align)
     call a:L_fld.set(idx, line)
   endfor
 
-  "---------------------------------------
   " Matched field
-
   let L_margin = (a:L_fld.is_blank() ? '' : s:String.padding(self.options.L_margin))
   let R_margin = s:String.padding(self.options.R_margin)
 
-  let M_fld_width = max(map(a:M_fld.to_a(), 's:String.width(v:val, AL_fld_width)'))
+  let M_fld_width = max(map(a:M_fld.to_list(), 's:String.width(v:val, AL_flds_width)'))
 
   for [idx, line] in a:M_fld.each()
     let line = L_margin . s:String.justify(line, M_fld_width, M_fld_align) . R_margin
@@ -483,28 +477,29 @@ call s:Aligner.method('_get_field_align')
 
 function! s:Aligner__shift_align_fields(L_fld, M_fld, fld_idx, is_last, shift_left, use_tab) dict
   if self.align_count == 0 && a:fld_idx == 0
-    " Save the left/right most position of matches.
-    let width_list = map(filter(a:L_fld.each(), 'a:M_fld.has(v:val[0])'), '
+    " Save the Left/Right Most column position of matches
+    " before rstripping of L_fld.
+    let al_widths = map(filter(a:L_fld.each(), 'a:M_fld.has(v:val[0])'), '
           \ self.aligned.width(v:val[0]) +
           \ s:String.width(v:val[1], self.aligned.width(v:val[0]))
           \')
-    let LRM_AL_fld_width = (a:shift_left ? min(width_list) : max(width_list))
+    let LRM_match_col = (a:shift_left ? min(al_widths) : max(al_widths)) + 1
   else
-    let LRM_AL_fld_width = 0
+    let LRM_match_col = 0
   endif
 
   call a:L_fld.rstrip()
 
-  let AL_fld_width = max(map(filter(a:L_fld.each(), 'a:M_fld.has(v:val[0])'), '
+  let AL_flds_width = max(map(filter(a:L_fld.each(), 'a:M_fld.has(v:val[0])'), '
         \ self.aligned.width(v:val[0]) +
         \ s:String.width(v:val[1], self.aligned.width(v:val[0]))
         \'))
 
   let margin = self.options.L_margin
-  let AL_fld_width = max([AL_fld_width + margin, LRM_AL_fld_width])
+  let AL_flds_width = max([AL_flds_width + margin, LRM_match_col - 1])
   let Padding_func = s:String.padding
   if a:use_tab
-    let AL_fld_width = s:ts_ceil(AL_fld_width)
+    let AL_flds_width = s:tabstop_ceil(AL_flds_width)
     if !&l:expandtab
       let Padding_func = s:String.tab_padding
     endif
@@ -513,7 +508,7 @@ function! s:Aligner__shift_align_fields(L_fld, M_fld, fld_idx, is_last, shift_le
   for [idx, line] in a:L_fld.each()
     let col = self.aligned.width(idx)
     let col += s:String.width(line, col)
-    let line .= call(Padding_func, [AL_fld_width - col, col])
+    let line .= call(Padding_func, [AL_flds_width - col, col])
     call a:L_fld.set(idx, line)
   endfor
 endfunction
@@ -539,17 +534,17 @@ function! s:Aligner__shift_right_tab_align_fields(...) dict
 endfunction
 call s:Aligner.method('_shift_right_tab_align_fields')
 
-function! s:ts_ceil(w)
+function! s:tabstop_ceil(w)
   let ts = &l:tabstop
   return (a:w % ts == 0 ? a:w : ts * (a:w / ts + 1))
 endfunction
 
 "-----------------------------------------------------------------------------
-" Lines
+" Fragments
 
-let s:Lines = alignta#oop#class#new('Lines', s:SID)
+let s:Fragments = alignta#oop#class#new('Fragments', s:SID)
 
-function! s:Lines_initialize(...) dict
+function! s:Fragments_initialize(...) dict
   let self._lines = {}
   let self._width = {}
   let self._calc_width = (len(a:000) >= 2)
@@ -565,93 +560,92 @@ function! s:Lines_initialize(...) dict
     let idx += 1
   endwhile
 endfunction
-call s:Lines.method('initialize')
+call s:Fragments.method('initialize')
 
-function! s:Lines_append(idx, str) dict
+function! s:Fragments_append(idx, str) dict
   if !has_key(self._lines, a:idx)
     let self._lines[a:idx] = ""
     let self._width[a:idx] = 0
   endif
   let self._lines[a:idx] .= a:str
-
   if self._calc_width
     let col = (self._begin_col - 1) + self._width[a:idx]
     let self._width[a:idx] += s:String.width(a:str, col)
   endif
 endfunction
-call s:Lines.method('append')
+call s:Fragments.method('append')
 
-function! s:Lines_min_leading_width() dict
-  let lines = filter(self.to_a(), 'v:val =~ "\\S"')
+function! s:Fragments_min_leading_width() dict
+  let lines = filter(self.to_list(), 'v:val =~ "\\S"')
   return min(map(map(lines, 'matchstr(v:val, "^\\s*")'), 'strlen(v:val)'))
 endfunction
-call s:Lines.method('min_leading_width')
+call s:Fragments.method('min_leading_width')
 
-function! s:Lines_dump() dict
+function! s:Fragments_dump() dict
   for [idx, line] in self.each()
     call s:echomsg(printf('%03x: ', idx) . string(line))
   endfor
 endfunction
-call s:Lines.method('dump')
+call s:Fragments.method('dump')
 
-function! s:Lines_dup() dict
+function! s:Fragments_dup() dict
   let obj = copy(self)
   let obj._lines = copy(self._lines)
   let obj._width = copy(self._width)
   return obj
 endfunction
-call s:Lines.method('dup')
+call s:Fragments.method('dup')
 
-function! s:Lines_each() dict
+function! s:Fragments_each() dict
   let items = []
   for idx in s:sort_numbers(keys(self._lines))
     call add(items, [idx, self._lines[idx]])
   endfor
   return items
 endfunction
-call s:Lines.method('each')
+call s:Fragments.method('each')
 
-function! s:Lines_has(idx) dict
+function! s:Fragments_has(idx) dict
   return has_key(self._lines, a:idx)
 endfunction
-call s:Lines.method('has')
+call s:Fragments.method('has')
 
-function! s:Lines_is_blank() dict
+function! s:Fragments_is_blank() dict
   return (len(filter(values(self._lines), 'v:val =~ "^\\s*$"')) == len(self._lines))
 endfunction
-call s:Lines.method('is_blank')
+call s:Fragments.method('is_blank')
 
-function! s:Lines_line(idx) dict
+function! s:Fragments_line(idx) dict
   return self._lines[a:idx]
 endfunction
-call s:Lines.method('line')
+call s:Fragments.method('line')
 
-function! s:Lines_width(idx) dict
+function! s:Fragments_width(idx) dict
   return self._width[a:idx]
 endfunction
-call s:Lines.method('width')
+call s:Fragments.method('width')
 
-function! s:Lines_set(idx, str) dict
+function! s:Fragments_set(idx, str) dict
   if has_key(self._lines, a:idx)
     call self.remove(a:idx)
   endif
   call self.append(a:idx, a:str)
 endfunction
-call s:Lines.method('set')
+call s:Fragments.method('set')
 
-function! s:Lines_remove(idx) dict
+function! s:Fragments_remove(idx) dict
   unlet self._lines[a:idx]
   unlet self._width[a:idx]
 endfunction
-call s:Lines.method('remove')
+call s:Fragments.method('remove')
 
-function! s:Lines_strip(...) dict
+function! s:Fragments_strip(...) dict
   call self.lstrip(a:0 ? a:1 : 0)
   call self.rstrip()
 endfunction
-call s:Lines.method('strip')
+call s:Fragments.method('strip')
 
-function! s:Lines_lstrip(...) dict
+function! s:Fragments_lstrip(...) dict
   let strip_min_leading =  (a:0 ? a:1 : 0)
   if strip_min_leading
     let leading = s:String.padding(self.min_leading_width())
@@ -662,19 +656,19 @@ function! s:Lines_lstrip(...) dict
     call map(self._lines, 's:String.lstrip(v:val)')
   endif
 endfunction
-call s:Lines.method('lstrip')
+call s:Fragments.method('lstrip')
 
-function! s:Lines_rstrip() dict
+function! s:Fragments_rstrip() dict
   call map(self._lines, 's:String.rstrip(v:val)')
 endfunction
-call s:Lines.method('rstrip')
+call s:Fragments.method('rstrip')
 
-function! s:Lines_to_a() dict
+function! s:Fragments_to_list() dict
   return map(self.each(), 'v:val[1]')
 endfunction
-call s:Lines.method('to_a')
+call s:Fragments.method('to_list')
 
-function! s:Lines_update_width() dict
+function! s:Fragments_update_width() dict
   if self._calc_width
     let col = self._begin_col - 1
     for [idx, line] in self.each()
@@ -682,7 +676,7 @@ function! s:Lines_update_width() dict
     endfor
   endif
 endfunction
-call s:Lines.method('update_width')
+call s:Fragments.method('update_width')
 
 function! s:sort_numbers(list)
   return sort(a:list, 's:compare_numbers')
@@ -706,7 +700,7 @@ function! s:print_debug(caption, value)
     call s:echomsg("")
     call s:echomsg("ALIGNTA-DEBUG: " . a:caption)
     if alignta#oop#is_object(a:value)
-      if a:value.is_a(s:Lines)
+      if a:value.is_a(s:Fragments)
         call a:value.dump()
       else
         call s:echomsg(a:value.to_s())
