@@ -142,10 +142,6 @@ function! s:Aligner_align() dict
     return
   endif
 
-  if exists('g:alignta_profile') && g:alignta_profile && has("reltime")
-    let start_time = reltime()
-  endif
-
   let vimenv = s:Vimenv.new('.', '&ignorecase')
   set noignorecase
   " NOTE: s:String.width() for Vim 7.2 or older has a side effect that changes
@@ -204,13 +200,7 @@ function! s:Aligner_align() dict
 
   " Update!
   call self.region.update()
-
   call vimenv.restore()
-
-  if exists('g:alignta_profile') && g:alignta_profile && has("reltime")
-    let used_time = split(reltimestr(reltime(start_time)))[0]
-    echomsg "alignta: used=" . used_time . "s"
-  endif
 endfunction
 call s:Aligner.method('align')
 
