@@ -743,12 +743,8 @@ function! s:print_debug(caption, value)
   if exists('g:alignta_debug') && g:alignta_debug
     call s:echomsg("")
     call s:echomsg("ALIGNTA-DEBUG: " . a:caption)
-    if alignta#oop#is_object(a:value)
-      if a:value.is_a(s:Fragments)
+    if alignta#oop#is_object(a:value) && a:value.is_a(s:Fragments)
         call a:value.dump()
-      else
-        call s:echomsg(a:value.to_s())
-      endif
     else
       call s:echomsg(alignta#oop#string(a:value))
     endif
