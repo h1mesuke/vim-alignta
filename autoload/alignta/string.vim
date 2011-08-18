@@ -1,7 +1,7 @@
 "=============================================================================
 " File    : lib/string.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-08-17
+" Updated : 2011-08-19
 " Version : 0.1.2
 " License : MIT license {{{
 "
@@ -51,6 +51,7 @@ function! s:String_escape_regexp(str)
 endfunction
 call s:String.function('escape_regexp')
 
+" String.justify( {str}, {width}, {align} [, {col}])
 function! s:String_justify(str, width, align, ...)
   if ((a:align == '<' || a:align =~# 'l\%[eft]') ||
     \ (a:align == '=' || a:align =~# 'a\%[ppend]'))
@@ -75,13 +76,28 @@ function! s:String_justify(str, width, align, ...)
 endfunction
 call s:String.function('justify')
 
+" Returns concatenated Spaces for padding.
+"
 " NOTE: This function's interface must be same as String.tab_padding's.
 " Don't remove "...".
+"
 function! s:String_padding(width, ...)
   return repeat(' ', a:width)
 endfunction
 call s:String.function('padding')
 
+" Returns concatenated Tabs and Spaces for padding. The returned padding
+" string occupies {width} in display cells from column {col}+1 on the screen.
+"
+" If 'tabstop' is 8:
+"
+"   String.tab_padding(10, 0) => 1 Tab  and 2 Spaces
+"   String.tab_padding(10, 4) => 1 Tab  and 6 Spaces
+"
+"   String.tab_padding(20, 0) => 2 Tabs and 4 Spaces
+"   String.tab_padding(20, 4) => 3 Tabs and 0 Space
+"
+" String.tab_padding( {width} [, {col}])
 function! s:String_tab_padding(width, ...)
   let col = (a:0 ? a:1 : 0) | let ts = &l:tabstop
   let rem = (col % ts)
@@ -108,15 +124,14 @@ endfunction
 call s:String.function('rstrip')
 
 if v:version >= 703
-
+  " String.width( str [, {col}])
   function! s:String_width(str, ...)
     let col = (a:0 ? a:1 : 0)
     return strdisplaywidth(a:str, col)
   endfunction
   call s:String.function('width')
-
 else
-
+  " String.width( str [, {col}])
   function! s:String_width(str, ...)
     if a:str =~ '^[\x00-\x08\x0a-\x7f]*$'
       " NOTE: If the given string consists of only 7-bit ASCII characters
@@ -126,7 +141,7 @@ else
 
     let col = (a:0 ? a:1 : 0)
 
-    " Borrowed from Charles Campbell's Align.vim
+    " Derived from Charles Campbell's Align.vim
     " http://www.vim.org/scripts/script.php?script_id=294
     "
     " NOTE: This code has a side effect that changes the cursor's position.
@@ -139,7 +154,6 @@ else
     return width
   endfunction
   call s:String.function('width')
-
 endif
 
 " vim: filetype=vim

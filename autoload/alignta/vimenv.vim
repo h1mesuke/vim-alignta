@@ -1,7 +1,7 @@
 "=============================================================================
 " File    : vimenv.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-08-17
+" Updated : 2011-08-19
 " Version : 0.1.2
 " License : MIT license {{{
 "
@@ -46,6 +46,7 @@ delfunction s:get_SID
 
 let s:Vimenv = {s:lib}#oop#class#new('Vimenv', s:SID)
 
+" Vimenv.new( {args})
 function! s:Vimenv_initialize(...) dict
   let args = a:000
   let save_cursor = 0

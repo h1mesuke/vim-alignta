@@ -105,6 +105,7 @@ function! s:Aligner_initialize(region_args, align_args, use_regexp) dict
   call self.init_options()
   let self.align_count = 0
 
+  " Normalize Tabs for indentation to Spaces.
   if self.region.has_indent_tab()
     call self.region.detab_indent()
     let self.region.had_indent_tab = 1
@@ -431,6 +432,14 @@ function! s:Aligner__join_fields(fields) dict
   endwhile
 endfunction
 call s:Aligner.method('_join_fields')
+
+" NOTE:
+"
+"   A ... Aligned
+"   L ... Left
+"   M ... Matched
+"   R ... Right
+"   AL .. Aligned and Left
 
 function! s:Aligner__pad_align_fields(L_fld, M_fld, fld_idx, is_last) dict
   let L_fld_align = self._get_field_align(a:fld_idx, a:is_last)

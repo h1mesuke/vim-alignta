@@ -1,7 +1,7 @@
 "=============================================================================
 " File    : lib/region.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-08-17
+" Updated : 2011-08-19
 " Version : 0.1.3
 " License : MIT license {{{
 "
@@ -49,7 +49,7 @@ delfunction s:get_SID
 
 let s:Region = {s:lib}#oop#class#new('Region', s:SID)
 
-" TODO: doc
+" Region.new( {args})
 function! s:Region_initialize(...) dict
   let [type, line_range, char_range] = self._parse_arguments(a:000)
   let self.type = type
@@ -187,6 +187,7 @@ function! s:entab_indent(str, col)
   return substitute(a:str, '^\s*', indent, '')
 endfunction
 
+" Region.has_indent_tab( [{orig}])
 function! s:Region_has_indent_tab(...) dict
   let orig = (a:0 ? a:1 : 0)
   let lines = copy(orig ? self.original_lines : self.lines)
@@ -195,6 +196,7 @@ function! s:Region_has_indent_tab(...) dict
 endfunction
 call s:Region.method('has_indent_tab')
 
+" Region.has_tab( [{orig}])
 function! s:Region_has_tab(...) dict
   let orig = (a:0 ? a:1 : 0)
   let lines = copy(orig ? self.original_lines : self.lines)
