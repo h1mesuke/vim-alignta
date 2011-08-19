@@ -446,26 +446,45 @@ function! s:Aligner__pad_align_fields(L_fld, M_fld, fld_idx, is_last) dict
   let L_fld_align = self._get_field_align(a:fld_idx, a:is_last)
   let M_fld_align = self._get_field_align(a:fld_idx + 1)
 
+  "---------------------------------------
   " Left field
+
   call a:L_fld.strip(L_fld_align == '=')
 
+  " Calculate the maximum width of the Left side.
   let AL_flds_width = max(map(a:L_fld.each(), '
         \ self.aligned.width(v:val[0]) +
         \ s:String.width(v:val[1], self.aligned.width(v:val[0]))
         \'))
 
+  " Justify the Left field.
   for [idx, line] in a:L_fld.each()
     let width = AL_flds_width - self.aligned.width(idx)
     let line = s:String.justify(line, width, L_fld_align)
     call a:L_fld.set(idx, line)
   endfor
 
+  "---------------------------------------
   " Matched field
-  let L_margin = (a:L_fld.is_blank() ? '' : s:String.padding(self.options.L_margin))
-  let R_margin = s:String.padding(self.options.R_margin)
 
+  " Get the Left margin.
+  if a:L_fld.is_blank()
+    let L_margin = ''
+  else
+    let L_margin = s:String.padding(self.options.L_margin)
+  endif
+
+  " Calculate the maximum width of the Matched field.
   let M_fld_width = max(map(a:M_fld.to_list(), 's:String.width(v:val, AL_flds_width)'))
 
+  " Get the Right margin.
+  if a:L_fld.is_blank() && M_fld_width == 0
+    let R_margin = ''
+  else
+    let R_margin = s:String.padding(self.options.R_margin)
+  endif
+
+  " Justify the Matched field.
   for [idx, line] in a:M_fld.each()
     let line = L_margin . s:String.justify(line, M_fld_width, M_fld_align) . R_margin
     call a:M_fld.set(idx, line)
