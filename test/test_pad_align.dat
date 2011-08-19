@@ -804,4 +804,19 @@
 	ccccc = 100
 # should_entab_indent_rr_expected_end
 
+#-----------------------------------------------------------------------------
+# Zero-width
+
+#---------------------------------------
+# should_not_raise_if_zero_width_match_data_begin
+  ,aaa,bbb,ccc
+  ,aaa,bbb,ccc
+  ,aaa,bbb,ccc
+# should_not_raise_if_zero_width_match_data_end
+# should_not_raise_if_zero_width_match_expected_begin
+  ,aaa  ,bbb  ,ccc
+  ,aaa  ,bbb  ,ccc
+  ,aaa  ,bbb  ,ccc
+# should_not_raise_if_zero_width_match_expected_end
+
 # vim:sw=4:ts=4:ft=conf:et:ai:list
