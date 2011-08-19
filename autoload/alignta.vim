@@ -392,13 +392,18 @@ endfunction
 call s:Aligner.method('_split_to_fields')
 
 function! s:Aligner__join_fields(fields) dict
-  call s:print_debug("fields", map(copy(a:fields), 'v:val.each()'))
+  let is_debug = exists('g:alignta_debug') && g:alignta_debug
+  " NOTE: Use this flag to avoid the cost of evaluating s:print_debug()'s
+  " arguments unless g:alignta_debug variable is set to True.
+  if is_debug
+    call s:print_debug("fields", map(copy(a:fields), 'v:val.each()'))
+  endif
 
   let fld_idx = 0
   while fld_idx < len(a:fields) - 2
     let [L_fld, M_fld]= a:fields[fld_idx : fld_idx + 1]
 
-    if exists('g:alignta_debug') && g:alignta_debug
+    if is_debug
       call s:print_debug(printf("[%02d] L_fld:before", fld_idx),     L_fld)
       call s:print_debug(printf("[%02d] M_fld:before", fld_idx + 1), M_fld)
     endif
@@ -418,11 +423,12 @@ function! s:Aligner__join_fields(fields) dict
       endif
     endfor
 
-    if exists('g:alignta_debug') && g:alignta_debug
+    if is_debug
       call s:print_debug(printf("[%02d] L_fld:after",  fld_idx),     L_fld)
       call s:print_debug(printf("[%02d] M_fld:after",  fld_idx + 1), M_fld)
       call s:print_debug("aligned", self.aligned)
     endif
+
     let fld_idx += 2
   endwhile
 endfunction
