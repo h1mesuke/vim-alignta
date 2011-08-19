@@ -349,8 +349,8 @@ call s:Aligner.method('_keep_min_leading')
 
 function! s:Aligner__split_to_fields(lines, pattern, times) dict
   let fields = []
-  let n = 0 | let rest = a:lines
-  while n < a:times
+  let n = 1 | let rest = a:lines
+  while n <= a:times
     let matched_count = 0
     let L_fld = s:Fragments.new() | " Left
     let M_fld = s:Fragments.new() | " Matched
@@ -358,13 +358,21 @@ function! s:Aligner__split_to_fields(lines, pattern, times) dict
     " Match and split.
     for [idx, line] in rest.each()
       let match_beg = match(line, a:pattern)
+      let match_end = matchend(line, a:pattern)
+      if match_beg == 0
+        if match_beg == match_end && n > 1
+          " Guard against zero-width matching at the beginning.
+          let pattern = '^\@<!' . a:pattern
+          let match_beg = match(line, pattern)
+          let match_end = matchend(line, pattern)
+        endif
+      endif
       if match_beg >= 0
-        let match_end = matchend(line, a:pattern)
         call L_fld.set(idx, strpart(line, 0, match_beg))
         call M_fld.set(idx, strpart(line, match_beg, match_end - match_beg))
         call R_fld.set(idx, strpart(line, match_end))
         let matched_count += 1
-      elseif n > 0
+      elseif n > 1
         call L_fld.set(idx, line)
       endif
     endfor
@@ -377,10 +385,8 @@ function! s:Aligner__split_to_fields(lines, pattern, times) dict
     endif
     let n += 1
   endwhile
-
   let sentinel = s:Fragments.new()
   let fields += [rest, sentinel, sentinel]
-
   return fields
 endfunction
 call s:Aligner.method('_split_to_fields')
