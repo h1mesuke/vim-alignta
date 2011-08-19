@@ -338,8 +338,7 @@ call s:Aligner.method('_filter_lines')
 
 function! s:Aligner__keep_min_leading(lines) dict
   let leading = s:String.padding(a:lines.min_leading_width())
-  call a:lines.lstrip(1)
-
+  call a:lines.min_lstrip()
   for [idx, line] in a:lines.each()
     call self.lines.set(idx, line)
     call self.aligned.append(idx, leading)
@@ -449,7 +448,12 @@ function! s:Aligner__pad_align_fields(L_fld, M_fld, fld_idx, is_last) dict
   "---------------------------------------
   " Left field
 
-  call a:L_fld.strip(L_fld_align == '=')
+  if L_fld_align == '='
+    call a:L_fld.min_lstrip()
+  else
+    call a:L_fld.lstrip()
+  endif
+  call a:L_fld.rstrip()
 
   " Calculate the maximum width of the Left side.
   let AL_flds_width = max(map(a:L_fld.each(), '
@@ -595,12 +599,6 @@ function! s:Fragments_append(idx, str) dict
 endfunction
 call s:Fragments.method('append')
 
-function! s:Fragments_min_leading_width() dict
-  let lines = filter(self.to_list(), 'v:val =~ "\\S"')
-  return min(map(map(lines, 'matchstr(v:val, "^\\s*")'), 'strlen(v:val)'))
-endfunction
-call s:Fragments.method('min_leading_width')
-
 function! s:Fragments_dump() dict
   for [idx, line] in self.each()
     call s:echomsg(printf('%03x: ', idx) . string(line))
@@ -649,24 +647,26 @@ function! s:Fragments_remove(idx) dict
 endfunction
 call s:Fragments.method('remove')
 
-" Fragments.strip( [{strip_min_leading}])
-function! s:Fragments_strip(...) dict
-  call self.lstrip(a:0 ? a:1 : 0)
-  call self.rstrip()
+function! s:Fragments_min_leading_width() dict
+  let lines = filter(self.to_list(), 'v:val =~ "\\S"')
+  return min(map(map(lines, 'matchstr(v:val, "^\\s*")'), 'strlen(v:val)'))
 endfunction
-call s:Fragments.method('strip')
+call s:Fragments.method('min_leading_width')
 
-" Fragments.lstrip( [{strip_min_leading}])
-function! s:Fragments_lstrip(...) dict
-  let strip_min_leading =  (a:0 ? a:1 : 0)
-  if strip_min_leading
-    let leading = s:String.padding(self.min_leading_width())
-    for [idx, line] in self.each()
-      call self.set(idx, substitute(line, '^' . leading, '', ''))
-    endfor
-  else
-    call map(self._lines, 's:String.lstrip(v:val)')
-  endif
+"   '  aaa'      'aaa'
+"   '   aa'  =>  ' aa'
+"   '    a'      '  a'
+"
+function! s:Fragments_min_lstrip() dict
+  let leading = s:String.padding(self.min_leading_width())
+  for [idx, line] in self.each()
+    call self.set(idx, substitute(line, '^' . leading, '', ''))
+  endfor
+endfunction
+call s:Fragments.method('min_lstrip')
+
+function! s:Fragments_lstrip() dict
+  call map(self._lines, 's:String.lstrip(v:val)')
 endfunction
 call s:Fragments.method('lstrip')
 
