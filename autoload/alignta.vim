@@ -325,7 +325,7 @@ function! s:Aligner__align_at(pattern, times) dict
   endif
 
   let fields = self._split_to_fields(lines, a:pattern, a:times)
-  call self._join_fields(fields)
+  call self._align_and_join_fields(fields)
   let self.align_count += 1
 
   call s:print_debug("lines", self.lines)
@@ -399,7 +399,7 @@ function! s:Aligner__split_to_fields(lines, pattern, times) dict
 endfunction
 call s:Aligner.method('_split_to_fields')
 
-function! s:Aligner__join_fields(fields) dict
+function! s:Aligner__align_and_join_fields(fields) dict
   let is_debug = exists('g:alignta_debug') && g:alignta_debug
   " NOTE: Use this flag to avoid the cost of evaluating s:print_debug()'s
   " arguments unless g:alignta_debug variable is set to True.
@@ -440,7 +440,7 @@ function! s:Aligner__join_fields(fields) dict
     let fld_idx += 2
   endwhile
 endfunction
-call s:Aligner.method('_join_fields')
+call s:Aligner.method('_align_and_join_fields')
 
 " NOTE:
 "
