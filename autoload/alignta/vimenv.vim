@@ -1,8 +1,8 @@
 "=============================================================================
 " File    : vimenv.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-08-19
-" Version : 0.1.2
+" Updated : 2011-08-20
+" Version : 0.1.5
 " License : MIT license {{{
 "
 "   Permission is hereby granted, free of charge, to any person obtaining
@@ -57,7 +57,7 @@ function! s:Vimenv_initialize(...) dict
 
   " Parse arguments.
   for value in args
-    if value == '.'
+    if value ==? 'cursor' || value == '.'
       let save_cursor = 1
     elseif value =~# "^'[a-zA-Z[\\]']$"
       call add(save_marks, substitute(value, '^.', '', ''))
