@@ -3,7 +3,7 @@
 "
 " File    : autoload/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-08-19
+" Updated : 2011-08-20
 " Version : 0.2.1
 " License : MIT license {{{
 "
@@ -142,8 +142,9 @@ function! s:Aligner_align() dict
     return
   endif
 
-  let vimenv = s:Vimenv.new('.', '&ignorecase')
+  let vimenv = s:Vimenv.new('cursor', '&ignorecase', '&lazyredraw')
   set noignorecase
+  set lazyredraw
   " NOTE: s:String.width() for Vim 7.2 or older has a side effect that changes
   " the cursor's position.
 
