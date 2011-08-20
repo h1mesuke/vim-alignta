@@ -202,6 +202,11 @@ function! s:Region_has_indent_tab(...) dict
 endfunction
 call s:Region.method('has_indent_tab')
 
+function! s:Region_original_has_indent_tab(...) dict
+  return self.has_indent_tab(1)
+endfunction
+call s:Region.method('original_has_indent_tab')
+
 " Region.has_tab( [{orig}])
 function! s:Region_has_tab(...) dict
   let orig = (a:0 ? a:1 : 0)
@@ -209,6 +214,11 @@ function! s:Region_has_tab(...) dict
   return !empty(filter(lines, 'v:val =~ "\\t"'))
 endfunction
 call s:Region.method('has_tab')
+
+function! s:Region_original_has_tab(...) dict
+  return self.has_tab(1)
+endfunction
+call s:Region.method('original_has_tab')
 
 function! s:Region_line_is_ragged(line_idx) dict
   return has_key(self._ragged, self.line_range[0] + a:line_idx)
