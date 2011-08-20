@@ -1,8 +1,8 @@
 "=============================================================================
 " File    : lib/region.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-08-19
-" Version : 0.1.3
+" Updated : 2011-08-20
+" Version : 0.1.5
 " License : MIT license {{{
 "
 "   Permission is hereby granted, free of charge, to any person obtaining
@@ -116,49 +116,55 @@ function! s:Region__get_selection() dict
   else
     " Characterwise or Blockwise
 
-    " Get the selection via register 'v'.
+    " Save the Vim's environment.
     let vismode = { 'char': 'v', 'line': 'V', 'block': "\<C-v>" }[self.type]
-    let vimenv = s:Vimenv.new('.', '&selection', '@v', vismode)
-    set selection=inclusive
+    let vimenv = s:Vimenv.new('cursor', '&selection', '@v', vismode)
+    try
+      set selection=inclusive
 
-    call setpos('.', self.char_range[0])
-    execute 'normal!' vismode
-    call setpos('.', self.char_range[1])
-    execute 'silent normal! "vy'
+      " Get the selection via register 'v'.
+      call setpos('.', self.char_range[0])
+      execute 'normal!' vismode
+      call setpos('.', self.char_range[1])
+      execute 'silent normal! "vy'
 
-    let self.lines = split(@v, "\n")
+      let self.lines = split(@v, "\n")
 
-    " NOTE: If a line ends before the left most column of the blockwise
-    " selection, the yanked block will be filled with spaces for the line.
-    " They are "ragged right". I borrowed this term from Charles Campbell's
-    " Align.vim
-    "               ____________
-    "               |   Block   |
-    "   Ragged      |           |
-    "   ========|   |@@@@@@@@@@@| <-- Ragged Right
-    "               |           |
-    "   Short       |           |
-    "   ==================|     |
-    "               |___________|
-    "
-    if self.type ==# 'block'
-      let [block_begcol, block_endcol] = s:sort_numbers([virtcol("'<"), virtcol("'>")])
-      let self.block_begin_col = block_begcol
-      let self.block_width = block_endcol - block_begcol + 1
-      for lnum in range(self.line_range[0], self.line_range[1])
-        execute lnum
-        let line_endcol = virtcol('$')
-        if line_endcol <= block_begcol
-          " Collect lnums of lines that cause ragged rights to avoid the extra
-          " spaces issue on s:Region.update()
-          let self._ragged[lnum] = 1
-          let self.lines[lnum - self.line_range[0]] = ''
-        elseif line_endcol <= block_endcol
-          let self._short[lnum] = 1
-        endif
-      endfor
-    endif
-    call vimenv.restore()
+      " NOTE: If a line ends before the left most column of the blockwise
+      " selection, the yanked block will be filled with spaces for the line.
+      " They are "ragged right". I borrowed this term from Charles Campbell's
+      " Align.vim
+      "               ____________
+      "               |   Block   |
+      "   Ragged      |           |
+      "   ========|   |@@@@@@@@@@@| <-- Ragged Right
+      "               |           |
+      "   Short       |           |
+      "   ==================|     |
+      "               |___________|
+      "
+      if self.type ==# 'block'
+        let [block_begcol, block_endcol] = s:sort_numbers([virtcol("'<"), virtcol("'>")])
+        let self.block_begin_col = block_begcol
+        let self.block_width = block_endcol - block_begcol + 1
+        for lnum in range(self.line_range[0], self.line_range[1])
+          execute lnum
+          let line_endcol = virtcol('$')
+          if line_endcol <= block_begcol
+            " Collect lnums of lines that cause ragged rights to avoid the extra
+            " spaces issue on s:Region.update()
+            let self._ragged[lnum] = 1
+            let self.lines[lnum - self.line_range[0]] = ''
+          elseif line_endcol <= block_endcol
+            let self._short[lnum] = 1
+          endif
+        endfor
+      endif
+      " Catch nothing.
+    finally
+      " Restore the Vim's environment.
+      call vimenv.restore()
+    endtry
   endif
 endfunction
 call s:Region.method('_get_selection')
@@ -221,46 +227,51 @@ function! s:Region_update() dict
 
   if self.type ==# 'line'
     call setline(self.line_range[0], self.lines)
-  else              
-    let vimenv = s:Vimenv.new('.', '@v')
-    let vismode = { 'char': 'v', 'line': 'V', 'block': "\<C-v>" }[self.type]
-    let regtype = vismode
+  else
+    " Save the Vim's environment.
+    let vimenv = s:Vimenv.new('cursor', '@v')
+    try
+      let vismode = { 'char': 'v', 'line': 'V', 'block': "\<C-v>" }[self.type]
+      let regtype = vismode
 
-    if self.type ==# 'block'
-      " Calculate the block width.
-      let col = self.block_begin_col - 1
-      let max_width = max(map(copy(self.lines), 's:String.width(v:val, col)'))
-      " NOTE: If the block contains any multi-byte characters, Vim fails to
-      " count the number of paddings and append extra spaces. So, justify the
-      " lines here beforehand.
-      call map(self.lines, '
-            \ (self.line_is_short(v:key) || v:val =~ "^\\s*$")
-            \   ? v:val
-            \   : s:String.justify(v:val, max_width, "left", col)
-            \')
-      let regtype .= max_width
-    endif
+      if self.type ==# 'block'
+        " Calculate the block width.
+        let col = self.block_begin_col - 1
+        let max_width = max(map(copy(self.lines), 's:String.width(v:val, col)'))
+        " NOTE: If the block contains any multi-byte characters, Vim fails to
+        " count the number of paddings and append extra spaces. So, justify the
+        " lines here beforehand.
+        call map(self.lines, '
+              \ (self.line_is_short(v:key) || v:val =~ "^\\s*$")
+              \   ? v:val
+              \   : s:String.justify(v:val, max_width, "left", col)
+              \')
+        let regtype .= max_width
+      endif
 
-    call setreg('v', join(self.lines, "\n"), regtype)
-    call setpos('.', self.char_range[0])
-    execute 'normal!' vismode
-    call setpos('.', self.char_range[1])
-    silent execute 'normal!' '"_d"v' . self.writeback_command . '`<'
+      call setreg('v', join(self.lines, "\n"), regtype)
+      call setpos('.', self.char_range[0])
+      execute 'normal!' vismode
+      call setpos('.', self.char_range[1])
+      silent execute 'normal!' '"_d"v' . self.writeback_command . '`<'
 
-    call vimenv.restore()
-
-    " NOTE: Pasting a block with ragged rights appends extra spaces to the
-    " ends of their corresponding lines. To avoid this behavior, overwrite the
-    " lines with their saved copies if they are still blank.
-    "
-    if self.type ==# 'block'
-      for lnum in keys(self._ragged)
-        let idx = lnum - self.line_range[0]
-        if self.lines[idx] == ""
-          call setline(lnum, self.original_lines[idx])
-        endif
-      endfor
-    endif
+      " NOTE: Pasting a block with ragged rights appends extra spaces to the
+      " ends of their corresponding lines. To avoid this behavior, overwrite the
+      " lines with their saved copies if they are still blank.
+      "
+      if self.type ==# 'block'
+        for lnum in keys(self._ragged)
+          let idx = lnum - self.line_range[0]
+          if self.lines[idx] == ""
+            call setline(lnum, self.original_lines[idx])
+          endif
+        endfor
+      endif
+      " Catch nothing.
+    finally
+      " Restore the Vim's environment.
+      call vimenv.restore()
+    endtry
   endif
 endfunction
 call s:Region.method('update')

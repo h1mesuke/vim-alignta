@@ -142,66 +142,74 @@ function! s:Aligner_align() dict
     return
   endif
 
+  " Save the Vim's environment.
   let vimenv = s:Vimenv.new('cursor', '&ignorecase', '&lazyredraw')
-  set noignorecase
-  set lazyredraw
-  " NOTE: s:String.width() for Vim 7.2 or older has a side effect that changes
-  " the cursor's position.
+  try
+    set noignorecase
+    set lazyredraw
+    " NOTE: s:String.width() for Vim 7.2 or older has a side effect that
+    " changes the cursor's position.
 
-  let argc = len(self.arguments)
-  let is_pattern = 0
-
-  " Process arguments.
-  let idx = 0
-  while idx < argc
-    let value = self.arguments[idx]
-    if idx == argc - 1
-      let is_pattern = 1
-    elseif !is_pattern && value =~ '^-p\%[attern]$'
-      let is_pattern = 1
-      let idx += 1
-      continue
-    endif
-    let opts = self.parse_options(value)
-    if !is_pattern && !empty(opts)
-      " options
-      call self.apply_options(opts)
-    else
-      " pattern
-      let [pattern, times] = self.parse_pattern(value)
-      call self._align_at(pattern, times)
-    endif
+    let argc = len(self.arguments)
     let is_pattern = 0
-    let idx += 1
-  endwhile
 
-  for [idx, line] in self.lines.each()
-    call self.aligned.append(idx, line)
-  endfor
-  call self.aligned.rstrip()
-
-  if self.region.type ==# 'block'
-    " Keep the block width as possible.
-    let block_width = self.region.block_width
-    for [idx, line] in self.aligned.each()
-      if (line =~ '^\s*$' || self.region.line_is_short(idx)) | continue | endif
-      let line_width = self.aligned.width(idx)
-      if line_width < block_width
-        let line .= s:String.padding(block_width - line_width)
-        call self.aligned.set(idx, line)
+    " Process arguments.
+    let idx = 0
+    while idx < argc
+      let value = self.arguments[idx]
+      if idx == argc - 1
+        let is_pattern = 1
+      elseif !is_pattern && value =~ '^-p\%[attern]$'
+        let is_pattern = 1
+        let idx += 1
+        continue
       endif
+      let opts = self.parse_options(value)
+      if !is_pattern && !empty(opts)
+        " Options
+        call self.apply_options(opts)
+      else
+        " Pattern
+        let [pattern, times] = self.parse_pattern(value)
+        call self._align_at(pattern, times)
+      endif
+      let is_pattern = 0
+      let idx += 1
+    endwhile
+
+    " Append the rest of lines to the result as aligned.
+    for [idx, line] in self.lines.each()
+      call self.aligned.append(idx, line)
     endfor
-  endif
+    " Remove trailing whitespaces from the result.
+    call self.aligned.rstrip()
 
-  let self.region.lines = self.aligned.to_list()
+    if self.region.type ==# 'block'
+      " Keep the block width as possible.
+      let block_width = self.region.block_width
+      for [idx, line] in self.aligned.each()
+        if (line =~ '^\s*$' || self.region.line_is_short(idx)) | continue | endif
+        let line_width = self.aligned.width(idx)
+        if line_width < block_width
+          let line .= s:String.padding(block_width - line_width)
+          call self.aligned.set(idx, line)
+        endif
+      endfor
+    endif
 
-  if self.region.had_indent_tab
-    call self.region.entab_indent()
-  endif
-
-  " Update!
-  call self.region.update()
-  call vimenv.restore()
+    " Update the content of the selected region.
+    let self.region.lines = self.aligned.to_list()
+    if self.region.had_indent_tab
+      call self.region.entab_indent()
+    endif
+    call self.region.update()
+  catch
+    call alignta#print_error(v:throwpoint)
+    call alignta#print_error(v:exception)
+  finally
+    " Restore the Vim's environment.
+    call vimenv.restore()
+  endtry
 endfunction
 call s:Aligner.method('align')
 
