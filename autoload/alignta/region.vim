@@ -47,6 +47,20 @@ endfunction
 let s:SID = s:get_SID()
 delfunction s:get_SID
 
+" Region is a class that represents the user-selected region on a Vim's
+" buffer. It provides an easy way to get and modify the content of the region.
+"
+" == Example
+"
+"   let region = s:Region.new(visualmode())
+"   let idx = 0
+"   while idx < len(region.lines)
+"     let line = region.lines[idx]
+"     " Do something.
+"     let region.lines[idx] = line
+"   endwhile
+"   call region.update()
+"
 let s:Region = {s:lib}#oop#class#new('Region', s:SID)
 
 " Region.new( {args})

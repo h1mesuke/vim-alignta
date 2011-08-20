@@ -44,6 +44,25 @@ endfunction
 let s:SID = s:get_SID()
 delfunction s:get_SID
 
+" Vimenv is a class that help us to save/restore the current Vim's environment
+" parameters.
+"
+" == Example
+"
+"   " Save the Vim's environment. 
+"   let vimenv = s:Vimenv.new('cursor', '&ignorecase', '&lazyredraw') 
+"   try 
+"     set noignorecase 
+"     set lazyredraw 
+"     " Do something.
+"   catch 
+"     call s:print_error(v:throwpoint) 
+"     call s:print_error(v:exception) 
+"   finally 
+"     " Restore the Vim's environment. 
+"     call vimenv.restore() 
+"   endtry 
+" 
 let s:Vimenv = {s:lib}#oop#class#new('Vimenv', s:SID)
 
 " Vimenv.new( {args})

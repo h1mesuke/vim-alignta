@@ -166,10 +166,10 @@ function! s:Aligner_align() dict
       endif
       let opts = self.parse_options(value)
       if !is_pattern && !empty(opts)
-        " Options
+        " Options => apply
         call self.apply_options(opts)
       else
-        " Pattern
+        " Pattern => align
         let [pattern, times] = self.parse_pattern(value)
         call self._align_at(pattern, times)
       endif
@@ -218,7 +218,9 @@ function! s:Aligner_parse_options(value) dict
   for opts_str in split(a:value, '\(\(^\|[^\\]\)\(\\\{2}\)*\)\@<=\s\s*')
 
     " Padding Alignment Options
+    "
     "   {L_fld_align}{M_fld_align}...[L_fld_align][margin]
+    "
     let matched_list = matchlist(opts_str,
           \ '^\([<|>=]\{2,}\)\%(\(\d\)\(\d\)\=\|\(\d\+\):\(\d\+\)\)\=$')
     if len(matched_list) > 0
@@ -239,8 +241,10 @@ function! s:Aligner_parse_options(value) dict
     endif
 
     " Shifting Alignment Options
+    "
     "   <-[margin] or <--[margin] or
     "   ->[margin] or -->[margin]
+    "
     let matched_list = matchlist(opts_str, '^\(<--\=\|--\=>\)\(\d\+\)\=$')
     if len(matched_list) > 0
       let opts.method = 'shift'
@@ -285,7 +289,8 @@ function! s:Aligner_parse_options(value) dict
       continue
     endif
   endfor
-
+  " NOTE: Empty Dictionary means that the given value didn't match any
+  " notation of alignment options and it is a pattern.
   return opts
 endfunction
 call s:Aligner.class_method('parse_options')
@@ -318,12 +323,13 @@ function! s:Aligner__align_at(pattern, times) dict
   call s:print_debug("options", self.options)
   call s:print_debug("pattern", a:pattern)
 
+  " Filter lines by g/pattern and/or v/pattern.
   let lines = self._filter_lines()
 
   if self.align_count == 0 && self.options.method ==# 'pad'
     call self._keep_min_leading(lines)
   endif
-
+  " Align at {pattern}
   let fields = self._split_to_fields(lines, a:pattern, a:times)
   call self._align_and_join_fields(fields)
   let self.align_count += 1
@@ -407,15 +413,17 @@ function! s:Aligner__align_and_join_fields(fields) dict
     call s:print_debug("fields", map(copy(a:fields), 'v:val.each()'))
   endif
 
+  " Process fields by two.
   let fld_idx = 0
   while fld_idx < len(a:fields) - 2
+    " Take two fields, Left and Matched.
     let [L_fld, M_fld]= a:fields[fld_idx : fld_idx + 1]
-
     if is_debug
       call s:print_debug(printf("[%02d] L_fld:before", fld_idx),     L_fld)
       call s:print_debug(printf("[%02d] M_fld:before", fld_idx + 1), M_fld)
     endif
 
+    " Align fields.
     call call(self['_' . self.options.method . '_align_fields'],
           \ [L_fld, M_fld, fld_idx, (fld_idx == len(a:fields) - 3)], self)
 
@@ -430,13 +438,11 @@ function! s:Aligner__align_and_join_fields(fields) dict
         call self.lines.set(idx, line)
       endif
     endfor
-
     if is_debug
       call s:print_debug(printf("[%02d] L_fld:after",  fld_idx),     L_fld)
       call s:print_debug(printf("[%02d] M_fld:after",  fld_idx + 1), M_fld)
       call s:print_debug("aligned", self.aligned)
     endif
-
     let fld_idx += 2
   endwhile
 endfunction
