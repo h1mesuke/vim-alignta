@@ -60,8 +60,7 @@ endfunction
 call s:TestCase.method('_test_align_block')
 
 function! s:goto_data(tag)
-  execute s:data_range(a:tag)[0]
-  normal! 0
+  call cursor(s:data_range(a:tag)[0], 1)
 endfunction
 
 function! s:select_visual_block(tag)

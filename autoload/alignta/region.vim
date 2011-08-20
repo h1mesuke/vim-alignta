@@ -148,7 +148,7 @@ function! s:Region__get_selection() dict
         let self.block_begin_col = block_begcol
         let self.block_width = block_endcol - block_begcol + 1
         for lnum in range(self.line_range[0], self.line_range[1])
-          execute lnum
+          call cursor(lnum, 1)
           let line_endcol = virtcol('$')
           if line_endcol <= block_begcol
             " Collect lnums of lines that cause ragged rights to avoid the extra
