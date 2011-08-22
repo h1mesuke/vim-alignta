@@ -3,7 +3,7 @@
 "
 " File    : autoload/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-08-20
+" Updated : 2011-08-22
 " Version : 0.2.1
 " License : MIT license {{{
 "
@@ -77,11 +77,11 @@ delfunction s:get_SID
 let s:Aligner = alignta#oop#class#new('Aligner', s:SID)
 
 let s:Aligner.DEFAULT_OPTIONS = {
-      \ 'field_align': ['<', '<', '<'],
-      \ 'L_margin'   : 1,
-      \ 'R_margin'   : 1,
-      \ 'g_pattern'  : '',
-      \ 'v_pattern'  : '',
+      \ 'field_aligns': ['<', '<', '<'],
+      \ 'L_margin'    : 1,
+      \ 'R_margin'    : 1,
+      \ 'g_pattern'   : '',
+      \ 'v_pattern'   : '',
       \ }
 
 let s:Aligner.extending_options = {}
@@ -225,7 +225,7 @@ function! s:Aligner_parse_options(value) dict
           \ '^\([<|>=]\{2,}\)\%(\(\d\)\(\d\)\=\|\(\d\+\):\(\d\+\)\)\=$')
     if len(matched_list) > 0
       let opts.method = 'pad'
-      let opts.field_align = split(matched_list[1], '\zs')
+      let opts.field_aligns = split(matched_list[1], '\zs')
       if matched_list[2] != ''
         " 1 or 11
         let opts.L_margin = str2nr(matched_list[2])
@@ -512,14 +512,14 @@ endfunction
 call s:Aligner.method('_pad_align_fields')
 
 function! s:Aligner__get_field_align(fld_idx, ...) dict
-  let fld_align = self.options.field_align
+  let fld_aligns = self.options.field_aligns
   let is_last = (a:0 ? a:1 : 0)
 
   if len(fld_align) % 2 == 1
     if is_last | return fld_align[-1] | endif
     let fld_align = fld_align[:-2]
   endif
-  return fld_align[a:fld_idx % len(fld_align)]
+  return fld_aligns[a:fld_idx % len(fld_aligns)]
 endfunction
 call s:Aligner.method('_get_field_align')
 
