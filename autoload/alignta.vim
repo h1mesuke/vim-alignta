@@ -57,7 +57,7 @@ function! alignta#reset_extending_options()
 endfunction
 
 "-----------------------------------------------------------------------------
-" Constant
+" Constants
 
 let s:HUGE_VALUE = 9999
 
@@ -450,12 +450,16 @@ call s:Aligner.method('_align_and_join_fields')
 
 " NOTE:
 "
-"   A ... Aligned
-"   L ... Left
-"   M ... Matched
-"   R ... Right
-"   AL .. Aligned and Left
+"   Prefix  Meaning
+"   ------  -------
+"   A       Aligned
+"   L       Left
+"   M       Matched
+"   R       Right
+"   AL      Aligned and Left
 
+" Align fields with the padding alignment method.
+"
 function! s:Aligner__pad_align_fields(L_fld, M_fld, fld_idx, is_last) dict
   let L_fld_align = self._get_field_align(a:fld_idx, a:is_last)
   let M_fld_align = self._get_field_align(a:fld_idx + 1)
@@ -486,7 +490,7 @@ function! s:Aligner__pad_align_fields(L_fld, M_fld, fld_idx, is_last) dict
   "---------------------------------------
   " Matched field
 
-  " Get the Left margin.
+  " Make the Left margin.
   if a:L_fld.is_blank()
     let L_margin = ''
   else
@@ -496,7 +500,7 @@ function! s:Aligner__pad_align_fields(L_fld, M_fld, fld_idx, is_last) dict
   " Calculate the maximum width of the Matched field.
   let M_fld_width = max(map(a:M_fld.to_list(), 's:String.width(v:val, AL_flds_width)'))
 
-  " Get the Right margin.
+  " Make the Right margin.
   if a:L_fld.is_blank() && M_fld_width == 0
     let R_margin = ''
   else
@@ -511,18 +515,26 @@ function! s:Aligner__pad_align_fields(L_fld, M_fld, fld_idx, is_last) dict
 endfunction
 call s:Aligner.method('_pad_align_fields')
 
+" Returns a symbol character ( <, |, >, = ) that specifies how to justify the
+" field.
+"
+" Aligner__get_field_align( fld_idx [, {is_last}])
 function! s:Aligner__get_field_align(fld_idx, ...) dict
   let fld_aligns = self.options.field_aligns
   let is_last = (a:0 ? a:1 : 0)
-
-  if len(fld_align) % 2 == 1
-    if is_last | return fld_align[-1] | endif
-    let fld_align = fld_align[:-2]
+  if len(fld_aligns) % 2 == 1
+    " If {R_fld_align} is specified and the field is the last one, returns
+    " {R_fld_align}.
+    if is_last | return fld_aligns[-1] | endif
+    " Otherwise, round fld_aligns for modulo operation.
+    let fld_aligns = fld_aligns[:-2]
   endif
   return fld_aligns[a:fld_idx % len(fld_aligns)]
 endfunction
 call s:Aligner.method('_get_field_align')
 
+" Align fields with the shifting alignment method.
+"
 function! s:Aligner__shift_align_fields(L_fld, M_fld, fld_idx, is_last, shift_left, use_tab) dict
   if self.align_count == 0 && a:fld_idx == 0
     " Save the Left/Right Most column position of matches

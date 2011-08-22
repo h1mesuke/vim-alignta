@@ -1,7 +1,7 @@
 "=============================================================================
 " File    : lib/region.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-08-20
+" Updated : 2011-08-22
 " Version : 0.1.5
 " License : MIT license {{{
 "
@@ -48,7 +48,8 @@ let s:SID = s:get_SID()
 delfunction s:get_SID
 
 " Region is a class that represents the user-selected region on a Vim's
-" buffer. It provides an easy way to get and modify the content of the region.
+" buffer. It provides an easy way to get and modify the content of the
+" selection.
 "
 " == Example
 "
@@ -174,7 +175,7 @@ function! s:Region__get_selection() dict
           endif
         endfor
       endif
-      " Catch nothing.
+      " Don't catch anything.
     finally
       " Restore the Vim's environment.
       call vimenv.restore()
@@ -291,7 +292,7 @@ function! s:Region_update() dict
           endif
         endfor
       endif
-      " Catch nothing.
+      " Don't catch anything.
     finally
       " Restore the Vim's environment.
       call vimenv.restore()
