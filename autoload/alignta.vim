@@ -3,7 +3,7 @@
 "
 " File    : autoload/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-08-22
+" Updated : 2011-09-13
 " Version : 0.2.1
 " License : MIT license {{{
 "
@@ -258,8 +258,9 @@ function! s:Aligner_parse_options(value) dict
     endif
 
     " Margin Options
+    " NOTE: '@' prefix is still valid for backward compatibility.
     let matched_list = matchlist(opts_str,
-          \ '^@\%(\(\d\)\(\d\)\=\|\(\d\+\):\(\d\+\)\)\=$')
+          \ '^@\=\%(\(\d\)\(\d\)\=\|\(\d\+\):\(\d\+\)\)\=$')
     if len(matched_list) > 0
       if matched_list[1] != ''
         " 1 or 11
