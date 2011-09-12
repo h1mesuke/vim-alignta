@@ -30,7 +30,7 @@
 "=============================================================================
 
 " Inspired by Yukihiro Nakadaira's nsexample.vim
-" https://gist.github.com/867896
+" http://gist.github.com/867896
 "
 let s:oop = expand('<sfile>:p:r:gs?[\\/]?#?:s?^.*#autoload#??')
 " => path#to#oop

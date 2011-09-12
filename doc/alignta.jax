@@ -1,8 +1,8 @@
-*alignta.txt*	Align Them All! - 新たなる整列プラグイン
+*alignta.txt*		Align Them All! - 新たなる整列プラグイン
 
 File    : doc/alignta.jax
 Author  : h1mesuke <himesuke@gmail.com>
-Updated : 2011-04-16
+Updated : 2011-09-13
 Version : 0.2.1
 License : MIT license {{{
 
@@ -735,7 +735,7 @@ TODO						*alignta-todo*
 ==============================================================================
 更新履歴					*alignta-changelog*
 
-https://github.com/h1mesuke/vim-alignta/commits/master
+http://github.com/h1mesuke/vim-alignta/commits/master
 
 0.2.1	2011-02-16
 	* UNITE-ALIGNTA
