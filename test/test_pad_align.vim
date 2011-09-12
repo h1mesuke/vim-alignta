@@ -244,16 +244,51 @@ function! tc.margin_should_be_1_3_at_dd()
 endfunction
 
 " @\d\+:\d\+ notation
-function! tc.margin_should_be_0_0_at_d_colon_at_d()
+function! tc.margin_should_be_0_0_at_d_colon()
   call self._test_align('margin_should_be_0_0', 'Alignta @0:0 =')
 endfunction
 
-function! tc.margin_should_be_3_1_at_d_colon_at_d()
+function! tc.margin_should_be_3_1_at_d_colon()
   call self._test_align('margin_should_be_3_1', 'Alignta @3:1 =')
 endfunction
 
-function! tc.margin_should_be_1_3_at_d_colon_at_d()
+function! tc.margin_should_be_1_3_at_d_colon()
   call self._test_align('margin_should_be_1_3', 'Alignta @1:3 =')
+endfunction
+
+" \d notation
+function! tc.margin_should_be_0_0_d()
+  call self._test_align('margin_should_be_0_0', 'Alignta 0 =')
+endfunction
+
+function! tc.margin_should_be_3_3_d()
+  call self._test_align('margin_should_be_3_3', 'Alignta 3 =')
+endfunction
+
+" \d\d notation
+function! tc.margin_should_be_0_0_dd()
+  call self._test_align('margin_should_be_0_0', 'Alignta 00 =')
+endfunction
+
+function! tc.margin_should_be_3_1_dd()
+  call self._test_align('margin_should_be_3_1', 'Alignta 31 =')
+endfunction
+
+function! tc.margin_should_be_1_3_dd()
+  call self._test_align('margin_should_be_1_3', 'Alignta 13 =')
+endfunction
+
+" \d\+:\d\+ notation
+function! tc.margin_should_be_0_0_d_colon_d()
+  call self._test_align('margin_should_be_0_0', 'Alignta 0:0 =')
+endfunction
+
+function! tc.margin_should_be_3_1_d_colon_d()
+  call self._test_align('margin_should_be_3_1', 'Alignta 3:1 =')
+endfunction
+
+function! tc.margin_should_be_1_3_d_colon_d()
+  call self._test_align('margin_should_be_1_3', 'Alignta 1:3 =')
 endfunction
 
 "---------------------------------------
