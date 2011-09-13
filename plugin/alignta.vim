@@ -3,7 +3,7 @@
 "
 " File    : plugin/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-09-13
+" Updated : 2011-09-15
 " Version : 0.2.1
 " License : MIT license {{{
 "
@@ -48,14 +48,27 @@ endif
 "-----------------------------------------------------------------------------
 " Commands
 
-command! -range -bang -nargs=* Alignta <line1>,<line2>call <SID>align([<f-args>])
+command! -range -bang -nargs=* -complete=customlist,s:complete_command_option
+      \ Alignta <line1>,<line2>call <SID>align([<f-args>])
 " NOTE: Bang is still acceptable for backward compatibility but it has no
 " meaning now.
 
 if exists(':Align') != 2
   " :Align is ours, yay!
-  command! -range -bang -nargs=* Align <line1>,<line2>Alignta <args>
+  command! -range -bang -nargs=* -complete=customlist,s:complete_command_option
+        \  Align <line1>,<line2>Alignta <args>
 endif
+
+function! s:complete_command_option(leader, cmdline, pos)
+  let leader = '^-\=' . a:leader
+  return filter([
+        \ '-escape ',
+        \ '-Escape ',
+        \ '-regexp ',
+        \ '-Regexp ',
+        \ '-pattern ',
+        \ ], 'v:val =~# leader')
+endfunction
 
 function! s:align(align_args) range
   if empty(a:align_args)
