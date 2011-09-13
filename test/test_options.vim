@@ -2,7 +2,7 @@
 
 let tc = unittest#testcase#new('test_options', alignta#testcase#class())
 
-"---------------------------------------
+"-----------------------------------------------------------------------------
 " Alias
 
 if exists(':AlignCtrl') != 2
@@ -15,7 +15,7 @@ if exists(':AlignCtrl') != 2
   endfunction
 endif
 
-"---------------------------------------
+"-----------------------------------------------------------------------------
 " Filtering
 
 function! tc.should_align_only_matching_g_pattern()
@@ -34,7 +34,7 @@ function! tc.should_align_block_except_matching_v_pattern()
   call self._test_align_block('should_align_block_except_matching_v_pattern', 'Alignta v/^\s*# =')
 endfunction
 
-"---------------------------------------
+"-----------------------------------------------------------------------------
 " &ignorecase
 
 function! tc.setup_should_not_ignore_case()
@@ -54,14 +54,14 @@ function! tc.setup_should_ignore_case_when_c()
   set noignorecase
 endfunction
 function! tc.should_ignore_case_when_c()
-  call self._test_align('should_ignore_case_when_c', 'Alignta! \cb\+')
+  call self._test_align('should_ignore_case_when_c', 'Alignta \cb\+')
   call assert#not(&ignorecase)
 endfunction
 function! tc.teardown_should_ignore_case_when_c()
   let &ignorecase = self.save_ignorecase
 endfunction
 
-"---------------------------------------
+"-----------------------------------------------------------------------------
 " Options
 
 function! tc.setup_buffer_local_options_should_take_precedence()
@@ -84,7 +84,7 @@ function! tc.teatdown_should_align_with_default_arguments_if_no_args_given()
   unlet b:alignta_default_arguments
 endfunction
 
-"---------------------------------------
+"-----------------------------------------------------------------------------
 " Parser
 
 function! tc.after_p_should_be_parsed_as_pattern()
@@ -103,7 +103,7 @@ function! tc.last_arg_should_be_parsed_as_pattern_p()
   call self._test_align('should_be_parsed_as_pattern_p', 'Alignta -p')
 endfunction
 
-"---------------------------------------
+"-----------------------------------------------------------------------------
 " unite-alignta
 
 function! tc.setup_extending_options_should_take_precedence()
@@ -118,6 +118,8 @@ function! tc.teardown_extending_options_should_take_precedence()
   call alignta#reset_extending_options()
   unlet b:alignta_default_options
 endfunction
+
+"-----------------------------------------------------------------------------
 
 unlet tc
 

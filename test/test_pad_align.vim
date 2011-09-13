@@ -365,8 +365,10 @@ endfunction
 " Zero-width
 
 function! tc.should_not_raise_if_zero_width_match()
-  call self._test_align('should_not_raise_if_zero_width_match', 'Alignta! \ze,')
+  call self._test_align('should_not_raise_if_zero_width_match', 'Alignta \ze,')
 endfunction
+
+"-----------------------------------------------------------------------------
 
 unlet tc
 

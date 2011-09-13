@@ -189,18 +189,20 @@ function! s:Aligner_align() dict
       let is_pattern = 0
     endfor
 
-    " Append the rest of lines to the result as aligned.
+    " Append the rest of lines to the aligned results.
     for [idx, line] in self.lines.each()
       call self.aligned.append(idx, line)
     endfor
-    " Remove trailing whitespaces from the result.
+    " Remove trailing whitespaces from the aligned results.
     call self.aligned.rstrip()
 
     if self.region.type ==# 'block'
       " Keep the block width as possible.
       let block_width = self.region.block_width
       for [idx, line] in self.aligned.each()
-        if (line =~ '^\s*$' || self.region.line_is_short(idx)) | continue | endif
+        if (line =~ '^\s*$' || self.region.line_is_short(idx))
+          continue
+        endif
         let line_width = self.aligned.width(idx)
         if line_width < block_width
           let line .= s:String.padding(block_width - line_width)

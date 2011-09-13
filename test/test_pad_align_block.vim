@@ -50,6 +50,8 @@ function! tc.should_raise_if_region_is_invalid_for_tab()
   call self._test_align_block('should_raise_if_region_is_invalid_for_tab', 'Alignta ＝')
 endfunction
 
+"-----------------------------------------------------------------------------
+
 unlet tc
 
 " vim: filetype=vim

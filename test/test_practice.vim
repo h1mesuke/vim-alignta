@@ -116,6 +116,8 @@ function! tc.test_leader_tt()
   call self._test_align('test_leader_tt', 'Alignta & \\\\')
 endfunction
 
+"-----------------------------------------------------------------------------
+
 unlet tc
 
 " vim: filetype=vim
