@@ -428,7 +428,7 @@ endfunction
 call s:Aligner.method('_split_to_fields')
 
 function! s:Aligner__align_and_join_fields(fields) dict
-  let is_debug = exists('g:alignta_debug') && g:alignta_debug
+  let is_debug = get(g:, 'alignta_debug', 0)
   " NOTE: Use this flag to avoid the cost of evaluating s:print_debug()'s
   " arguments unless g:alignta_debug variable is set to True.
   if is_debug
@@ -823,7 +823,8 @@ function! s:print_debug(caption, value)
   if exists('g:alignta_debug') && g:alignta_debug
     call s:echomsg("")
     call s:echomsg("ALIGNTA-DEBUG: " . a:caption)
-    if alignta#oop#is_object(a:value) && a:value.is_a(s:Fragments)
+    if alignta#oop#is_object(a:value) &&
+          \ (a:value.is_a(s:Fragments) || a:value.is_a(s:Aligned))
         call a:value.dump()
     else
       call s:echomsg(alignta#oop#string(a:value))
