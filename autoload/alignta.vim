@@ -3,7 +3,7 @@
 "
 " File    : autoload/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-09-13
+" Updated : 2011-09-14
 " Version : 0.2.1
 " License : MIT license {{{
 "
@@ -28,9 +28,8 @@
 " }}}
 "=============================================================================
 
-function! alignta#align(region_args, align_args, ...)
-  let use_regexp = (a:0 ? a:1 : 0)
-  let aligner = s:Aligner.new(a:region_args, a:align_args, use_regexp)
+function! alignta#align(region_args, align_args)
+  let aligner = s:Aligner.new(a:region_args, a:align_args)
   call aligner.align()
 endfunction
 
@@ -97,11 +96,10 @@ function! s:Aligner_reset_extending_options() dict
 endfunction
 call s:Aligner.class_method('reset_extending_options')
 
-function! s:Aligner_initialize(region_args, align_args, use_regexp) dict
+function! s:Aligner_initialize(region_args, align_args) dict
   let self.region = call(s:Region.new, a:region_args, s:Region)
   let self.region.had_indent_tab = 0
   let self.arguments  = a:align_args
-  let self.use_regexp = a:use_regexp
   call self.init_options()
   let self.align_count = 0
 
@@ -151,31 +149,45 @@ function! s:Aligner_align() dict
     " changes the cursor's position.
 
     let argc = len(self.arguments)
+    let parse_next = 'auto'
+    let parse_rest = 'auto'
     let is_pattern = 0
 
     " Process arguments.
-    let idx = 0
-    while idx < argc
-      let value = self.arguments[idx]
-      if idx == argc - 1
-        let is_pattern = 1
-      elseif !is_pattern && value =~ '^-p\%[attern]$'
-        let is_pattern = 1
-        let idx += 1
-        continue
+    for value in self.arguments
+      if !is_pattern
+        if value =~# '^-e\%[scape]$'
+          let parse_next = 'String'
+          let is_pattern = 1
+          continue
+        elseif value =~# '^-E\%[scape]$'
+          let parse_rest = 'String'
+          continue
+        elseif value =~# '^-r\%[egexp]$'
+          let parse_next = 'Regexp'
+          continue
+        elseif value =~# '^-R\%[egexp]$'
+          let parse_rest = 'Regexp'
+          continue
+        elseif value =~# '^-p\%[attern]$'
+          let is_pattern = 1
+          continue
+        else
+          let opts = self.parse_options(value)
+          if !empty(opts)
+            " Options => apply
+            call self.apply_options(opts)
+            continue
+          endif
+        endif
       endif
-      let opts = self.parse_options(value)
-      if !is_pattern && !empty(opts)
-        " Options => apply
-        call self.apply_options(opts)
-      else
-        " Pattern => align
-        let [pattern, times] = self.parse_pattern(value)
-        call self._align_at(pattern, times)
-      endif
+      " Pattern => align
+      let parse_as = (parse_next !=# 'auto' ? parse_next : parse_rest)
+      let [pattern, times] = self.parse_pattern(value, parse_as)
+      call self._align_at(pattern, times)
+      let parse_next = parse_rest
       let is_pattern = 0
-      let idx += 1
-    endwhile
+    endfor
 
     " Append the rest of lines to the result as aligned.
     for [idx, line] in self.lines.each()
@@ -297,10 +309,15 @@ endfunction
 call s:Aligner.class_method('parse_options')
 call s:Aligner.method('parse_options')
 
-function! s:Aligner_parse_pattern(value) dict
+function! s:Aligner_parse_pattern(value, parse_as) dict
   let times_str = matchstr(a:value, '{\zs\(\d\+\|+\)\ze}$')
   let pattern = substitute(a:value, '{\(\d\+\|+\)}$', '', '')
-  if !self.use_regexp
+  if a:parse_as ==# 'auto'
+    let do_escape = !s:is_regexp(a:value)
+  else
+    let do_escape = (a:parse_as ==# 'String')
+  endif
+  if do_escape
     let pattern = s:String.escape_regexp(pattern)
   endif
   if times_str == ''
@@ -319,6 +336,10 @@ function! s:Aligner_parse_pattern(value) dict
   return [pattern, times]
 endfunction
 call s:Aligner.method('parse_pattern')
+
+function! s:is_regexp(pattern)
+  return (a:pattern =~ '\\' || a:pattern =~ '\.\*')
+endfunction
 
 function! s:Aligner__align_at(pattern, times) dict
   call s:print_debug("options", self.options)

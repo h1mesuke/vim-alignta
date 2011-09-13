@@ -48,20 +48,21 @@ endif
 "-----------------------------------------------------------------------------
 " Commands
 
-command! -range -bang -nargs=* Alignta <line1>,<line2>call <SID>align([<f-args>], '<bang>')
+command! -range -bang -nargs=* Alignta <line1>,<line2>call <SID>align([<f-args>])
+" NOTE: Bang is still acceptable for backward compatibility but it has no
+" meaning now.
 
 if exists(':Align') != 2
   " :Align is ours, yay!
-  command! -range -bang -nargs=* Align <line1>,<line2>Alignta<bang> <args>
+  command! -range -bang -nargs=* Align <line1>,<line2>Alignta <args>
 endif
 
-function! s:align(align_args, bang) range
+function! s:align(align_args) range
   if empty(a:align_args)
     try
       let arg_list = alignta#get_config_variable('alignta_default_arguments')
-      let arg_list = substitute(substitute(arg_list, '^\s*', '', ''), '^!\@!', ' ', '')
       let range = a:firstline . ',' . a:lastline
-      execute range . 'Alignta' . arg_list
+      execute range . 'Alignta' arg_list
     catch
       call alignta#print_error("alignta: default arguments not defined")
     endtry
@@ -72,8 +73,7 @@ function! s:align(align_args, bang) range
     else
       let region_args = [a:firstline, a:lastline]
     endif
-    let use_regexp = (a:bang == '!')
-    call alignta#align(region_args, a:align_args, use_regexp)
+    call alignta#align(region_args, a:align_args)
   endif
 endfunction
 
