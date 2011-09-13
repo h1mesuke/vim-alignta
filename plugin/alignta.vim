@@ -3,7 +3,7 @@
 "
 " File    : plugin/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-02-13
+" Updated : 2011-09-13
 " Version : 0.2.1
 " License : MIT license {{{
 "
@@ -28,8 +28,8 @@
 " }}}
 "=============================================================================
 
-if v:version < 700 || &cp
-  echoerr "alignta: Vim 7.0 or later required"
+if v:version < 701 || &cp
+  echoerr "alignta: Vim 7.1 or later required."
   finish
 elseif exists('g:loaded_alignta')
   finish
