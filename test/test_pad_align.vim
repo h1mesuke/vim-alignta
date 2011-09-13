@@ -169,7 +169,7 @@ function! tc.should_align_big_data()
 endfunction
 
 function! tc.should_freeze_aligned_parts()
-  call self._test_align('should_freeze_aligned_parts', 'Alignta! \S\+')
+  call self._test_align('should_freeze_aligned_parts', 'Alignta \S\+')
 endfunction
 
 "---------------------------------------
@@ -183,7 +183,7 @@ endfunction
 " Margin
 
 function! tc.L_margin_should_be_0_if_N_fld_is_blank()
-  call self._test_align('L_margin_should_be_0_if_N_fld_is_blank', 'Alignta! \S\+')
+  call self._test_align('L_margin_should_be_0_if_N_fld_is_blank', 'Alignta \S\+')
 endfunction
 
 " <<\d notation

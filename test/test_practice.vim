@@ -21,7 +21,7 @@ endfunction
 
 " equivalent to Align.vim's <Leader>acom
 function! tc.test_leader_acom()
-  call self._test_align('test_leader_acom', 'Alignta! -> \(/\*\|\S\@<=\s*$\) \*/')
+  call self._test_align('test_leader_acom', 'Alignta -> \(/\*\|\S\@<=\s*$\) \*/')
 endfunction
 
 " equivalent to Align.vim's <Leader>aocom
@@ -80,7 +80,7 @@ function! tc.setup_leader_tab()
   set noexpandtab
 endfunction
 function! tc.test_leader_tab()
-  call self._test_align('test_leader_tab', 'Alignta! <--2 \S\+{+}')
+  call self._test_align('test_leader_tab', 'Alignta <--2 \S\+{+}')
 endfunction
 function! tc.teardown_leader_tab()
   let &l:expandtab = self.save_expandtab
@@ -88,27 +88,27 @@ endfunction
 
 " equivalent to Align.vim's <Leader>tml
 function! tc.test_leader_tml()
-  call self._test_align('test_leader_tml', 'Alignta! \\\\$')
+  call self._test_align('test_leader_tml', 'Alignta \\\\$')
 endfunction
 
 " equivalent to Align.vim's <Leader>tsp
 function! tc.test_leader_tsp()
-  call self._test_align('test_leader_tsp', 'Alignta! \S\+')
+  call self._test_align('test_leader_tsp', 'Alignta \S\+')
 endfunction
 
 " equivalent to Align.vim's <Leader>Tsp
 function! tc.test_leader_Tsp()
-  call self._test_align('test_leader_Tsp', 'Alignta! >> \S\+')
+  call self._test_align('test_leader_Tsp', 'Alignta >> \S\+')
 endfunction
 
 " equivalent to Align.vim's <Leader>tsq
 function! tc.test_leader_tsq()
-  call self._test_align('test_leader_tsq', 'Alignta! \("[^"]*"\|' . "'[^']*'" . '\|\S\+\)')
+  call self._test_align('test_leader_tsq', 'Alignta \("[^"]*"\|' . "'[^']*'" . '\|\S\+\)')
 endfunction
 
 " equivalent to Align.vim's <Leader>Htd
 function! tc.test_leader_Htd()
-  call self._test_align('test_leader_Htd', 'Alignta! @0 \c</\=td>')
+  call self._test_align('test_leader_Htd', 'Alignta @0 \c</\=td>')
 endfunction
 
 " equivalent to Align.vim's <Leader>tt

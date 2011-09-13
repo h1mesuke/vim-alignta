@@ -10,19 +10,19 @@ function! tc.SL_should_align_at_1_pattern()
 endfunction
 
 function! tc.SL_should_align_at_1_pattern_2_times()
-  call self._test_align('SL_should_align_at_1_pattern_2_times', 'Alignta! <- b\+{2}')
+  call self._test_align('SL_should_align_at_1_pattern_2_times', 'Alignta <- b\+{2}')
 endfunction
 
 function! tc.SL_should_align_at_1_pattern_n_times()
-  call self._test_align('SL_should_align_at_1_pattern_n_times', 'Alignta! <- b\+{+}')
+  call self._test_align('SL_should_align_at_1_pattern_n_times', 'Alignta <- b\+{+}')
 endfunction
 
 function! tc.SL_should_align_at_1_pattern_x_times()
-  call self._test_align('SL_should_align_at_1_pattern_x_times', 'Alignta! <- b\+{+}')
+  call self._test_align('SL_should_align_at_1_pattern_x_times', 'Alignta <- b\+{+}')
 endfunction
 
 function! tc.SL_should_align_at_multi_patterns()
-  call self._test_align('SL_should_align_at_multi_patterns', 'Alignta! <- b\+{2} c\+ \d\+')
+  call self._test_align('SL_should_align_at_multi_patterns', 'Alignta <- b\+{2} c\+ \d\+')
 endfunction
 
 "---------------------------------------
@@ -44,19 +44,19 @@ function! tc.SL_should_align_mb_at_1_pattern()
 endfunction
 
 function! tc.SL_should_align_mb_at_1_pattern_2_times()
-  call self._test_align('SL_should_align_mb_at_1_pattern_2_times', 'Alignta! <- 伊\+{2}')
+  call self._test_align('SL_should_align_mb_at_1_pattern_2_times', 'Alignta <- 伊\+{2}')
 endfunction
 
 function! tc.SL_should_align_mb_at_1_pattern_n_times()
-  call self._test_align('SL_should_align_mb_at_1_pattern_n_times', 'Alignta! <- 伊\+{+}')
+  call self._test_align('SL_should_align_mb_at_1_pattern_n_times', 'Alignta <- 伊\+{+}')
 endfunction
 
 function! tc.SL_should_align_mb_at_1_pattern_x_times()
-  call self._test_align('SL_should_align_mb_at_1_pattern_x_times', 'Alignta! <- 伊\+{+}')
+  call self._test_align('SL_should_align_mb_at_1_pattern_x_times', 'Alignta <- 伊\+{+}')
 endfunction
 
 function! tc.SL_should_align_mb_at_multi_patterns()
-  call self._test_align('SL_should_align_mb_at_multi_patterns', 'Alignta! <- 伊\+{2} 宇\+ 壱')
+  call self._test_align('SL_should_align_mb_at_multi_patterns', 'Alignta <- 伊\+{2} 宇\+ 壱')
 endfunction
 
 "-----------------------------------------------------------------------------
@@ -67,19 +67,19 @@ function! tc.SR_should_align_at_1_pattern()
 endfunction
 
 function! tc.SR_should_align_at_1_pattern_2_times()
-  call self._test_align('SR_should_align_at_1_pattern_2_times', 'Alignta! -> b\+{2}')
+  call self._test_align('SR_should_align_at_1_pattern_2_times', 'Alignta -> b\+{2}')
 endfunction
 
 function! tc.SR_should_align_at_1_pattern_n_times()
-  call self._test_align('SR_should_align_at_1_pattern_n_times', 'Alignta! -> b\+{+}')
+  call self._test_align('SR_should_align_at_1_pattern_n_times', 'Alignta -> b\+{+}')
 endfunction
 
 function! tc.SR_should_align_at_1_pattern_x_times()
-  call self._test_align('SR_should_align_at_1_pattern_x_times', 'Alignta! -> b\+{+}')
+  call self._test_align('SR_should_align_at_1_pattern_x_times', 'Alignta -> b\+{+}')
 endfunction
 
 function! tc.SR_should_align_at_multi_patterns()
-  call self._test_align('SR_should_align_at_multi_patterns', 'Alignta! -> b\+{2} c\+ \d\+')
+  call self._test_align('SR_should_align_at_multi_patterns', 'Alignta -> b\+{2} c\+ \d\+')
 endfunction
 
 "---------------------------------------
@@ -90,19 +90,19 @@ function! tc.SR_should_align_mb_at_1_pattern()
 endfunction
 
 function! tc.SR_should_align_mb_at_1_pattern_2_times()
-  call self._test_align('SR_should_align_mb_at_1_pattern_2_times', 'Alignta! -> 伊\+{2}')
+  call self._test_align('SR_should_align_mb_at_1_pattern_2_times', 'Alignta -> 伊\+{2}')
 endfunction
 
 function! tc.SR_should_align_mb_at_1_pattern_n_times()
-  call self._test_align('SR_should_align_mb_at_1_pattern_n_times', 'Alignta! -> 伊\+{+}')
+  call self._test_align('SR_should_align_mb_at_1_pattern_n_times', 'Alignta -> 伊\+{+}')
 endfunction
 
 function! tc.SR_should_align_mb_at_1_pattern_x_times()
-  call self._test_align('SR_should_align_mb_at_1_pattern_x_times', 'Alignta! -> 伊\+{+}')
+  call self._test_align('SR_should_align_mb_at_1_pattern_x_times', 'Alignta -> 伊\+{+}')
 endfunction
 
 function! tc.SR_should_align_mb_at_multi_patterns()
-  call self._test_align('SR_should_align_mb_at_multi_patterns', 'Alignta! -> 伊\+{2} 宇\+ 壱')
+  call self._test_align('SR_should_align_mb_at_multi_patterns', 'Alignta -> 伊\+{2} 宇\+ 壱')
 endfunction
 
 "-----------------------------------------------------------------------------
@@ -124,19 +124,19 @@ function! tc.SLT_should_align_at_1_pattern()
 endfunction
 
 function! tc.SLT_should_align_at_1_pattern_2_times()
-  call self._test_align('SLT_should_align_at_1_pattern_2_times', 'Alignta! <-- b\+{2}')
+  call self._test_align('SLT_should_align_at_1_pattern_2_times', 'Alignta <-- b\+{2}')
 endfunction
 
 function! tc.SLT_should_align_at_1_pattern_n_times()
-  call self._test_align('SLT_should_align_at_1_pattern_n_times', 'Alignta! <-- b\+{+}')
+  call self._test_align('SLT_should_align_at_1_pattern_n_times', 'Alignta <-- b\+{+}')
 endfunction
 
 function! tc.SLT_should_align_at_1_pattern_x_times()
-  call self._test_align('SLT_should_align_at_1_pattern_x_times', 'Alignta! <-- b\+{+}')
+  call self._test_align('SLT_should_align_at_1_pattern_x_times', 'Alignta <-- b\+{+}')
 endfunction
 
 function! tc.SLT_should_align_at_multi_patterns()
-  call self._test_align('SLT_should_align_at_multi_patterns', 'Alignta! <-- b\+{2} c\+ \d\+')
+  call self._test_align('SLT_should_align_at_multi_patterns', 'Alignta <-- b\+{2} c\+ \d\+')
 endfunction
 
 "---------------------------------------
@@ -147,19 +147,19 @@ function! tc.SLT_should_align_mb_at_1_pattern()
 endfunction
 
 function! tc.SLT_should_align_mb_at_1_pattern_2_times()
-  call self._test_align('SLT_should_align_mb_at_1_pattern_2_times', 'Alignta! <-- 伊\+{2}')
+  call self._test_align('SLT_should_align_mb_at_1_pattern_2_times', 'Alignta <-- 伊\+{2}')
 endfunction
 
 function! tc.SLT_should_align_mb_at_1_pattern_n_times()
-  call self._test_align('SLT_should_align_mb_at_1_pattern_n_times', 'Alignta! <-- 伊\+{+}')
+  call self._test_align('SLT_should_align_mb_at_1_pattern_n_times', 'Alignta <-- 伊\+{+}')
 endfunction
 
 function! tc.SLT_should_align_mb_at_1_pattern_x_times()
-  call self._test_align('SLT_should_align_mb_at_1_pattern_x_times', 'Alignta! <-- 伊\+{+}')
+  call self._test_align('SLT_should_align_mb_at_1_pattern_x_times', 'Alignta <-- 伊\+{+}')
 endfunction
 
 function! tc.SLT_should_align_mb_at_multi_patterns()
-  call self._test_align('SLT_should_align_mb_at_multi_patterns', 'Alignta! <-- 伊\+{2} 宇\+ 壱')
+  call self._test_align('SLT_should_align_mb_at_multi_patterns', 'Alignta <-- 伊\+{2} 宇\+ 壱')
 endfunction
 
 "-----------------------------------------------------------------------------
@@ -170,19 +170,19 @@ function! tc.SRT_should_align_at_1_pattern()
 endfunction
 
 function! tc.SRT_should_align_at_1_pattern_2_times()
-  call self._test_align('SRT_should_align_at_1_pattern_2_times', 'Alignta! --> b\+{2}')
+  call self._test_align('SRT_should_align_at_1_pattern_2_times', 'Alignta --> b\+{2}')
 endfunction
 
 function! tc.SRT_should_align_at_1_pattern_n_times()
-  call self._test_align('SRT_should_align_at_1_pattern_n_times', 'Alignta! --> b\+{+}')
+  call self._test_align('SRT_should_align_at_1_pattern_n_times', 'Alignta --> b\+{+}')
 endfunction
 
 function! tc.SRT_should_align_at_1_pattern_x_times()
-  call self._test_align('SRT_should_align_at_1_pattern_x_times', 'Alignta! --> b\+{+}')
+  call self._test_align('SRT_should_align_at_1_pattern_x_times', 'Alignta --> b\+{+}')
 endfunction
 
 function! tc.SRT_should_align_at_multi_patterns()
-  call self._test_align('SRT_should_align_at_multi_patterns', 'Alignta! --> b\+{2} c\+ \d\+')
+  call self._test_align('SRT_should_align_at_multi_patterns', 'Alignta --> b\+{2} c\+ \d\+')
 endfunction
 
 "---------------------------------------

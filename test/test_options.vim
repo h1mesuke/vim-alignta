@@ -42,7 +42,7 @@ function! tc.setup_should_not_ignore_case()
   set ignorecase
 endfunction
 function! tc.should_not_ignore_case()
-  call self._test_align('should_not_ignore_case', 'Alignta! b\+')
+  call self._test_align('should_not_ignore_case', 'Alignta b\+')
   call assert#_(&ignorecase)
 endfunction
 function! tc.teardown_should_not_ignore_case()
