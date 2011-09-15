@@ -87,6 +87,38 @@ endfunction
 "-----------------------------------------------------------------------------
 " Parser
 
+function! tc.backslash_should_be_parsed_as_regexp()
+  call self._test_align('should_be_parsed_as_regexp', 'Alignta \d\+')
+endfunction
+
+function! tc.backslash_should_be_parsed_as_regexp_2()
+  call self._test_align('should_be_parsed_as_regexp_2', 'Alignta \d\+ \u\+')
+endfunction
+
+function! tc.after_e_should_be_parsed_as_string()
+  call self._test_align('should_be_parsed_as_string', 'Alignta -e \d\+')
+endfunction
+
+function! tc.after_e_should_be_parsed_as_string_2()
+  call self._test_align('should_be_parsed_as_string', 'Alignta -E \d\+ \u\+')
+endfunction
+
+function! tc.asterisk_should_be_parsed_as_string()
+  call self._test_align('asterisk_should_be_parsed_as_string', 'Alignta //*')
+endfunction
+
+function! tc.asterisk_should_be_parsed_as_string_2()
+  call self._test_align('asterisk_should_be_parsed_as_string_2', 'Alignta //* @@*')
+endfunction
+
+function! tc.after_r_should_be_parsed_as_regexp()
+  call self._test_align('asterisk_should_be_parsed_as_regexp', 'Alignta -r //*')
+endfunction
+
+function! tc.after_R_should_be_parsed_as_regexp_2()
+  call self._test_align('asterisk_should_be_parsed_as_regexp_2', 'Alignta -R //* @@*')
+endfunction
+
 function! tc.after_p_should_be_parsed_as_pattern()
   call self._test_align('should_be_parsed_as_pattern', 'Alignta -p <<')
 endfunction

@@ -160,6 +160,102 @@
 # Parser
 
 #---------------------------------------
+# should_be_parsed_as_regexp_data_begin
+  a \d\+ 1 aaaaa
+  bbb \d\+ 10 bbb
+  ccccc \d\+ 100 c
+# should_be_parsed_as_regexp_data_end
+# should_be_parsed_as_regexp_expected_begin
+  a \d\+     1   aaaaa
+  bbb \d\+   10  bbb
+  ccccc \d\+ 100 c
+# should_be_parsed_as_regexp_expected_end
+
+#---------------------------------------
+# should_be_parsed_as_regexp_2_data_begin
+  a \d\+ 1 \u\+ AAAAA a
+  bbb \d\+ 10 \u\+ BBB b
+  ccccc \d\+ 100 \u\+ C c
+# should_be_parsed_as_regexp_2_data_end
+# should_be_parsed_as_regexp_2_expected_begin
+  a \d\+     1   \u\+ AAAAA a
+  bbb \d\+   10  \u\+ BBB   b
+  ccccc \d\+ 100 \u\+ C     c
+# should_be_parsed_as_regexp_2_expected_end
+
+#---------------------------------------
+# should_be_parsed_as_string_data_begin
+  a \d\+ 1 aaaaa
+  bbb \d\+ 10 bbb
+  ccccc \d\+ 100 c
+# should_be_parsed_as_string_data_end
+# should_be_parsed_as_string_expected_begin
+  a     \d\+ 1 aaaaa
+  bbb   \d\+ 10 bbb
+  ccccc \d\+ 100 c
+# should_be_parsed_as_string_expected_end
+
+#---------------------------------------
+# should_be_parsed_as_string_2_data_begin
+  a \d\+ 1 \u\+ AAAAA a
+  bbb \d\+ 10 \u\+ BBB b
+  ccccc \d\+ 100 \u\+ C c
+# should_be_parsed_as_string_2_data_end
+# should_be_parsed_as_string_2_expected_begin
+  a     \d\+ 1   \u\+ AAAAA a
+  bbb   \d\+ 10  \u\+ BBB b
+  ccccc \d\+ 100 \u\+ C c
+# should_be_parsed_as_string_2_expected_end
+
+#---------------------------------------
+# asterisk_should_be_parsed_as_string_data_begin
+  a //* ////// AAA
+  bbb //* //// BB
+  ccccc //* // C
+# asterisk_should_be_parsed_as_string_data_end
+# asterisk_should_be_parsed_as_string_expected_begin
+  a     //* ////// AAA
+  bbb   //* //// BB
+  ccccc //* // C
+# asterisk_should_be_parsed_as_string_expected_end
+
+#---------------------------------------
+# asterisk_should_be_parsed_as_string_2_data_begin
+  a //* ////// AAA @@* @ aaaaa
+  bbb //* //// BB @@* @@@ bbb
+  ccccc //* // C @@* @@@@@ c
+# asterisk_should_be_parsed_as_string_2_data_end
+# asterisk_should_be_parsed_as_string_2_expected_begin
+  a     //* ////// AAA @@* @ aaaaa
+  bbb   //* //// BB    @@* @@@ bbb
+  ccccc //* // C       @@* @@@@@ c
+# asterisk_should_be_parsed_as_string_2_expected_end
+
+#---------------------------------------
+# asterisk_should_be_parsed_as_regexp_data_begin
+  a //* ////// AAA
+  bbb //* //// BB
+  ccccc //* // C
+# asterisk_should_be_parsed_as_regexp_data_end
+# asterisk_should_be_parsed_as_regexp_expected_begin
+  a     // * ////// AAA
+  bbb   // * ////   BB
+  ccccc // * //     C
+# asterisk_should_be_parsed_as_regexp_expected_end
+
+#---------------------------------------
+# asterisk_should_be_parsed_as_regexp_2_data_begin
+  a //* ////// AAA @@* @ aaaaa
+  bbb //* //// BB @@* @@@ bbb
+  ccccc //* // C @@* @@@@@ c
+# asterisk_should_be_parsed_as_regexp_2_data_end
+# asterisk_should_be_parsed_as_regexp_2_expected_begin
+  a     // * ////// AAA @@ * @     aaaaa
+  bbb   // * ////   BB  @@ * @@@   bbb
+  ccccc // * //     C   @@ * @@@@@ c
+# asterisk_should_be_parsed_as_regexp_2_expected_end
+
+#---------------------------------------
 # should_be_parsed_as_pattern_data_begin
   a << 1
   bbb << 10
