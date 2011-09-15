@@ -3,7 +3,7 @@
 "
 " File    : autoload/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-09-14
+" Updated : 2011-09-15
 " Version : 0.2.1
 " License : MIT license {{{
 "
@@ -149,25 +149,31 @@ function! s:Aligner_align() dict
     " changes the cursor's position.
 
     let argc = len(self.arguments)
-    let parse_next = 'auto'
-    let parse_rest = 'auto'
+    let next_as = 'auto'
+    let rest_as = 'auto'
     let is_pattern = 0
 
     " Process arguments.
-    for value in self.arguments
+    for idx in range(argc)
+      let value = self.arguments[idx]
+      if idx == argc - 1
+        " Parse the last argument as a pattern.
+        let is_pattern = 1
+      endif
       if !is_pattern
+        " Command Option
         if value =~# '^-e\%[scape]$'
-          let parse_next = 'String'
+          let next_as = 'String'
           let is_pattern = 1
           continue
         elseif value =~# '^-E\%[scape]$'
-          let parse_rest = 'String'
+          let rest_as = 'String'
           continue
         elseif value =~# '^-r\%[egexp]$'
-          let parse_next = 'Regexp'
+          let next_as = 'Regexp'
           continue
         elseif value =~# '^-R\%[egexp]$'
-          let parse_rest = 'Regexp'
+          let rest_as = 'Regexp'
           continue
         elseif value =~# '^-p\%[attern]$'
           let is_pattern = 1
@@ -175,17 +181,19 @@ function! s:Aligner_align() dict
         else
           let opts = self.parse_options(value)
           if !empty(opts)
-            " Options => apply
+            " Alignment Options => apply
             call self.apply_options(opts)
             continue
           endif
         endif
       endif
+
       " Pattern => align
-      let parse_as = (parse_next !=# 'auto' ? parse_next : parse_rest)
+      let parse_as = (next_as !=# 'auto' ? next_as : rest_as)
       let [pattern, times] = self.parse_pattern(value, parse_as)
       call self._align_at(pattern, times)
-      let parse_next = parse_rest
+
+      let next_as = rest_as
       let is_pattern = 0
     endfor
 
