@@ -4,77 +4,77 @@ let tc = unittest#testcase#new('test_practice', alignta#testcase#class())
 
 "-----------------------------------------------------------------------------
 
-" equivalent to Align.vim's <Leader>a?
+" Equivalent to Align.vim's <Leader>a?
 function! tc.test_leader_a_q()
   call self._test_align('test_leader_a?', 'Alignta @01 \ ? \ :')
 endfunction
 
-" equivalent to Align.vim's <Leader>a<
+" Equivalent to Align.vim's <Leader>a<
 function! tc.test_leader_a_lt()
   call self._test_align('test_leader_a<', 'Alignta -p <<')
 endfunction
 
-" equivalent to Align.vim's <Leader>a=
+" Equivalent to Align.vim's <Leader>a=
 function! tc.test_leader_a_eq()
   call self._test_align('test_leader_a=', 'Alignta :=')
 endfunction
 
-" equivalent to Align.vim's <Leader>acom
+" Equivalent to Align.vim's <Leader>acom
 function! tc.test_leader_acom()
   call self._test_align('test_leader_acom', 'Alignta -> \(/\*\|\S\@<=\s*$\) \*/')
 endfunction
 
-" equivalent to Align.vim's <Leader>aocom
+" Equivalent to Align.vim's <Leader>aocom
 function! tc.test_leader_aocom()
   call self._test_align('test_leader_aocom', 'Alignta -> /* */')
 endfunction
 
-" equivalent to Align.vim's <Leader>ascom
+" Equivalent to Align.vim's <Leader>ascom
 function! tc.test_leader_ascom()
   call self._test_align('test_leader_ascom', 'Alignta v/^\s*/\* -> /* */')
 endfunction
 
-"" equivalent to Align.vim's <Leader>adec
+"" Equivalent to Align.vim's <Leader>adec
 "function! tc.test_leader_adec()
 " call self._test_align('test_leader_adec', 'Alignta _args_')
 "endfunction
 
-"" equivalent to Align.vim's <Leader>anum
+"" Equivalent to Align.vim's <Leader>anum
 "function! tc.test_leader_anum()
 " call self._test_align('test_leader_anum', 'Alignta _args_')
 "endfunction
 
-" equivalent to Align.vim's <Leader>t=
+" Equivalent to Align.vim's <Leader>t=
 function! tc.test_leader_t_eq()
   call self._test_align('test_leader_t=', 'Alignta =')
 endfunction
 
-" equivalent to Align.vim's <Leader>T=
+" Equivalent to Align.vim's <Leader>T=
 function! tc.test_leader_T_eq()
   call self._test_align('test_leader_T=', 'Alignta >> =')
 endfunction
 
-" equivalent to Align.vim's <Leader>t|
+" Equivalent to Align.vim's <Leader>t|
 function! tc.test_leader_t_bar()
   call self._test_align('test_leader_t|', 'Alignta @0 |')
 endfunction
 
-" equivalent to Align.vim's <Leader>T|
+" Equivalent to Align.vim's <Leader>T|
 function! tc.test_leader_T_bar()
   call self._test_align('test_leader_T|', 'Alignta >>0 |')
 endfunction
 
-" equivalent to Align.vim's <Leader>t:
+" Equivalent to Align.vim's <Leader>t:
 function! tc.test_leader_t_colon()
   call self._test_align('test_leader_t:', 'Alignta :')
 endfunction
 
-" equivalent to Align.vim's <Leader>T:
+" Equivalent to Align.vim's <Leader>T:
 function! tc.test_leader_T_colon()
   call self._test_align('test_leader_T:', 'Alignta >> :')
 endfunction
 
-" equivalent to Align.vim's <Leader>tab
+" Equivalent to Align.vim's <Leader>tab
 function! tc.setup_leader_tab()
   let self.save_expandtab = &l:expandtab
   set noexpandtab
@@ -86,34 +86,34 @@ function! tc.teardown_leader_tab()
   let &l:expandtab = self.save_expandtab
 endfunction
 
-" equivalent to Align.vim's <Leader>tml
+" Equivalent to Align.vim's <Leader>tml
 function! tc.test_leader_tml()
   call self._test_align('test_leader_tml', 'Alignta \\\\$')
 endfunction
 
-" equivalent to Align.vim's <Leader>tsp
+" Equivalent to Align.vim's <Leader>tsp
 function! tc.test_leader_tsp()
   call self._test_align('test_leader_tsp', 'Alignta \S\+')
 endfunction
 
-" equivalent to Align.vim's <Leader>Tsp
+" Equivalent to Align.vim's <Leader>Tsp
 function! tc.test_leader_Tsp()
   call self._test_align('test_leader_Tsp', 'Alignta >> \S\+')
 endfunction
 
-" equivalent to Align.vim's <Leader>tsq
+" Equivalent to Align.vim's <Leader>tsq
 function! tc.test_leader_tsq()
   call self._test_align('test_leader_tsq', 'Alignta \("[^"]*"\|' . "'[^']*'" . '\|\S\+\)')
 endfunction
 
-" equivalent to Align.vim's <Leader>Htd
+" Equivalent to Align.vim's <Leader>Htd
 function! tc.test_leader_Htd()
   call self._test_align('test_leader_Htd', 'Alignta @0 \c</\=td>')
 endfunction
 
-" equivalent to Align.vim's <Leader>tt
+" Equivalent to Align.vim's <Leader>tt
 function! tc.test_leader_tt()
-  call self._test_align('test_leader_tt', 'Alignta & \\\\')
+  call self._test_align('test_leader_tt', 'Alignta & -e \\\\')
 endfunction
 
 "-----------------------------------------------------------------------------
