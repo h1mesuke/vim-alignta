@@ -33,31 +33,36 @@ function! tc.should_align_at_1_pattern_rcl()
 endfunction
 
 function! tc.should_align_at_1_pattern_2_times()
+  call self._test_align('should_align_at_1_pattern_2_times', 'Alignta =/2')
+endfunction
+
+" For backward compatibility.
+function! tc.should_align_at_1_pattern_2_times_OLD()
   call self._test_align('should_align_at_1_pattern_2_times', 'Alignta ={2}')
 endfunction
 
 function! tc.should_align_at_1_pattern_2_times_ll()
-  call self._test_align('should_align_at_1_pattern_2_times_ll', 'Alignta << ={2}')
+  call self._test_align('should_align_at_1_pattern_2_times_ll', 'Alignta << =/2')
 endfunction
 
 function! tc.should_align_at_1_pattern_2_times_cc()
-  call self._test_align('should_align_at_1_pattern_2_times_cc', 'Alignta || ={2}')
+  call self._test_align('should_align_at_1_pattern_2_times_cc', 'Alignta || =/2')
 endfunction
 
 function! tc.should_align_at_1_pattern_2_times_rr()
-  call self._test_align('should_align_at_1_pattern_2_times_rr', 'Alignta >> ={2}')
+  call self._test_align('should_align_at_1_pattern_2_times_rr', 'Alignta >> =/2')
 endfunction
 
 function! tc.should_align_at_1_pattern_2_times_aa()
-  call self._test_align('should_align_at_1_pattern_2_times_aa', 'Alignta == ={2}')
+  call self._test_align('should_align_at_1_pattern_2_times_aa', 'Alignta == =/2')
 endfunction
 
 function! tc.should_align_at_1_pattern_2_times_lcr()
-  call self._test_align('should_align_at_1_pattern_2_times_lcr', 'Alignta <|> ={2}')
+  call self._test_align('should_align_at_1_pattern_2_times_lcr', 'Alignta <|> =/2')
 endfunction
 
 function! tc.should_align_at_1_pattern_2_times_rcl()
-  call self._test_align('should_align_at_1_pattern_2_times_rcl', 'Alignta >|< ={2}')
+  call self._test_align('should_align_at_1_pattern_2_times_rcl', 'Alignta >|< =/2')
 endfunction
 
 function! tc.should_align_at_1_pattern_n_times()

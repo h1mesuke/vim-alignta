@@ -3,7 +3,7 @@
 "
 " File    : autoload/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-09-15
+" Updated : 2011-09-16
 " Version : 0.2.1
 " License : MIT license {{{
 "
@@ -320,8 +320,13 @@ call s:Aligner.class_method('parse_options')
 call s:Aligner.method('parse_options')
 
 function! s:Aligner_parse_pattern(value, parse_as) dict
-  let times_str = matchstr(a:value, '{\zs\(\d\+\|+\)\ze}$')
-  let pattern = substitute(a:value, '{\(\d\+\|+\)}$', '', '')
+  let times_str = matchstr(a:value, '/\zs\(\d\+\|g\)$')
+  let pattern = substitute(a:value, '/\(\d\+\|g\)$', '', '')
+  if empty(times_str)
+    " NOTE: {n} notation is still valid for backward compatibility.
+    let times_str = matchstr(a:value, '{\zs\(\d\+\|+\)\ze}$')
+    let pattern = substitute(a:value, '{\(\d\+\|+\)}$', '', '')
+  endif
   if a:parse_as ==# 'auto'
     let do_escape = !s:is_regexp(a:value)
   else
@@ -336,7 +341,7 @@ function! s:Aligner_parse_pattern(value, parse_as) dict
     else
       let times = 1
     endif
-  elseif times_str == '+'
+  elseif times_str =~# '^[g+]$'
     " pattern{+}
     let times = s:HUGE_VALUE
   else
