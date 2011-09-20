@@ -4,7 +4,7 @@
 "
 " File    : oop/module.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-09-13
+" Updated : 2011-05-05
 " Version : 0.2.0
 " License : MIT license {{{
 "
@@ -77,7 +77,7 @@ let s:Module = {
 " underscore. This convention helps you to distinguish module functions from
 " other functions.
 "
-"   function! s:Fizz_hello() dict
+"   function! s:Fizz_hello()
 "   endfunction
 "   call s:Fizz.function('hello')
 "

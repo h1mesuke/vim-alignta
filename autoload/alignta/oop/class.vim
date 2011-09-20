@@ -4,7 +4,7 @@
 "
 " File    : oop/class.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-09-13
+" Updated : 2011-08-22
 " Version : 0.2.0
 " License : MIT license {{{
 "
@@ -115,7 +115,7 @@ let s:Class.is_descendant_of = function(s:SID . 'Class_is_descendant_of')
 " by one underscore. This convention helps you to distinguish method functions
 " from other functions.
 "
-"   function! s:Foo_hello() dict
+"   function! s:Foo_hello()
 "   endfunction
 "   call s:Foo.class_method('hello')
 "
@@ -134,7 +134,7 @@ let s:Class.class_method = s:Class.__class_bind__ | " syntax sugar
 " class name followed by one underscore. This convention helps you to
 " distinguish method functions from other functions.
 "
-"   function! s:Foo_hello() dict
+"   function! s:Foo_hello()
 "   endfunction
 "   call s:Foo.method('hello')
 "
