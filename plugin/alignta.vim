@@ -3,7 +3,7 @@
 "
 " File    : plugin/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-09-15
+" Updated : 2012-01-08
 " Version : 0.3.0
 " License : MIT license {{{
 "
@@ -96,5 +96,3 @@ let &cpo = s:save_cpo
 unlet s:save_cpo
 
 let g:loaded_alignta = 1
-
-" vim: filetype=vim

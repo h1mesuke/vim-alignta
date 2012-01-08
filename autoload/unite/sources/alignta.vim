@@ -3,7 +3,7 @@
 "
 " File    : autoload/unite/sources/alignta.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-02-16
+" Updated : 2012-01-08
 " Version : 0.3.0
 " License : MIT license {{{
 "
@@ -131,5 +131,3 @@ function! s:source.gather_candidates(args, context)
     return []
   endtry
 endfunction
-
-" vim: filetype=vim

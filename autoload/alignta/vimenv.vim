@@ -1,7 +1,7 @@
 "=============================================================================
 " File    : vimenv.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-08-20
+" Updated : 2012-01-08
 " Version : 0.1.5
 " License : MIT license {{{
 "
@@ -179,5 +179,3 @@ function! s:Vimenv_restore() dict
   endif
 endfunction
 call s:Vimenv.method('restore')
-
-" vim: filetype=vim

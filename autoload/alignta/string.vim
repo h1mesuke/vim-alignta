@@ -1,7 +1,7 @@
 "=============================================================================
 " File    : lib/string.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-08-19
+" Updated : 2012-01-08
 " Version : 0.1.2
 " License : MIT license {{{
 "
@@ -155,5 +155,3 @@ else
   endfunction
   call s:String.function('width')
 endif
-
-" vim: filetype=vim

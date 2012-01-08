@@ -100,5 +100,3 @@ function! s:TestCase_print_lines(lines) dict
   endfor
 endfunction
 call s:TestCase.method('print_lines')
-
-" vim: filetype=vim

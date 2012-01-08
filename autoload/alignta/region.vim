@@ -1,7 +1,7 @@
 "=============================================================================
 " File    : lib/region.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-08-22
+" Updated : 2012-01-08
 " Version : 0.1.5
 " License : MIT license {{{
 "
@@ -308,5 +308,3 @@ endfunction
 function! s:compare_numbers(n1, n2)
   return a:n1 == a:n2 ? 0 : a:n1 > a:n2 ? 1 : -1
 endfunction
-
-" vim: filetype=vim
