@@ -28,12 +28,13 @@
 " }}}
 "=============================================================================
 
-if v:version < 701 || &cp
+if v:version < 701
   echoerr "alignta: Vim 7.1 or later required."
   finish
-elseif exists('g:loaded_alignta')
+elseif exists('g:loaded_alignta') && g:loaded_alignta
   finish
 endif
+let g:loaded_alignta = 1
 
 let s:save_cpo = &cpo
 set cpo&vim
@@ -50,13 +51,13 @@ endif
 
 command! -range -bang -nargs=* -complete=customlist,s:complete_command_option
       \ Alignta <line1>,<line2>call <SID>align([<f-args>])
-" NOTE: Bang is still acceptable for backward compatibility but it has no
+" NOTE: Bang is still acceptable for backward compatibility, but it has no
 " meaning now.
 
 if exists(':Align') != 2
   " :Align is ours, yay!
   command! -range -bang -nargs=* -complete=customlist,s:complete_command_option
-        \  Align <line1>,<line2>Alignta <args>
+        \ Align <line1>,<line2>Alignta <args>
 endif
 
 function! s:complete_command_option(leader, cmdline, pos)
@@ -94,5 +95,3 @@ endfunction
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
-
-let g:loaded_alignta = 1
