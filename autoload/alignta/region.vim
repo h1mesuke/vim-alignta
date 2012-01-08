@@ -26,6 +26,9 @@
 " }}}
 "=============================================================================
 
+let s:save_cpo = &cpo
+set cpo&vim
+
 " Inspired by Yukihiro Nakadaira's nsexample.vim
 " https://gist.github.com/867896
 "
@@ -308,3 +311,6 @@ endfunction
 function! s:compare_numbers(n1, n2)
   return a:n1 == a:n2 ? 0 : a:n1 > a:n2 ? 1 : -1
 endfunction
+
+let &cpo = s:save_cpo
+unlet s:save_cpo

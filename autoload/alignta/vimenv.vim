@@ -26,6 +26,9 @@
 " }}}
 "=============================================================================
 
+let s:save_cpo = &cpo
+set cpo&vim
+
 " Inspired by Yukihiro Nakadaira's nsexample.vim
 " https://gist.github.com/867896
 "
@@ -179,3 +182,6 @@ function! s:Vimenv_restore() dict
   endif
 endfunction
 call s:Vimenv.method('restore')
+
+let &cpo = s:save_cpo
+unlet s:save_cpo

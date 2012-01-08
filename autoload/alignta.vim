@@ -28,6 +28,9 @@
 " }}}
 "=============================================================================
 
+let s:save_cpo = &cpo
+set cpo&vim
+
 function! alignta#align(region_args, align_args)
   let aligner = s:Aligner.new(a:region_args, a:align_args)
   call aligner.align()
@@ -854,3 +857,6 @@ function! s:echomsg(msg)
     echomsg a:msg
   endif
 endfunction
+
+let &cpo = s:save_cpo
+unlet s:save_cpo

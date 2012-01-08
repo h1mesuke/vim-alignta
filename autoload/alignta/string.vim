@@ -26,6 +26,9 @@
 " }}}
 "=============================================================================
 
+let s:save_cpo = &cpo
+set cpo&vim
+
 " Inspired by Yukihiro Nakadaira's nsexample.vim
 " https://gist.github.com/867896
 "
@@ -155,3 +158,6 @@ else
   endfunction
   call s:String.function('width')
 endif
+
+let &cpo = s:save_cpo
+unlet s:save_cpo

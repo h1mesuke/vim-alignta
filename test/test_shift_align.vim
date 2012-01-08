@@ -1,5 +1,8 @@
 " alignta's test suite
 
+let s:save_cpo = &cpo
+set cpo&vim
+
 let tc = unittest#testcase#new('test_shift_align', alignta#testcase#class())
 
 "-----------------------------------------------------------------------------
@@ -216,3 +219,6 @@ endfunction
 "-----------------------------------------------------------------------------
 
 unlet tc
+
+let &cpo = s:save_cpo
+unlet s:save_cpo

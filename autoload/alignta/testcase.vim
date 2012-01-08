@@ -1,5 +1,8 @@
 " alignta's test suite
 
+let s:save_cpo = &cpo
+set cpo&vim
+
 function! alignta#testcase#class()
   return s:TestCase
 endfunction
@@ -100,3 +103,6 @@ function! s:TestCase_print_lines(lines) dict
   endfor
 endfunction
 call s:TestCase.method('print_lines')
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
