@@ -27,7 +27,7 @@
 "=============================================================================
 
 " Inspired by Yukihiro Nakadaira's nsexample.vim
-" http://gist.github.com/867896
+" https://gist.github.com/867896
 "
 let s:lib = expand('<sfile>:p:h:gs?[\\/]?#?:s?^.*#autoload#??')
 " => path#to#lib
