@@ -4,8 +4,8 @@
 "
 " File    : oop.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-05-04
-" Version : 0.2.0
+" Updated : 2012-01-08
+" Version : 0.2.2
 " License : MIT license {{{
 "
 "   Permission is hereby granted, free of charge, to any person obtaining
@@ -29,37 +29,56 @@
 " }}}
 "=============================================================================
 
+let s:save_cpo = &cpo
+set cpo&vim
+
 " Inspired by Yukihiro Nakadaira's nsexample.vim
-" http://gist.github.com/867896
+" https://gist.github.com/867896
 "
 let s:oop = expand('<sfile>:p:r:gs?[\\/]?#?:s?^.*#autoload#??')
 " => path#to#oop
 
-function! {s:oop}#is_object(value)
-  return type(a:value) == type({}) && has_key(a:value, '__type_Object__')
-endfunction
-
-function! {s:oop}#is_class(value)
-  return type(a:value) == type({}) && has_key(a:value, '__type_Class__')
-endfunction
-
-function! {s:oop}#is_instance(value)
-  return type(a:value) == type({}) && has_key(a:value, '__type_Instance__')
-endfunction
-
-function! {s:oop}#is_module(value)
-  return type(a:value) == type({}) && has_key(a:value, '__type_Module__')
-endfunction
-
+let s:TYPE_NUM  = type(0)
+let s:TYPE_STR  = type("")
 let s:TYPE_DICT = type({})
 let s:TYPE_LIST = type([])
 let s:TYPE_FUNC = type(function('tr'))
 
-function! {s:oop}#string(value)
-  return string(s:dump_copy(a:value))
+function! {s:oop}#_sid_prefix(sid)
+  if type(a:sid) == s:TYPE_NUM
+    return '<SNR>' . a:sid . '_'
+  else
+    return '<SNR>' . matchstr(a:sid, '\d\+') . '_'
+  endif
 endfunction
+
+function! {s:oop}#is_object(value)
+  return type(a:value) == s:TYPE_DICT && has_key(a:value, '__type_Object__')
+endfunction
+
+function! {s:oop}#is_class(value)
+  return type(a:value) == s:TYPE_DICT && has_key(a:value, '__type_Class__')
+endfunction
+
+function! {s:oop}#is_instance(value)
+  return type(a:value) == s:TYPE_DICT && has_key(a:value, '__type_Instance__')
+endfunction
+
+function! {s:oop}#is_module(value)
+  return type(a:value) == s:TYPE_DICT && has_key(a:value, '__type_Module__')
+endfunction
+
+function! {s:oop}#string(value)
+  let value_type = type(a:value)
+  if value_type == s:TYPE_LIST || value_type == s:TYPE_DICT
+    return s:dump_copy(a:value)
+  else
+    return string(a:value)
+  endif
+endfunction
+
 function! s:dump_copy(value)
-  let Value = a:value
+  let value = a:value
   let value_type = type(a:value)
   if value_type == s:TYPE_DICT
     if has_key(a:value, '__type_Class__')
@@ -67,14 +86,16 @@ function! s:dump_copy(value)
     elseif has_key(a:value, '__type_Module__')
       return '<Module: ' . a:value.__name__ . '>'
     elseif has_key(a:value, '__type_Instance__')
-      let Value = filter(copy(a:value), '
+      let value = filter(copy(a:value), '
             \ !(type(v:val) == s:TYPE_FUNC || v:key =~ "^__type_")')
     endif
   endif
-  if value_type == s:TYPE_DICT || value_type == s:TYPE_LIST
-    return map(copy(Value), 's:dump_copy(v:val)')
+  if value_type == s:TYPE_LIST || value_type == s:TYPE_DICT
+    return string(map(copy(value), 's:dump_copy(v:val)'))
+  else
+    return value
   endif
-  return Value
 endfunction
 
-" vim: filetype=vim
+let &cpo = s:save_cpo
+unlet s:save_cpo

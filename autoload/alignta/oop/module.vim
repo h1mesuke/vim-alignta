@@ -4,8 +4,8 @@
 "
 " File    : oop/module.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-05-05
-" Version : 0.2.0
+" Updated : 2012-01-08
+" Version : 0.2.2
 " License : MIT license {{{
 "
 "   Permission is hereby granted, free of charge, to any person obtaining
@@ -29,8 +29,11 @@
 " }}}
 "=============================================================================
 
+let s:save_cpo = &cpo
+set cpo&vim
+
 " Inspired by Yukihiro Nakadaira's nsexample.vim
-" http://gist.github.com/867896
+" https://gist.github.com/867896
 "
 let s:oop = expand('<sfile>:p:h:gs?[\\/]?#?:s?^.*#autoload#??')
 " => path#to#oop
@@ -54,7 +57,7 @@ let s:oop = expand('<sfile>:p:h:gs?[\\/]?#?:s?^.*#autoload#??')
 function! {s:oop}#module#new(name, sid)
   let module = copy(s:Module)
   let module.__name__ = a:name
-  let module.__prefix__ = a:sid . a:name . '_'
+  let module.__prefix__ = {s:oop}#_sid_prefix(a:sid) . a:name . '_'
   " => <SNR>10_Fizz_
   return module
 endfunction
@@ -77,7 +80,7 @@ let s:Module = {
 " underscore. This convention helps you to distinguish module functions from
 " other functions.
 "
-"   function! s:Fizz_hello()
+"   function! s:Fizz_hello() dict
 "   endfunction
 "   call s:Fizz.function('hello')
 "
@@ -86,8 +89,9 @@ let s:Module = {
 "
 "   call s:Fizz.hello()
 "
-function! s:Module_bind(func_name) dict
-  let self[a:func_name] = function(self.__prefix__  . a:func_name)
+function! s:Module_bind(func_name, ...) dict
+  let meth_name = (a:0 ? a:1 : a:func_name)
+  let self[meth_name] = function(self.__prefix__  . a:func_name)
 endfunction
 let s:Module.__bind__ = function(s:SID . 'Module_bind')
 let s:Module.function = s:Module.__bind__ | " syntax sugar
@@ -96,14 +100,15 @@ let s:Module.function = s:Module.__bind__ | " syntax sugar
 "
 "   call s:Fizz.alias('hi', 'hello')
 "
-function! s:Module_alias(alias, method_name) dict
-  if has_key(self, a:method_name) &&
-        \ type(self[a:method_name]) == type(function('tr'))
-    let self[a:alias] = self[a:method_name]
+function! s:Module_alias(alias, meth_name) dict
+  if has_key(self, a:meth_name) &&
+        \ type(self[a:meth_name]) == type(function('tr'))
+    let self[a:alias] = self[a:meth_name]
   else
-    throw "oop: " . self.__name__ . "." . a:method_name . "() is not defined."
+    throw "vim-oop: " . self.__name__ . "." . a:meth_name . "() is not defined."
   endif
 endfunction
 let s:Module.alias = function(s:SID . 'Module_alias')
 
-" vim: filetype=vim
+let &cpo = s:save_cpo
+unlet s:save_cpo

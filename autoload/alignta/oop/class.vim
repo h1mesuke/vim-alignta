@@ -4,8 +4,8 @@
 "
 " File    : oop/class.vim
 " Author  : h1mesuke <himesuke@gmail.com>
-" Updated : 2011-08-22
-" Version : 0.2.0
+" Updated : 2012-01-08
+" Version : 0.2.2
 " License : MIT license {{{
 "
 "   Permission is hereby granted, free of charge, to any person obtaining
@@ -29,11 +29,16 @@
 " }}}
 "=============================================================================
 
+let s:save_cpo = &cpo
+set cpo&vim
+
 " Inspired by Yukihiro Nakadaira's nsexample.vim
-" http://gist.github.com/867896
+" https://gist.github.com/867896
 "
 let s:oop = expand('<sfile>:p:h:gs?[\\/]?#?:s?^.*#autoload#??')
 " => path#to#oop
+
+let s:TYPE_FUNC = type(function('tr'))
 
 "-----------------------------------------------------------------------------
 " Class
@@ -58,11 +63,11 @@ let s:oop = expand('<sfile>:p:h:gs?[\\/]?#?:s?^.*#autoload#??')
 function! {s:oop}#class#new(name, sid, ...)
   let class = copy(s:Class)
   let class.__name__ = a:name
-  let class.__prefix__ = a:sid . a:name . '_'
+  let class.__prefix__ = {s:oop}#_sid_prefix(a:sid) . a:name . '_'
   " => <SNR>10_Foo_
   let class.__prototype__ = copy(s:Instance)
   let class.__superclass__ = (a:0 ? a:1 : {})
-  " inherit methods from superclasses
+  " Inherit methods from superclasses.
   for klass in class.ancestors()
     call extend(class, klass, 'keep')
     call extend(class.__prototype__, klass.__prototype__, 'keep')
@@ -80,6 +85,26 @@ let s:Class = {
       \ '__type_Object__': 1,
       \ '__type_Class__' : 1,
       \ }
+
+" Adds {module}'s functions to the class as class methods.
+"
+"   s:Foo.extend(s:Fizz)
+"
+function! s:Class_extend(module) dict
+  let funcs = filter(copy(a:module), 'type(v:val) == s:TYPE_FUNC')
+  call extend(self, funcs, 'keep')
+endfunction
+let s:Class.extend = function(s:SID . 'Class_extend')
+
+" Adds {module}'s functions to the class as instance methods.
+"
+"   s:Foo.include(s:Fizz)
+"
+function! s:Class_include(module) dict
+  let funcs = filter(copy(a:module), 'type(v:val) == s:TYPE_FUNC')
+  call extend(self.__prototype__, funcs, 'keep')
+endfunction
+let s:Class.include = function(s:SID . 'Class_include')
 
 " Returns a List of ancestor classes.
 "
@@ -115,7 +140,7 @@ let s:Class.is_descendant_of = function(s:SID . 'Class_is_descendant_of')
 " by one underscore. This convention helps you to distinguish method functions
 " from other functions.
 "
-"   function! s:Foo_hello()
+"   function! s:Foo_hello() dict
 "   endfunction
 "   call s:Foo.class_method('hello')
 "
@@ -123,8 +148,9 @@ let s:Class.is_descendant_of = function(s:SID . 'Class_is_descendant_of')
 "
 "   call Foo.hello()
 "
-function! s:Class_class_bind(func_name) dict
-  let self[a:func_name] = function(self.__prefix__  . a:func_name)
+function! s:Class_class_bind(func_name, ...) dict
+  let meth_name = (a:0 ? a:1 : a:func_name)
+  let self[meth_name] = function(self.__prefix__  . a:func_name)
 endfunction
 let s:Class.__class_bind__ = function(s:SID . 'Class_class_bind')
 let s:Class.class_method = s:Class.__class_bind__ | " syntax sugar
@@ -134,7 +160,7 @@ let s:Class.class_method = s:Class.__class_bind__ | " syntax sugar
 " class name followed by one underscore. This convention helps you to
 " distinguish method functions from other functions.
 "
-"   function! s:Foo_hello()
+"   function! s:Foo_hello() dict
 "   endfunction
 "   call s:Foo.method('hello')
 "
@@ -142,8 +168,9 @@ let s:Class.class_method = s:Class.__class_bind__ | " syntax sugar
 "
 "   call foo.hello()
 "
-function! s:Class_bind(func_name) dict
-  let self.__prototype__[a:func_name] = function(self.__prefix__  . a:func_name)
+function! s:Class_bind(func_name, ...) dict
+  let meth_name = (a:0 ? a:1 : a:func_name)
+  let self.__prototype__[meth_name] = function(self.__prefix__  . a:func_name)
 endfunction
 let s:Class.__bind__ = function(s:SID . 'Class_bind')
 let s:Class.method = s:Class.__bind__ | " syntax sugar
@@ -152,12 +179,12 @@ let s:Class.method = s:Class.__bind__ | " syntax sugar
 "
 "   call s:Foo.class_alias('hi', 'hello')
 "
-function! s:Class_class_alias(alias, method_name) dict
-  if has_key(self, a:method_name) &&
-        \ type(self[a:method_name]) == type(function('tr'))
-    let self[a:alias] = self[a:method_name]
+function! s:Class_class_alias(alias, meth_name) dict
+  if has_key(self, a:meth_name) &&
+        \ type(self[a:meth_name]) == s:TYPE_FUNC
+    let self[a:alias] = self[a:meth_name]
   else
-    throw "oop: " . self.__name__ . "." . a:method_name . "() is not defined."
+    throw "vim-oop: " . self.__name__ . "." . a:meth_name . "() is not defined."
   endif
 endfunction
 let s:Class.class_alias = function(s:SID . 'Class_class_alias')
@@ -166,55 +193,47 @@ let s:Class.class_alias = function(s:SID . 'Class_class_alias')
 "
 "   call s:Foo.alias('hi', 'hello')
 "
-function! s:Class_alias(alias, method_name) dict
-  if has_key(self.__prototype__, a:method_name) &&
-        \ type(self.__prototype__[a:method_name]) == type(function('tr'))
-    let self.__prototype__[a:alias] = self.__prototype__[a:method_name]
+function! s:Class_alias(alias, meth_name) dict
+  if has_key(self.__prototype__, a:meth_name) &&
+        \ type(self.__prototype__[a:meth_name]) == s:TYPE_FUNC
+    let self.__prototype__[a:alias] = self.__prototype__[a:meth_name]
   else
-    throw "oop: " . self.__name__ . "#" . a:method_name . "() is not defined."
+    throw "vim-oop: " . self.__name__ . "#" . a:meth_name . "() is not defined."
   endif
 endfunction
 let s:Class.alias = function(s:SID . 'Class_alias')
 
-" Class#super( {method_name}, {self}  [, args...])
+" Class#super( {meth_name}, {args}, {self})
 "
-" Calls the super implementation of a method.
+" Calls the superclass's implementation of a method.
 "
 "   function! s:Bar_hello() dict
-"     return 'Bar < ' . s:Bar.super('hello', self)
+"     return 'Bar < ' . s:Bar.super('hello', [], self)
 "   endfunction
 "   call s:Bar.class_method('hello')
 "   call s:Bar.method('hello')
 "
-function! s:Class_super(method_name, _self, ...) dict
+function! s:Class_super(meth_name, args, _self) dict
   let is_class = {s:oop}#is_class(a:_self)
-  if is_class
-    let self_m_table = self
-  else
-    let self_m_table = self.__prototype__
-  endif
-  let has_impl = (has_key(self_m_table, a:method_name) &&
-        \ type(self_m_table[a:method_name]) == type(function('tr')))
+  let meth_table = (is_class ? self : self.__prototype__)
+
+  let has_impl = (has_key(meth_table, a:meth_name) &&
+        \ type(meth_table[a:meth_name]) == s:TYPE_FUNC)
+
   for klass in self.ancestors()
-    if is_class
-      let klass_m_table = klass
-    else
-      let klass_m_table = klass.__prototype__
-    endif
-    if has_key(klass_m_table, a:method_name)
-      if type(klass_m_table[a:method_name]) != type(function('tr'))
+      let kls_meth_table = (is_class ? klass : klass.__prototype__)
+    if has_key(kls_meth_table, a:meth_name)
+      if type(kls_meth_table[a:meth_name]) != s:TYPE_FUNC
         let sep = (is_class ? '.' : '#')
-        throw "oop: " . klass.__name__ . sep .
-              \ a:method_name . " is not a method."
-      elseif !has_impl ||
-            \ (has_impl && self_m_table[a:method_name] != klass_m_table[a:method_name])
-        return call(klass_m_table[a:method_name], a:000, a:_self)
+        throw "vim-oop: " . klass.__name__ . sep . a:meth_name . " is not a method."
+      elseif !has_impl || (has_impl && meth_table[a:meth_name] != kls_meth_table[a:meth_name])
+        return call(kls_meth_table[a:meth_name], a:args, a:_self)
       endif
     endif
   endfor
   let sep = (is_class ? '.' : '#')
-  throw "oop: " . self.__name__ . sep .
-        \ a:method_name . "()'s super implementation was not found."
+  throw "vim-oop: " . self.__name__ . sep .
+        \ a:meth_name . "()'s super implementation was not found."
 endfunction
 let s:Class.super = function(s:SID . 'Class_super')
 
@@ -271,4 +290,5 @@ endfunction
 let s:Instance.is_kind_of = function(s:SID . 'Instance_is_kind_of')
 let s:Instance.is_a = function(s:SID . 'Instance_is_kind_of')
 
-" vim: filetype=vim
+let &cpo = s:save_cpo
+unlet s:save_cpo
