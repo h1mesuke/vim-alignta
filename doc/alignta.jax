@@ -46,7 +46,7 @@ License : MIT license {{{
 	  変数				  |unite-alignta-variables|
 	  設定例			  |unite-alignta-settings-example|
 	ToDo				|alignta-todo|
-	既知の問題			|alignta-bugs|
+	既知の問題			|alignta-issues|
 	更新履歴			|alignta-changelog|
 	
 ==============================================================================
@@ -103,12 +103,13 @@ alignta ~
 	$HOME/.vim/autoload/alignta/
 	$HOME/.vim/doc/alignta.*
 
-      *	$HOME/.vim/autoload/unite/sources/alignta.vim
+	$HOME/.vim/autoload/unite/sources/alignta.vim
 
 	になります。
 
-      *	|unite|をお使いの場合、インストールしておくと alignta がより便利に
-	使えます。詳細は|unite-alignta|を参照
+	最後のファイルは unite.vim の source です。|unite|をお使いの場合、イン
+	ストールしておくと alignta がより便利に使えます。詳細は|unite-alignta|
+	を参照
 
 ==============================================================================
 整列						*alignta-alignment*
@@ -282,7 +283,7 @@ SHIFTING ALIGNMENT				*alignta-shifting-alignment*
 	旧書式			意味
 	--------------------	--------------------------
 	{pattern}{{number}}	{number} 回だけ整列
-	{pattern}{+ }		マッチが存在する限り整列
+	{pattern}{+}		マッチが存在する限り整列
 
 複数のパターン ~
 						*alignta-multiple-patterns*
@@ -763,7 +764,7 @@ unite-alignta					*unite-alignta*
 TODO						*alignta-todo*
 
 ==============================================================================
-既知の問題					*alignta-bugs*
+既知の問題					*alignta-issues*
 
 ==============================================================================
 更新履歴					*alignta-changelog*
