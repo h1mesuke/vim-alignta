@@ -2,7 +2,7 @@
 
 File    : doc/alignta.jax
 Author  : h1mesuke <himesuke@gmail.com>
-Updated : 2011-09-25
+Updated : 2012-01-09
 Version : 0.3.0
 License : MIT license {{{
 
@@ -170,19 +170,19 @@ SHIFTING ALIGNMENT				*alignta-shifting-alignment*
 ------------------------------------------------------------------------------
 コマンド					*alignta-commands*
 
-:[range]Alignta [arguments]			*:Alignta*
+	:[range]Alignta [arguments]		*:Alignta*
 
-	指定範囲に対し、与えられた引数にもとづく整列を行います。
-	[arguments] には整列に使用するパターン、または整列オプションの指定文字
-	列を任意の個数指定できます。
+		指定範囲に対し、与えられた引数にもとづく整列を行います。
+		[arguments] には整列に使用するパターン、または整列オプションの
+		指定文字列を任意の個数指定できます。
 
-	あるパターンによる整列回数の指定、複数のパターンを指定した場合の挙動、
-	整列オプションの書式については以下の節で説明します。
+		あるパターンによる整列回数の指定、複数のパターンを指定した場合
+		の挙動、整列オプションの書式については以下の節で説明します。
 
-:[range]Align [arguments]
+	:[range]Align [arguments]
 
-	:Alignta の別名。Charles Campbell氏の Align.vim がインストールされてい
-	ない場合に使用できます。
+		:Alignta の別名。Charles Campbell氏の Align.vim がインストール
+		されていない場合に使用できます。
 
 ------------------------------------------------------------------------------
 パターン					*alignta-patterns*
@@ -617,26 +617,25 @@ LINE FILTERING				*alignta-line-filtering*
 ------------------------------------------------------------------------------
 変数						*alignta-variables*
 
-g:alignta_default_options			*g:alignta_default_options*
+	g:alignta_default_options		*g:alignta_default_options*
 						*b:alignta_default_options*
-	:Aligntaコマンドの初期整列オプションの指定文字列
-	引数リストに整列オプションの指定文字列が現れない限り、この変数に設定し
-	た整列オプションで整列が行われます。
+		:Aligntaコマンドの初期整列オプションの指定文字列
+		引数リストに整列オプションの指定文字列が現れない限り、この変数
+		に設定した整列オプションで整列が行われます。
 
-	初期値は "<<<1:1"
+		初期値は "<<<1:1"
 
-g:alignta_default_arguments			*g:alignta_default_arguments*
+	g:alignta_default_arguments		*g:alignta_default_arguments*
 						*b:alignta_default_arguments*
-	:Aligntaコマンドの引数リスト文字列
-	:Aligntaコマンドを引数なしで実行した場合に、この変数に設定した引数リス
-	トにもとづく整列が行われます。
+		:Aligntaコマンドの引数リスト文字列
+		:Aligntaコマンドを引数なしで実行した場合、この変数に設定した引
+		数リストにもとづく整列が行われます。
 
-	初期値なし（未定義）
+		初期値なし（未定義）
 
 バッファローカルな設定 ~
 
-	これらの変数はいずれも同名のバッファローカル変数によって設定を上書き
-	できます。
+	これらの変数は同名のバッファローカル変数によって設定を上書きできます。
 >
 	let b:alignta_default_arguments = '01 ,'
 <
@@ -663,23 +662,23 @@ unite-alignta					*unite-alignta*
 変数						*unite-alignta-variables*
 
 				*g:unite_source_alignta_preset_arguments*
-g:unite_source_alignta_preset_arguments
+	g:unite_source_alignta_preset_arguments
 
-	:Aligntaコマンドの引数リスト文字列のリスト
-	:Unite alignta:arguments を実行したとき、候補として表示されます。
+		:Aligntaコマンドの引数リスト文字列のリスト
+		:Unite alignta:arguments を実行すると候補として表示されます。
 
-	詳細は|unite-alignta-usage|を参照
+		詳細は|unite-alignta-usage|を参照
 
-	初期値は []
+		初期値は []
 				*g:unite_source_alignta_preset_options*
-g:unite_source_alignta_preset_options
+	g:unite_source_alignta_preset_options
 
-	:Aligntaコマンドの整列オプションのリスト
-	:Unite alignta:options を実行したとき、候補として表示されます。
+		:Aligntaコマンドの整列オプションのリスト
+		:Unite alignta:options を実行すると候補として表示されます。
 
-	詳細は|unite-alignta-usage|を参照
+		詳細は|unite-alignta-usage|を参照
 
-	初期値については autoload/unite/sources/alignta.vim を参照
+		初期値は autoload/unite/sources/alignta.vim を参照
 
 ラベルの設定 ~
 
